@@ -6,4 +6,7 @@ class Data:
         self.Type = _type
         self.CoordX = coordX
         self.CoordY = coordY
-        self.TimeStamp = timeStamp
+        self.TimeStamp = self.convertToReadableDate(int(timeStamp))
+
+    def convertToReadableDate(self, timestamp):
+        return datetime.datetime.fromtimestamp(timestamp / 1e3).strftime('%Y-%m-%d %H:%M:%S.%f')[:-2]
