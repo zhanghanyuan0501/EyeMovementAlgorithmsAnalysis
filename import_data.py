@@ -7,4 +7,4 @@ for file in os.listdir('./data'):
             for line in inputfile:
                 results.append(line)
 
-print(results)
+print(results[0])
