@@ -3,6 +3,8 @@ from Data import Data
 from importFiles import createObjectsFromAllFiles, createObjectsFromFile
 from StatisticsClass import StatisticsClass
 from IDT import calculateIdtAlgorithm
+from IVT import calculateIvtAlgorithm
+from ML import calculateMlAlgorithm
 
 def main(argv):
     statistics = StatisticsClass()
@@ -14,11 +16,13 @@ def main(argv):
         if sys.argv[3] == 'I-DT':
             calculateIdtAlgorithm(parsedFile)
         elif sys.argv[3] == 'I-VT':
-            print('I-VT not implemented yet!')
+            calculateIvtAlgorithm(parsedFile)
+        elif sys.argv[3] == 'ML':
+            calculateMlAlgorithm(parsedFile)
         else:
             print('INCORRECT ALGORITHM')
     elif sys.argv[1] == '-a':
-        print('Available algorithms: "I-DT"')
+        print('Available algorithms: "I-DT", "I-VT", "ML"')
     else:
         print('How to run file: main.py -i <inputfile> <algorithm>')
 

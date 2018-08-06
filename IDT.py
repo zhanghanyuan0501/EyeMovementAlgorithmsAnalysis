@@ -10,5 +10,4 @@ def calculateIdtAlgorithm(pointList):
             print(time)
         else:
             timeStart = time
-            print('Change window')
         i += 1
