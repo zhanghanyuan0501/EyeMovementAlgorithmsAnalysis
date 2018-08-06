@@ -1,6 +1,5 @@
-import csv, os, datetime
+import csv, os, datetime, time
 from Data import Data
-import timeit
 
 # Create array of Data from Data files
 def createObjectsFromAllFiles():
@@ -14,7 +13,7 @@ def createObjectsFromAllFiles():
     return results
 
 def createObjectsFromFile(fileName):
-    start = timeit.default_timer()
+    start = time.process_time()
     results = []
     for file in os.listdir('./data'):
         if file.endswith(fileName):
@@ -22,5 +21,5 @@ def createObjectsFromFile(fileName):
                 for line in inputfile:
                     splittedLine = line.strip('\r\n').split('\t')
                     results.append(Data(splittedLine[0], splittedLine[1], splittedLine[2], splittedLine[3]))
-    end = timeit.default_timer()
+    end = time.process_time()
     return results, '%.3f' % (end - start)
