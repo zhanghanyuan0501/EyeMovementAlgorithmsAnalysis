@@ -32,7 +32,6 @@ def createObjectsFromFile(fileName):
                 loopFlag = False
                 break
             if results[i + 1].Type == 'SS':
-                print(str(i))
                 retList.append(results[i])
                 break
             retList.append(results[i])
