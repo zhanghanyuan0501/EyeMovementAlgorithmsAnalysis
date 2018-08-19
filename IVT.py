@@ -1,2 +1,28 @@
+import time, Data, math, constants
+
 def calculateIvtAlgorithm(pointList):
-    print('NOT IMPLEMENTED')
+    start = time.process_time()
+    fixations = []
+    coordX = []
+    coordY = []
+    i = 0
+    for element in pointList:
+        velocity = 0
+        if element.Type == 'SS':
+            i += 1
+            continue
+        if i + 1 == len(pointList) - 1:
+            velocity = math.sqrt(math.pow(pointList[i + 1].CoordX - pointList[i].CoordX, 2) + math.pow(pointList[i + 1].CoordY - pointList[i].CoordY, 2))
+            if (velocity < constants.FIXATION_VELOCITY_THRESHOLD):
+                fixations.append(pointList[i])
+                fixations.append(pointList[i + 1])
+            break
+        velocity = math.sqrt(math.pow(pointList[i + 1].CoordX - pointList[i].CoordX, 2) + math.pow(pointList[i + 1].CoordY - pointList[i].CoordY, 2))
+        print(velocity)
+
+        if (velocity < constants.FIXATION_VELOCITY_THRESHOLD):
+            fixations.append(pointList[i])
+        i += 1
+    
+    end = time.process_time()
+    return coordX, coordY, "%.2f" % (end - start), len(coordX)
