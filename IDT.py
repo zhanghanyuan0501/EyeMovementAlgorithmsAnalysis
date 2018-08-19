@@ -24,19 +24,15 @@ def calculateIdtAlgorithm(pointsList):
             break
         if len(windowList) > 1:
             Dispersion = (max(maxX.CoordX for maxX in windowList) - min(minX.CoordX for minX in windowList)) + (max(maxY.CoordY for maxY in windowList) - min(minY.CoordY for minY in windowList))
-            print('Dispersion: %.2f' % Dispersion)
         while len(windowList) > 1:
             if Dispersion <= constants.DISPERSION_THRESHOLD and len(windowList) > 1:
-                print('wchodze')
                 while (Dispersion < constants.DISPERSION_THRESHOLD):
-                    print('calcdisp')
                     windowList.append(pointsList[i])
                     i += 1
                     if i >= countPoints:
                         break
                     Dispersion = (max(maxX.CoordX for maxX in windowList) - min(minX.CoordX for minX in windowList)) + (max(maxY.CoordY for maxY in windowList) - min(minY.CoordY for minY in windowList))
                 if i >= countPoints:
-                    print('brk')
                     break
                 coordXList.append(sum(sumX.CoordX for sumX in windowList) / len(windowList))
                 coordYList.append(sum(sumY.CoordY for sumY in windowList) / len(windowList))

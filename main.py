@@ -16,8 +16,9 @@ def main(argv):
         parsedFile, statistics.ImportAndConvertFileStatistic = createObjectsFromFile(sys.argv[2])
         print('Converting file time: %s' % statistics.ImportAndConvertFileStatistic)
         if sys.argv[3] == 'I-DT':
-            coordX, coordY, statistics.AlgorithmRunTimeStatistic, statistics.NumberOfFixationsCount = calculateIdtAlgorithm(parsedFile)
-            helpers.plotResults(coordX, coordY, sys.argv[3])
+            for measurement in parsedFile:
+                coordX, coordY, statistics.AlgorithmRunTimeStatistic, statistics.NumberOfFixationsCount = calculateIdtAlgorithm(measurement)
+                helpers.plotResults(coordX, coordY, sys.argv[3])
         elif sys.argv[3] == 'I-VT':
             calculateIvtAlgorithm(parsedFile)
         elif sys.argv[3] == 'ML':
