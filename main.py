@@ -20,7 +20,9 @@ def main(argv):
                 coordX, coordY, statistics.AlgorithmRunTimeStatistic, statistics.NumberOfFixationsCount = calculateIdtAlgorithm(measurement)
                 helpers.plotResults(coordX, coordY, sys.argv[3])
         elif sys.argv[3] == 'I-VT':
-            calculateIvtAlgorithm(parsedFile)
+            for measurement in parsedFile:
+                coordX, coordY, statistics.AlgorithmRunTimeStatistic, statistics.NumberOfFixationsCount = calculateIvtAlgorithm(measurement)
+                helpers.plotResults(coordX, coordY, sys.argv[3])
         elif sys.argv[3] == 'ML':
             calculateMlAlgorithm(parsedFile)
         else:
