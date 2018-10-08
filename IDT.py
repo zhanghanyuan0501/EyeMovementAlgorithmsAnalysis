@@ -9,8 +9,8 @@ def calculateIdtAlgorithm(pointsList):
     coordXList = []
     coordYList = []
     countPoints = len(pointsList)
-    while(i < countPoints - 1):
-        if (pointsList[i].Type == 'SS'):
+    while i < countPoints - 1:
+        if pointsList[i].Type == 'SS':
             i += 1
             continue
         currTime = int(pointsList[i].TimeStamp)

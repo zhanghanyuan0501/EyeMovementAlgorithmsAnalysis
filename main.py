@@ -67,9 +67,6 @@ def main(argv):
         print('Converting file time: %s' % statistics.ImportAndConvertFileStatistic)
         if sys.argv[3] == 'I-DT':
             print('Starting measurement using I-DT algorithm')
-            resX = []
-            resY = []
-            i = 1
             for measurement in parsedFile:
                 retX = []
                 retY = []
@@ -78,16 +75,28 @@ def main(argv):
                 print('Ended calibration')
                 for i, item in enumerate(m1):
                     if item.Type == 'SS':
-                        plt.plot(m1[i].CoordX, m1[i].CoordY, 'ro', markersize=10, label='Eye-tracker points')
+                        plt.plot(m1[i].CoordX, m1[i].CoordY, 'ko', markersize=10, label='Eye-tracker points')
                 coordX, coordY, statistics.AlgorithmRunTimeStatistic, statistics.NumberOfFixationsCount = calculateIdtAlgorithm(m1)
-                plt.plot(coordX, coordY, 'yo', markersize=3, label='Calculated fixations')
-                #helpers.plotResults(coordX, coordY, sys.argv[3])
+                plt.plot(coordX, coordY, 'wo', markersize=5, markeredgecolor='r', label='Calculated fixations')
             print('Ending measurement using I-DT algorithm')
+            plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
             plt.show()
         elif sys.argv[3] == 'I-VT':
+            print('Starting measurement using I-VT algorithm')
             for measurement in parsedFile:
-                coordX, coordY, statistics.AlgorithmRunTimeStatistic, statistics.NumberOfFixationsCount = calculateIvtAlgorithm(measurement)
-                helpers.plotResults(coordX, coordY, sys.argv[3])
+                retX = []
+                retY = []
+                print('Starting calibration')
+                m1 = convertPointsToCalibration(measurement)
+                print('Ended calibration')
+                for i, item in enumerate(m1):
+                    if item.Type == 'SS':
+                        plt.plot(m1[i].CoordX, m1[i].CoordY, 'ko', markersize=10, label='Eye-tracker points')
+                coordX, coordY, statistics.AlgorithmRunTimeStatistic, statistics.NumberOfFixationsCount = calculateIvtAlgorithm(m1)
+                plt.plot(coordX, coordY, 'wo', markersize=5, markeredgecolor='r', label='Calculated fixations')
+            print('Ending measurement using I-VT algorithm')
+            plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
+            plt.show()
         elif sys.argv[3] == 'ML':
             calculateMlAlgorithm(parsedFile)
         else:

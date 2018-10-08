@@ -30,8 +30,9 @@ def calculateIvtAlgorithm(pointList):
         if velocity < constants.FIXATION_VELOCITY_THRESHOLD:
             combineFixationsArray.append(fixations[i])
         else:
-            coordX.append(sum(sumX.CoordX for sumX in combineFixationsArray) / len(combineFixationsArray))
-            coordY.append(sum(sumY.CoordY for sumY in combineFixationsArray) / len(combineFixationsArray))
+            if len(combineFixationsArray) != 0:
+                coordX.append(sum(sumX.CoordX for sumX in combineFixationsArray) / len(combineFixationsArray))
+                coordY.append(sum(sumY.CoordY for sumY in combineFixationsArray) / len(combineFixationsArray))
 
         i += 1
 
