@@ -5,6 +5,55 @@ from StatisticsClass import StatisticsClass
 from IDT import calculateIdtAlgorithm
 from IVT import calculateIvtAlgorithm
 from ML import calculateMlAlgorithm
+from scipy.optimize import least_squares, minimize
+import numpy as np
+import matplotlib.pyplot as plt
+
+def calibrate(xList, yList):
+    i = 1
+    ssxArr = []
+    ssyArr = []
+    X = []
+    Y = []
+    while i < len(xList):
+        X.append([xList[i]*xList[i],xList[i],yList[i]*yList[i],yList[i]])
+        Y.append([yList[i]*yList[i],yList[i],xList[i]*xList[i],xList[i]])
+        ssxArr.append(xList[0])
+        ssyArr.append(yList[0])
+        i+=1
+    
+    x = np.linalg.lstsq(X,ssxArr,rcond=None)
+    y = np.linalg.lstsq(Y,ssyArr,rcond=None)
+
+    i = 1
+    retX = []
+    retY = []
+    while i < len(xList):
+        retX.append(x[0][0]*xList[i]*xList[i] + x[0][1]*xList[i] + x[0][2]*yList[i]*yList[i] + x[0][3]*yList[i])
+        retY.append(y[0][0]*yList[i]*yList[i] + y[0][1]*yList[i] + y[0][2]*xList[i]*xList[i] + y[0][3]*xList[i])
+        i += 1
+
+    return retX, retY
+
+
+def convertPointsToCalibration(pointsList):
+    
+    coordX = []
+    coordY = []
+    retX = []
+    retY = []
+    
+    for i in pointsList:
+        coordX.append(i.CoordX)
+        coordY.append(i.CoordY)
+
+    retX, retY = calibrate(coordX, coordY)
+    for i, item in enumerate(pointsList):
+        if not item.Type == 'SS':
+            pointsList[i].CoordX = retX[i-1]
+            pointsList[i].CoordY = retY[i-1]
+
+    return pointsList
 
 def main(argv):
     statistics = StatisticsClass()
@@ -14,11 +63,27 @@ def main(argv):
         coordX = []
         coordY = []
         parsedFile, statistics.ImportAndConvertFileStatistic = createObjectsFromFile(sys.argv[2])
+        
         print('Converting file time: %s' % statistics.ImportAndConvertFileStatistic)
         if sys.argv[3] == 'I-DT':
+            print('Starting measurement using I-DT algorithm')
+            resX = []
+            resY = []
+            i = 1
             for measurement in parsedFile:
-                coordX, coordY, statistics.AlgorithmRunTimeStatistic, statistics.NumberOfFixationsCount = calculateIdtAlgorithm(measurement)
-                helpers.plotResults(coordX, coordY, sys.argv[3])
+                retX = []
+                retY = []
+                print('Starting calibration')
+                m1 = convertPointsToCalibration(measurement)
+                print('Ended calibration')
+                for i, item in enumerate(m1):
+                    if item.Type == 'SS':
+                        plt.plot(m1[i].CoordX, m1[i].CoordY, 'ro', markersize=10, label='Eye-tracker points')
+                coordX, coordY, statistics.AlgorithmRunTimeStatistic, statistics.NumberOfFixationsCount = calculateIdtAlgorithm(m1)
+                plt.plot(coordX, coordY, 'yo', markersize=3, label='Calculated fixations')
+                #helpers.plotResults(coordX, coordY, sys.argv[3])
+            print('Ending measurement using I-DT algorithm')
+            plt.show()
         elif sys.argv[3] == 'I-VT':
             for measurement in parsedFile:
                 coordX, coordY, statistics.AlgorithmRunTimeStatistic, statistics.NumberOfFixationsCount = calculateIvtAlgorithm(measurement)
@@ -27,7 +92,7 @@ def main(argv):
             calculateMlAlgorithm(parsedFile)
         else:
             print('INCORRECT ALGORITHM')
-        print('Number of fixations: %s, Algorithm runtime: %s' % (statistics.NumberOfFixationsCount, statistics.AlgorithmRunTimeStatistic))
+        #print('Number of fixations: %s, Algorithm runtime: %s' % (statistics.NumberOfFixationsCount, statistics.AlgorithmRunTimeStatistic))
         createExitFile(sys.argv[2], statistics)
     elif sys.argv[1] == '-a':
         print('Available algorithms: "I-DT", "I-VT", "ML"')
