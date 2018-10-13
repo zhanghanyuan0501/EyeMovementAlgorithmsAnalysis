@@ -44,13 +44,15 @@ def createObjectsFromFile(fileName):
 
 def createExitFile(fileName, statisticClass):
     fieldNames = ['ImportAndConvertFileStatistic',
-        'AlgorithmRunTimeStatistic'
+        'CalibrationSummaryTime',
+        'AlgorithmRunTimeStatistic',
         'NumberOfFixationsCount']
-    with open('./result/' + fileName + '.csv', 'wb') as csvFile:
+    with open('./result/' + fileName + '.csv', 'w', newline='') as csvFile:
         writer = csv.DictWriter(csvFile, fieldnames=fieldNames)
         writer.writeheader()
         writer.writerow({
             'ImportAndConvertFileStatistic': str(statisticClass.ImportAndConvertFileStatistic),
+            'CalibrationSummaryTime': str(statisticClass.CalibrationSummaryTime),
             'AlgorithmRunTimeStatistic': str(statisticClass.AlgorithmRunTimeStatistic),
             'NumberOfFixationsCount': str(statisticClass.NumberOfFixationsCount)
         })

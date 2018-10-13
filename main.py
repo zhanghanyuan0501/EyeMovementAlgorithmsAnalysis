@@ -8,6 +8,7 @@ from ML import calculateMlAlgorithm
 from scipy.optimize import least_squares, minimize
 import numpy as np
 import matplotlib.pyplot as plt
+import time
 
 def calibrate(xList, yList):
     i = 1
@@ -32,12 +33,12 @@ def calibrate(xList, yList):
         retX.append(x[0][0]*xList[i]*xList[i] + x[0][1]*xList[i] + x[0][2]*yList[i]*yList[i] + x[0][3]*yList[i])
         retY.append(y[0][0]*yList[i]*yList[i] + y[0][1]*yList[i] + y[0][2]*xList[i]*xList[i] + y[0][3]*xList[i])
         i += 1
-
+    
     return retX, retY
 
 
 def convertPointsToCalibration(pointsList):
-    
+    start = time.process_time()
     coordX = []
     coordY = []
     retX = []
@@ -52,8 +53,8 @@ def convertPointsToCalibration(pointsList):
         if not item.Type == 'SS':
             pointsList[i].CoordX = retX[i-1]
             pointsList[i].CoordY = retY[i-1]
-
-    return pointsList
+    end = time.process_time()
+    return pointsList, end - start
 
 def main(argv):
     statistics = StatisticsClass()
@@ -67,16 +68,20 @@ def main(argv):
         print('Converting file time: %s' % statistics.ImportAndConvertFileStatistic)
         if sys.argv[3] == 'I-DT':
             print('Starting measurement using I-DT algorithm')
+            
             for measurement in parsedFile:
                 retX = []
                 retY = []
                 print('Starting calibration')
-                m1 = convertPointsToCalibration(measurement)
+                m1, convertingTime = convertPointsToCalibration(measurement)
+                statistics.CalibrationSummaryTime += convertingTime
                 print('Ended calibration')
                 for i, item in enumerate(m1):
                     if item.Type == 'SS':
                         plt.plot(m1[i].CoordX, m1[i].CoordY, 'ko', markersize=10, label='Eye-tracker points')
-                coordX, coordY, statistics.AlgorithmRunTimeStatistic, statistics.NumberOfFixationsCount = calculateIdtAlgorithm(m1)
+                coordX, coordY, timealgorithm, fixationsForPoint = calculateIdtAlgorithm(m1)
+                statistics.AlgorithmRunTimeStatistic += timealgorithm
+                statistics.NumberOfFixationsCount += fixationsForPoint
                 plt.plot(coordX, coordY, 'wo', markersize=5, markeredgecolor='r', label='Calculated fixations')
             print('Ending measurement using I-DT algorithm')
             plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
@@ -87,7 +92,8 @@ def main(argv):
                 retX = []
                 retY = []
                 print('Starting calibration')
-                m1 = convertPointsToCalibration(measurement)
+                m1, convertingTime = convertPointsToCalibration(measurement)
+                statistics.CalibrationSummaryTime += convertingTime
                 print('Ended calibration')
                 for i, item in enumerate(m1):
                     if item.Type == 'SS':

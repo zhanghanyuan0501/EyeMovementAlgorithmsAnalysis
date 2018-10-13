@@ -41,4 +41,4 @@ def calculateIdtAlgorithm(pointsList):
         if i <= countPoints - 1:
             timeStart = int(pointsList[i].TimeStamp)
     end = time.process_time()
-    return coordXList, coordYList, '%.3f' % (end - start), len(coordXList)
+    return coordXList, coordYList, end - start, len(coordXList)
