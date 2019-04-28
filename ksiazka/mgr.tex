@@ -1,0 +1,71 @@
+\documentclass[12pt,a4paper,twoside,openright]{report}
+\usepackage{geometry}
+\usepackage{blindtext}
+\usepackage[T1]{fontenc}
+\usepackage{polski}
+\usepackage{graphicx}
+\usepackage{subfiles}
+
+\title{Analiza wybranych algorytmów wykrywania składowych ruchu oka}
+\author{inż. Paweł Kucia}
+\begin{document}
+    \newgeometry{centering}
+        \begin{titlepage}
+            \begin{figure}[h!]
+                \centering
+                \includegraphics[width=200pt]{resources/polslherb.JPG}
+            \end{figure}
+            \textsf{
+                \begin{center}
+                    \Large{
+                        Politechnika Śląska\\
+                        Wydział Automatyki, Elektroniki i Informatyki\\
+                        Kierunek Informatyka\\[1.5\baselineskip]
+                    }
+                    \LARGE{
+                        Praca dyplomowa magisterska\\[1.5\baselineskip]
+                    }
+                    \Large{
+                        Analiza wybranych algorytmów wykrywania składowych ruchu oka\\[1.5\baselineskip]
+                    }
+                \end{center}
+                \begin{flushright}
+                    Autor pracy: inż. Paweł Kucia\\
+                    Promotor: dr inż. Katarzyna Harężlak\\
+                \end{flushright}
+                \begin{center}
+                    \mbox{}
+                    \vfill
+                    Gliwice, wrzesień 2019
+                \end{center}
+            }
+        \end{titlepage}
+    \restoregeometry
+    \tableofcontents
+    \let\cleardoublepage\clearpage
+    \chapter{Wstęp}
+        \subfile{ch1}
+    \chapter{Analiza dziedziny przedmiotowej}
+        \subfile{ch2}
+    \chapter{Opis projektu}
+        \section{Wykorzystane narzędzia}
+    \chapter{Specyfikacja zewnętrzna}
+        \blindtext
+    \chapter{Specyfikacja wewnętrzna}
+        \blindtext
+    \chapter{Badania}
+        \blindtext
+        \section{Przeprowadzone badania}
+        \section{Wyniki badań}
+    \chapter{Podsumowanie i wnioski}
+        \blindtext
+    \addcontentsline{toc}{chapter}{Bibliografia}
+    \begin{thebibliography}{9}
+        \bibitem{lamport94}
+            Leslie Lamport,
+            \emph{\LaTeX: A Document Preparation System}.
+            Addison Wesley, Massachusetts,
+            2nd Edition,
+            1994.
+    \end{thebibliography}
+\end{document}
