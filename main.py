@@ -4,8 +4,8 @@ from FileHandler import createObjectsFromAllFiles, createObjectsFromFile, create
 from StatisticsClass import StatisticsClass
 from IDT import calculateIdtAlgorithm
 from IVT import calculateIvtAlgorithm
-from ML import calculateMlAlgorithm
 from scipy.optimize import least_squares, minimize
+from database import *
 import numpy as np
 import matplotlib.pyplot as plt
 import time
@@ -64,7 +64,7 @@ def main(argv):
         coordX = []
         coordY = []
         parsedFile, statistics.ImportAndConvertFileStatistic = createObjectsFromFile(sys.argv[2])
-        
+        initialize_db(parsedFile)
         print('Converting file time: %s' % statistics.ImportAndConvertFileStatistic)
         if sys.argv[3] == 'I-DT':
             print('Starting measurement using I-DT algorithm')
@@ -103,11 +103,9 @@ def main(argv):
             print('Ending measurement using I-VT algorithm')
             plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
             plt.show()
-        elif sys.argv[3] == 'ML':
-            calculateMlAlgorithm(parsedFile)
         else:
             print('INCORRECT ALGORITHM')
-        #print('Number of fixations: %s, Algorithm runtime: %s' % (statistics.NumberOfFixationsCount, statistics.AlgorithmRunTimeStatistic))
+        print('Number of fixations: %s, Algorithm runtime: %s' % (statistics.NumberOfFixationsCount, statistics.AlgorithmRunTimeStatistic))
         createExitFile(sys.argv[2], statistics)
     elif sys.argv[1] == '-a':
         print('Available algorithms: "I-DT", "I-VT", "ML"')
