@@ -46,7 +46,9 @@ def createExitFile(fileName, statisticClass):
     fieldNames = ['ImportAndConvertFileStatistic',
         'CalibrationSummaryTime',
         'AlgorithmRunTimeStatistic',
-        'NumberOfFixationsCount']
+        'NumberOfFixationsCount',
+        'ImportDataToDatabase',
+        'ImportAndConvertDatabaseStatistic']
     with open('./result/' + fileName + '.csv', 'w', newline='') as csvFile:
         writer = csv.DictWriter(csvFile, fieldnames=fieldNames)
         writer.writeheader()
@@ -54,5 +56,7 @@ def createExitFile(fileName, statisticClass):
             'ImportAndConvertFileStatistic': str(statisticClass.ImportAndConvertFileStatistic),
             'CalibrationSummaryTime': str(statisticClass.CalibrationSummaryTime),
             'AlgorithmRunTimeStatistic': str(statisticClass.AlgorithmRunTimeStatistic),
-            'NumberOfFixationsCount': str(statisticClass.NumberOfFixationsCount)
+            'NumberOfFixationsCount': str(statisticClass.NumberOfFixationsCount),
+            'ImportDataToDatabase': str(statisticClass.ImportDataToDatabase),
+            'ImportAndConvertDatabaseStatistic': str(statisticClass.ImportAndConvertDatabaseStatistic)
         })

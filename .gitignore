@@ -296,3 +296,4 @@ __pycache__/
 # RESULT files
 result/
 *.csv
+result/*.csv

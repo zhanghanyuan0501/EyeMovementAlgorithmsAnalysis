@@ -5,7 +5,8 @@ from StatisticsClass import StatisticsClass
 from IDT import calculateIdtAlgorithm
 from IVT import calculateIvtAlgorithm
 from scipy.optimize import least_squares, minimize
-from database import *
+from database import initialize_db, getFromDatabase
+from ML import calculateMlAlgorithm
 import numpy as np
 import matplotlib.pyplot as plt
 import time
@@ -64,14 +65,23 @@ def main(argv):
         coordX = []
         coordY = []
         parsedFile, statistics.ImportAndConvertFileStatistic = createObjectsFromFile(sys.argv[2])
-        initialize_db(parsedFile)
+
+        if (sys.argv[4] == '-d'):
+            statistics.ImportDataToDatabase = initialize_db(parsedFile)
+            
         print('Converting file time: %s' % statistics.ImportAndConvertFileStatistic)
+        parsedMeasurements = []
+
+        if sys.argv[4] == '-f':
+            parsedMeasurements = parsedFile
+        elif sys.argv[4] == '-d':
+            parsedMeasurements, statistics.ImportAndConvertDatabaseStatistic = getFromDatabase()
+        else:
+            parsedMeasurements = parsedFile
+
         if sys.argv[3] == 'I-DT':
             print('Starting measurement using I-DT algorithm')
-            
-            for measurement in parsedFile:
-                retX = []
-                retY = []
+            for measurement in parsedMeasurements:
                 print('Starting calibration')
                 m1, convertingTime = convertPointsToCalibration(measurement)
                 statistics.CalibrationSummaryTime += convertingTime
@@ -88,9 +98,7 @@ def main(argv):
             plt.show()
         elif sys.argv[3] == 'I-VT':
             print('Starting measurement using I-VT algorithm')
-            for measurement in parsedFile:
-                retX = []
-                retY = []
+            for measurement in parsedMeasurements:
                 print('Starting calibration')
                 m1, convertingTime = convertPointsToCalibration(measurement)
                 statistics.CalibrationSummaryTime += convertingTime
@@ -103,9 +111,24 @@ def main(argv):
             print('Ending measurement using I-VT algorithm')
             plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
             plt.show()
+        elif sys.argv[3] == 'ML':
+            print('Starting measurement using Machine Learning algorithm')
+            for measurement in parsedMeasurements:
+                print('Starting calibration')
+                m1, convertingTime = convertPointsToCalibration(measurement)
+                statistics.CalibrationSummaryTime += convertingTime
+                print('Ended calibration')
+                for i, item in enumerate(m1):
+                    if item.Type == 'SS':
+                        plt.plot(m1[i].CoordX, m1[i].CoordY, 'ko', markersize=10, label='Eye-tracker points')
+                calculateMlAlgorithm(m1)
+                #plt.plot(coordX, coordY, 'wo', markersize=5, markeredgecolor='r', label='Calculated fixations')
+            print('Ending measurement using Machine Learning algorithm')
+            #plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
+            #plt.show()
         else:
             print('INCORRECT ALGORITHM')
-        print('Number of fixations: %s, Algorithm runtime: %s' % (statistics.NumberOfFixationsCount, statistics.AlgorithmRunTimeStatistic))
+        print('Number of fixations: %s, Algorithm runtime: %s s' % (statistics.NumberOfFixationsCount, statistics.AlgorithmRunTimeStatistic))
         createExitFile(sys.argv[2], statistics)
     elif sys.argv[1] == '-a':
         print('Available algorithms: "I-DT", "I-VT", "ML"')
