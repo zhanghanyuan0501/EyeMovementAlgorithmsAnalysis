@@ -1,5 +1,6 @@
 import csv, os, datetime, time, StatisticsClass
 from Data import Data
+import uuid
 
 # Create array of Data from Data files
 def createObjectsFromAllFiles():
@@ -49,7 +50,7 @@ def createExitFile(fileName, statisticClass):
         'NumberOfFixationsCount',
         'ImportDataToDatabase',
         'ImportAndConvertDatabaseStatistic']
-    with open('./result/' + fileName + '.csv', 'w', newline='') as csvFile:
+    with open('./result/' + fileName + str(uuid.uuid4().hex) + '.csv', 'w', newline='') as csvFile:
         writer = csv.DictWriter(csvFile, fieldnames=fieldNames)
         writer.writeheader()
         writer.writerow({
