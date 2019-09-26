@@ -1,5 +1,13 @@
-\documentclass[12pt,a4paper,twoside,openright]{report}
+\documentclass[12pt,a4paper,twoside,openright,titlepage]{report}
 \usepackage{geometry}
+    \geometry{
+        a4paper,
+        top=25mm,
+        bottom=25mm,
+        left=30mm,
+        right=25mm
+    }
+\usepackage{float}
 \usepackage{blindtext}
 \usepackage[T1]{fontenc}
 \usepackage{polski}
@@ -23,7 +31,7 @@
                         Kierunek Informatyka\\[1.5\baselineskip]
                     }
                     \LARGE{
-                        Praca dyplomowa magisterska\\[1.5\baselineskip]
+                        \textbf{Praca dyplomowa magisterska\\[1.5\baselineskip]}
                     }
                     \Large{
                         Analiza wybranych algorytmów wykrywania składowych ruchu oka\\[1.5\baselineskip]
@@ -36,36 +44,57 @@
                 \begin{center}
                     \mbox{}
                     \vfill
-                    Gliwice, wrzesień 2019
+                    Gliwice, październik 2019
                 \end{center}
             }
         \end{titlepage}
     \restoregeometry
-    \tableofcontents
-    \let\cleardoublepage\clearpage
-    \chapter{Wstęp}
-        \subfile{ch1}
-    \chapter{Analiza dziedziny przedmiotowej}
-        \subfile{ch2}
-    \chapter{Opis projektu}
-        \section{Wykorzystane narzędzia}
-    \chapter{Specyfikacja zewnętrzna}
-        \blindtext
-    \chapter{Specyfikacja wewnętrzna}
-        \blindtext
-    \chapter{Badania}
-        \blindtext
-        \section{Przeprowadzone badania}
-        \section{Wyniki badań}
-    \chapter{Podsumowanie i wnioski}
-        \blindtext
-    \addcontentsline{toc}{chapter}{Bibliografia}
-    \begin{thebibliography}{9}
-        \bibitem{lamport94}
-            Leslie Lamport,
-            \emph{\LaTeX: A Document Preparation System}.
-            Addison Wesley, Massachusetts,
-            2nd Edition,
-            1994.
-    \end{thebibliography}
+    \begin{large}
+        \tableofcontents
+        \let\cleardoublepage\clearpage
+        \chapter{Wstęp}
+            \subfile{ch1}
+        \chapter{Analiza dziedziny przedmiotowej}
+            \subfile{ch2}
+        \chapter{Opis projektu}
+            \section{Wykorzystane narzędzia}
+        \chapter{Specyfikacja zewnętrzna}
+            \blindtext
+        \chapter{Specyfikacja wewnętrzna}
+            \blindtext
+        \chapter{Badania}
+            \blindtext
+            \section{Przeprowadzone badania}
+            \section{Wyniki badań}
+        \chapter{Podsumowanie i wnioski}
+            \blindtext
+        \addcontentsline{toc}{chapter}{Bibliografia i odwołania}
+        \begin{thebibliography}{9}
+            \bibitem{lamport94}
+                Leslie Lamport (1994),
+                \emph{\LaTeX: A Document Preparation System}.
+                Addison Wesley, Massachusetts,
+                2nd Edition,
+            \bibitem{GazeEyeTrackingSolutions}
+                Maria Laura Mele, Stefano Frederici (2012)
+                \emph{Gaze and eye-tracking solutions for psychological research},
+                Cogn Process (2012) 13 (Suppl 1):S261–S265,
+            \bibitem{Main}
+                Dario D. Salvucci, Joseph H. Goldberg (2000)
+                \emph{Identifying Fixations and Saccades in Eye-Tracking Protocols},
+                "Eye Tracking Research and Applications Symposium 2000"
+            \bibitem{Python}
+                Mark Lutz (2009)
+                \emph{Python. Wprowadzenie. Wydanie IV},
+                HELION S.A.
+            \bibitem{CarSteering}
+                M. F. Land, D. N. Lee (1994),
+                \emph{Where we look when we steer},
+                Nature 369(6483):742-744
+            \bibitem{Advertising}
+                Jian Mou (2017),
+                Effects of social popularity and time scarcity on online consumer behaviour regarding smart healthcare products: An eye-tracking approach. \emph{Computers in Human Behavior, 78, 74–89.},
+                https://doi.org/10.1016/j.chb.2017.08.049
+        \end{thebibliography}
+    \end{large}
 \end{document}
