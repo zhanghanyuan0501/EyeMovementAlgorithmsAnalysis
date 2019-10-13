@@ -1,25 +1,88 @@
-W poniższym rozdziale zawarty został opis teoretyczny dziedziny eye-trackingu, jak również analiza algorytmów wykrywania fiksacji wykorzystanych do przeprowadzenia badań.
-\section{Eye-tracking}
-W następującej sekcji zaprezentowana zostanie technologia eye-trackingu, oraz jej zastosowania.\\[\baselineskip]
-Jak wspomniano we wstępie do pracy, rozwój okulografii w przeciągu ostatnich kilkudziesięciu lat pozwala nam przeanalizować sposób w jakim operują ludzkie procesy obserwacji oraz sposobu rozpoznawania obrazu. Analiza tych procesów umożliwia badającym na wykorzystywanie wyników badań w zastosowaniach komercyjnych, np. badanie sposobu patrzenia na jezdnię w trakcie jazdy pojazdem \cite{CarSteering}, analiza psychologiczna \cite{GazeEyeTrackingSolutions} czy też w reklamach \cite{Advertising}.\\[\baselineskip]
-W celu przetworzenia danych z urządzenia do dalszej analizy stosuje się typowo dwie wartości: fiksacje, czyli miejsca, na których badana próbka wzroku się skupiła, oraz sakady, szybkie ruchy pomiędzy fiksacjami. Podział ten został odkryty w XIX wieku we Francji za pomocą obserwacji fizycznych, ponieważ zauważono, że ludzkie oko podczas czytania nie porusza się płynnie, a wykonuje "skoki" pomiędzy obszarami tekstu. Przykład takiego ruchu oraz punktów skupienia można zaobserwować na rysunku \ref{fig:fiksacje}.
+W poniższym rozdziale zawarty został krótki opis oka, analiza teoretyczna dziedziny eye-trackingu, jak również pokaznie algorytmów wykrywania fiksacji wykorzystanych do przeprowadzenia badań. Rozdział ten oparto głównie o prace \cite{Main}, \cite{EvaluationMethodology}, \cite{MachineLearning}.
+\section{Opis ludzkiej gałki ocznej}
+Zadadniem poniższej sekcji jest zaprezentowanie podstawowych terminologii związanych z ludzkim okiem oraz jego budową. Krótka analiza oka została przygotowana zgodnie z pracą numer \cite{EvaluationMethodology}.\\
+Jednym z najważniejszych organów w ludzkim ciele jest oko. Służy ono do dostarczania większości informacji dotyczących otoczenia w jakim się znajdujemy. Około 10\% komórek mózgowych jest zaangażowanych przy interpretacji oraz analizie sygnałów dostarczanych z tego narządu.\\
+Działanie oka polega na projekcji światła wpadającego do rogówki, najbardziej zewnętrznej część oka, poprzez źrenicę, która może być regulowana tęczówką w zależności od ilości promieni świetlnych, przechodzi ono następnie przez soczewkę, która załamuje te promienie, ciało szkliste, natrafiając na koniec na wewnętrzną warstwę oka, czyli siatkówkę, która składa się z dwóch typów fotoreceptorów: czopki - około 6 milionów, pręciki - około 100 milionów. Na siatkówce obraz, który powstał jest obrócony. Nerw wzrokowy transmituje dalej odwrócony obraz jako sygnał nerwowy do ośrodków wzrokowych kory mózgowej. Ważnymi elementami przy poprawnie funkcjonującym oku są również ciało rzęskowe, posiadające promieniście ułożone fałdy, wydzielające wodnistą ciecz, odpowiadającą za sztywność gałki ocznej, mięsień rzęskowy, który zmienia krzywiznę soczewki, zmieniając jej ogniskową, przez co występuje zjawisko akomodacji oka. 
 \begin{figure}[H]
-    \includegraphics[width=\linewidth]{resources/fixation_example.jpg}
-    \caption{Przykład fiskacji i sakad na tekście}
+    \centering
+    \captionsetup{justification=centering,margin=2cm}
+    \includegraphics[width=0.8\linewidth]{resources/oko_galka.jpg}
+    \caption[Przekrój oka.]{Uproszczony schemat gałki ocznej.\\\hspace{\textwidth} 
+    \small(źródło: \url{https://eszkola.pl/fizyka/schemat-budowy-oka-i-wady-wzroku-4225.html} [dostęp 01.10.2019])}
+    \label{fig:budowaoka}
+\end{figure}
+Akomodacja oka to zjawisko pozwalające oku na dostosowanie się do oglądania przedmiotów znajdujących się na różnych odległościach. Jak wspominiano wyżej fotoreceptory znajdujące się w oku pozwalają nam rozpoznać obraz ze światła wpadającego do oka, czopki odpowiadają za widzenie fotopowe, pręciki za widzenie skotopowe. Widzenie fotopowe pozwala na rozpoznawanie kolorów (czerwony, zielony, niebieski) przy dobrym oświetleniu, które nie może być zbyt intensywne, ponieważ czopki mogą ulec przesyceniu. Widzenie skotopowe to możliwość obserwacji czarno-białego obrazu przy słabszym oświetleniu, jednak obraz nie jest tak dokładny jak przy widzeniu fotopowym. Przykład zakresu absorbcji fal świetlnych można zaobserwować na rysunku \ref{fig:czopki}.
+\begin{figure}[H]
+    \centering
+    \captionsetup{justification=centering,margin=2cm}
+    \includegraphics[width=0.9\linewidth]{resources/czopki.png}
+    \caption[Względna absorbcja światła przez czopki oraz pręciki.]{Względna absorbcja światła przez czopki (K, Ś, D) oraz pręciki (Pr).\\\hspace{\textwidth}
+    \small(źródło: \url{https://upload.wikimedia.org/wikipedia/commons/9/9a/Cone-response-pl.svg} [dostęp 10.09.2019])}
+    \label{fig:czopki}
+\end{figure}
+Najważniejszym dla nas elementem siatkówki jest plamka żółta, umożliwiającą największą rozdzielczość widzenia, ze względu na najwyższe stężenie fotoreceptorów w ludzkim oku. Umożliwia ona ludziom np. czytanie tekstu. Im dalej od plamki żółtej, tym zwiększa się ilość pręcików, a przez to zmniejsza się dokładność obrazu.
+\section{Metody wykrywania ruchu gałek ocznych}
+\label{sec:movement}
+Jednym z głównych kryteriów dla mechanizmów wykrywania ruchu gałek jest jego inwazyjność. Może ona powodować dyskomfort u badanego podmiotu, co w rezultacie może dać przekłamane wyniki, przez to że użytkownik może zachowywać się mniej naturalnie. Wiele badań również wykazuje to, iż preferowane jest, żeby badano jak największą liczbę osób z małą znajomością tematyki śledzenia ruchu oka. Ta sekcja bazuje na danych znalezionych w pracy \cite{metodyeyetrack}. Poniżej przedstawiono trzy główne metody mierzenia ruchu oka.\\
+\subsection{Metody bazujące na soczewkach kontaktowych}
+\label{ssec:lenses}
+Ta kategoria sposobów mierzenia ruchu oka zakłada od badanego założenia na gałki oczne soczewek kontaktowych, które posiadają lustra, bądź cewkę z kablem, która obkrążała soczewkę kontaktową. Cewka ta była połączona do systemu cewek magnetycznych, co powodowało mierzenie ruchu gałek ocznych za pomocą zmian sił pola magnetycznego. Pomimo większego rozwoju technologicznego, ze względu na inwazyjność całego rozwiązania, jak również konieczność unieruchomienia głowy w trakcie przeprowadzenia pomiarów. Podgląd takich rozwiązań zaprezentowano na rysunku \ref{fig:soczewki}.
+\begin{figure}[H]
+    \centering
+    \captionsetup{justification=centering,margin=2cm}
+    \includegraphics[width=0.9\linewidth]{resources/soczewki.png}
+    \caption{Przykład rozwiązań bazujący na soczewkach kontaktowych.}
+    \label{fig:soczewki}
+\end{figure}
+\subsection{Elektrookulografia (EOG)}
+\label{ssec:eog}
+Poniższy typ rozwiązań bazuje na różnicy potencjałów pomiędzy elektrodami przymocowanymi blisko oczu. Ze względu na dużą ilość połączeń nerwowych w gałce ocznej, można odczuć zmianę napięcia w samej gałce, jak również wyczuwana jest zmiana pól elektrycznych podczas wykonywania ruchu. Amplituda tych zmian zależy od pozycji oka. Powody niewykorzystywania tych rozwiązań można przypisać do tych zaprezentowanych w sekcji \ref{ssec:lenses}.
+\subsection{Kamery}
+\label{ssec:cameras}
+Ostatnia, trzecia metoda pobierania informacji wykorzystuje kamery, czy to umieszczone zdalnie, czy też montowane w okularach, jak zaprezentowano poglądowo na rysunkach \ref{fig:camerassub1} i \ref{fig:camerassub2}. Jak można zaobserwować, metody te ze względu na ich nieinwazyjność znalazły najszersze zastosowanie w dziedzinie pomiaru ruchu gałek ocznych. Ten sposób wyciągania danych wykorzystuje dwa typy obrazów: obraz z naturalnego światła oraz z podczerwieni. Obraz z naturalnego światła jest podejściem pasywnym, które pobiera dane z odbitego światła z oka, wynikiem tego obrazu jest zarys ruchu soczewki. Wadą tego rozwiązania jest zależność od źródła światła, gdyż pomiary przeprowadzane w złym świetle mogą powodować przekłamania, jak również w skrajnych przypadkach brak możliwości odczytu danych. Wykorzystanie odczytu światła podczerwieni eliminuje ten problem. Kolejną zaletą użycia podczerwieni jest zmiana wyniku, z zarysu ruchu soczewki na zarys ruchu źrenicy, poprzez wykorzystanie zjawiska odbicia światła z ekranu. W wypadku spojrzenia na element, odbicie jest białe, w przeciwnym stanie - czarne.
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{.5\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{resources/camera.png}
+      \caption{Stanowisko z kamerą}
+      \label{fig:camerassub1}
+    \end{subfigure}%
+    \begin{subfigure}{.5\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{resources/glasses.jpg}
+      \caption{Kamera w okularach}
+      \label{fig:camerassub2}
+    \end{subfigure}
+    \caption{Przykłady zastosowania kamer}
+    \label{fig:cameras}
+\end{figure}
+\section{Eye-tracking}
+\label{sec:eyetracking}
+W następującej sekcji zaprezentowana zostanie technologia eye-trackingu, oraz jej zastosowania.\\[\baselineskip]
+Jak wspomniano we wstępie do pracy, rozwój okulografii w przeciągu ostatnich kilkudziesięciu lat pozwala nam przeanalizować sposób w jakim operują ludzkie procesy obserwacji oraz sposobu rozpoznawania obrazu. Analiza tych procesów umożliwia badającym na wykorzystywanie wyników badań w zastosowaniach komercyjnych, np. badanie sposobu patrzenia na jezdnię w trakcie jazdy pojazdem \cite{CarSteering}, analiza psychologiczna \cite{GazeEyeTrackingSolutions} czy też w wykorzystaniu komercyjnym \cite{Advertising}.\\[\baselineskip]
+W celu przetworzenia danych z urządzenia pomiarowego, których przykłady zaprezentowano w podrozdziale \ref{sec:movement} do dalszej analizy stosuje się typowo dwie wartości: fiksacje, czyli miejsca, na których badana próbka wzroku się skupiła, oraz sakady, szybkie ruchy pomiędzy fiksacjami. Podział ten został odkryty w XIX wieku we Francji za pomocą obserwacji fizycznych, ponieważ zauważono, że ludzkie oko podczas czytania nie porusza się płynnie, a wykonuje "skoki" pomiędzy obszarami tekstu. Przykład takiego ruchu oraz punktów skupienia można zaobserwować na rysunku \ref{fig:fiksacje}.
+\begin{figure}[H]
+    \centering
+    \captionsetup{justification=centering,margin=2cm}
+    \includegraphics[width=0.8\linewidth]{resources/fixation_example.jpg}
+    \caption[Przykład fiskacji i sakad na tekście.]{Przykład fiskacji i sakad na tekście.\\\hspace{\textwidth}
+    \small(źródło: \url{https://upload.wikimedia.org/wikipedia/commons/e/ef/Reading_Fixations_Saccades.jpg} [dostęp 10.09.2019])}
     \label{fig:fiksacje}
 \end{figure}
 Analiza fiksacji między innymi poprzez translacje danych ruchu oka z urządzenia wejściowego na fiksacje, co pozwala również określić sakady na pomiarze. Daje to możliwość pozbycia się zbędnych danych z próbki, takich jak sakad, oraz pomniejszych ruchów oka, które mogły nastąpić przy niedokładnym pomiarze, czy mikroskopijnym ruchu oka. Zezwala to nam na zmniejszenie rozmiaru danych, poprzez zbijająnia rzeczywistych fiksacji do jednego, większego punktu danych. Najczęściej otrzymane wartości są wykorzystywane do metryk pomiaru typu czas fiksacji, prędkości i amplitudy sakad, jak również miary pomiędzy fiksacjami a sakadami. Jednak cytując \cite{Main} \emph{"w większości badań naukowych, dane z sakad nie stanowią aż takiej przydatności"}.\\[\baselineskip]
 Wyniki algorytmów wykrywania fiksacji są wynikami typowo statystycznymi, tzn. możemy określić ile wystąpiło fiksacji, a przez to ile elementów jest sakadami, ale dalsza analiza danych należy do badającego. Stwarza to problem interpretacji danych, zgodnie z \cite{Main} \emph{"jednym ze sposobów walidacji tych algorytmów jest porównanie wynikowych fiksacji z wrażeniami wizualnymi obserwującego"}.
-\subsection{Typy algorytmów wykrywania fiksacji}
-Wyróżniamy trzy główne rodzaje algorytmów wykrywania fiksacji: prędkościowe, dyspersyjne oraz powierzchniowe. Algorytmem prędkościowym możemy nazwać algorytm, który analizuje punkty pod kątem różnicy prędkości pomiędzy nimi, biorąc pod uwagę, iż fiksacje posiadają niską prędkość pomiędzy swoimi punktami, a sakady wysoką. Algorytmy dyspersyjne bazują na odległościach rozproszenia między punktami, gdzie fiksacje posiadają je małe, a sakady duże. Algorytmy powierzchniowe to algorytmy, których zadaniem jest identyfikacja punktów w wybranych powierzchniach zainteresowania (z ang. \textit{Area of Interest - AOI}). \emph{do dopisania}
-\section{Wybrane algorytmy}
+\section{Algorytmy wykrywania fiksacji}
+\label{ssec:num1}
+Wyróżniamy trzy główne rodzaje algorytmów wykrywania fiksacji: prędkościowe, dyspersyjne oraz powierzchniowe. Algorytmem prędkościowym możemy nazwać algorytm, który analizuje punkty pod kątem różnicy prędkości pomiędzy nimi, biorąc pod uwagę, iż fiksacje posiadają niską prędkość pomiędzy swoimi punktami, a sakady wysoką. Algorytmy dyspersyjne bazują na odległościach rozproszenia między punktami, gdzie fiksacje posiadają je małe, a sakady duże. Algorytmy powierzchniowe to algorytmy, których zadaniem jest identyfikacja punktów w wybranych powierzchniach zainteresowania (z ang. \textit{Area of Interest - AOI}).
+\subsection{Wybrane algorytmy}
 Celem poniższego podrozdziału jest opis teoretyczny algorytmów wykrywania fiksacji zastosowanych w pracy. Opis teoretyczny wybranych algorytmów bazuje na pracy \cite{Main}.
-\subsection{Algorytm I-VT}
-Algorytm I-VT (z ang. \emph{Identification-Velocity Threshold}) jest przykładem algorytmu z grupy prędkościowych, jak wspomniano w poprzednim podrozdziale. Ze względu na małą złożoność algorytmu, jest on najprostszą metodą do zaimplementowania.\\
+\subsubsection{Algorytm I-VT}
+Algorytm I-VT (z ang. \emph{Identification-Velocity Threshold}) jest przykładem algorytmu z grupy prędkościowych, jak wspomniano w podrozdziale \ref{ssec:num1}. Ze względu na małą złożoność algorytmu, jest on najprostszą metodą do zaimplementowania.\\
 
 Pseudokod algorytmu I-VT zaprezentowano w tabeli \ref{tab:ivt}.
 \begin{table}[H]
-    \begin{tttabular}{|p{15cm}|}
+    \begin{tttabular}{|p{0.9\linewidth}|}
         \hline
         Oblicz prędkości pomiędzy punktami dla każdego punktu w protokole.\\
         \smallskip
@@ -35,6 +98,6 @@ Pseudokod algorytmu I-VT zaprezentowano w tabeli \ref{tab:ivt}.
     \caption{Pseudokod algorytmu I-VT}
     \label{tab:ivt}
 \end{table}
-\subsection{Algorytm I-DT}
-\subsection{Uczenie maszynowe}
+\subsubsection{Algorytm I-DT}
+\subsubsection{Uczenie maszynowe}
 \section{Inne metody analizy okulograficznej}
