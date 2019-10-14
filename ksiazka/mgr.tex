@@ -21,16 +21,16 @@
 \usepackage{nopageno}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage[linesnumbered,figure,noalgohanging]{algorithm2e}
+\usepackage{setspace}
 
-\newenvironment{tttabular}[1]%
-{\ttfamily \small \begin{tabular}{#1}}%
-{\end{tabular}}
 \hypersetup{linktoc=section}
 \linespread{1.3}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}  
 \title{Analiza wybranych algorytmów wykrywania składowych ruchu oka}
 \author{inż. Paweł Kucia}
+
 \begin{document}
     \newgeometry{centering}
         \subfile{titlepage}
@@ -54,12 +54,8 @@
         \subfile{ch1}
     \chapter{Analiza dziedziny przedmiotowej}
         \subfile{ch2}
-    \chapter{Opis projektu}
+    \chapter{Opis projektu badawczego}
         \subfile{ch3}
-    \chapter{Specyfikacja aplikacji badającej}
-        Ten rozdział ma za zadanie zaprezentowanie sposobu działania aplikacji służącej do przeprowadzania badań.
-        \section{Specyfikacja zewnętrzna}
-        \section{Specyfikacja wewnętrzna}
     \chapter{Badania}
         \blindtext
         \section{Przeprowadzone badania}

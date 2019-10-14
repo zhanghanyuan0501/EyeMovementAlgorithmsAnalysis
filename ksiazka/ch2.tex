@@ -1,7 +1,7 @@
 W poniższym rozdziale zawarty został krótki opis oka, analiza teoretyczna dziedziny eye-trackingu, jak również pokaznie algorytmów wykrywania fiksacji wykorzystanych do przeprowadzenia badań. Rozdział ten oparto głównie o prace \cite{Main}, \cite{EvaluationMethodology}, \cite{MachineLearning}.
 \section{Opis ludzkiej gałki ocznej}
-Zadadniem poniższej sekcji jest zaprezentowanie podstawowych terminologii związanych z ludzkim okiem oraz jego budową. Krótka analiza oka została przygotowana zgodnie z pracą numer \cite{EvaluationMethodology}.\\
-Jednym z najważniejszych organów w ludzkim ciele jest oko. Służy ono do dostarczania większości informacji dotyczących otoczenia w jakim się znajdujemy. Około 10\% komórek mózgowych jest zaangażowanych przy interpretacji oraz analizie sygnałów dostarczanych z tego narządu.\\
+Zadaniem poniższej sekcji jest zaprezentowanie podstawowych terminologii związanych z ludzkim okiem oraz jego budową. Krótka analiza oka została przygotowana zgodnie z pracą numer \cite{EvaluationMethodology}.\par
+Jednym z najważniejszych organów w ludzkim ciele jest oko. Służy ono do dostarczania większości informacji dotyczących otoczenia w jakim się znajdujemy. Około 10\% komórek mózgowych jest zaangażowanych przy interpretacji oraz analizie sygnałów dostarczanych z tego narządu.\par
 Działanie oka polega na projekcji światła wpadającego do rogówki, najbardziej zewnętrznej część oka, poprzez źrenicę, która może być regulowana tęczówką w zależności od ilości promieni świetlnych, przechodzi ono następnie przez soczewkę, która załamuje te promienie, ciało szkliste, natrafiając na koniec na wewnętrzną warstwę oka, czyli siatkówkę, która składa się z dwóch typów fotoreceptorów: czopki - około 6 milionów, pręciki - około 100 milionów. Na siatkówce obraz, który powstał jest obrócony. Nerw wzrokowy transmituje dalej odwrócony obraz jako sygnał nerwowy do ośrodków wzrokowych kory mózgowej. Ważnymi elementami przy poprawnie funkcjonującym oku są również ciało rzęskowe, posiadające promieniście ułożone fałdy, wydzielające wodnistą ciecz, odpowiadającą za sztywność gałki ocznej, mięsień rzęskowy, który zmienia krzywiznę soczewki, zmieniając jej ogniskową, przez co występuje zjawisko akomodacji oka. 
 \begin{figure}[H]
     \centering
@@ -23,7 +23,7 @@ Akomodacja oka to zjawisko pozwalające oku na dostosowanie się do oglądania p
 Najważniejszym dla nas elementem siatkówki jest plamka żółta, umożliwiającą największą rozdzielczość widzenia, ze względu na najwyższe stężenie fotoreceptorów w ludzkim oku. Umożliwia ona ludziom np. czytanie tekstu. Im dalej od plamki żółtej, tym zwiększa się ilość pręcików, a przez to zmniejsza się dokładność obrazu.
 \section{Metody wykrywania ruchu gałek ocznych}
 \label{sec:movement}
-Jednym z głównych kryteriów dla mechanizmów wykrywania ruchu gałek jest jego inwazyjność. Może ona powodować dyskomfort u badanego podmiotu, co w rezultacie może dać przekłamane wyniki, przez to że użytkownik może zachowywać się mniej naturalnie. Wiele badań również wykazuje to, iż preferowane jest, żeby badano jak największą liczbę osób z małą znajomością tematyki śledzenia ruchu oka. Ta sekcja bazuje na danych znalezionych w pracy \cite{metodyeyetrack}. Poniżej przedstawiono trzy główne metody mierzenia ruchu oka.\\
+Jednym z głównych kryteriów dla mechanizmów wykrywania ruchu gałek jest jego inwazyjność. Może ona powodować dyskomfort u badanego podmiotu, co w rezultacie może dać przekłamane wyniki, przez to że użytkownik może zachowywać się mniej naturalnie. Wiele badań również wykazuje to, iż preferowane jest, żeby badano jak największą liczbę osób z małą znajomością tematyki śledzenia ruchu oka. Ta sekcja bazuje na danych znalezionych w pracy \cite{metodyeyetrack}. Poniżej przedstawiono trzy główne metody mierzenia ruchu oka.\par
 \subsection{Metody bazujące na soczewkach kontaktowych}
 \label{ssec:lenses}
 Ta kategoria sposobów mierzenia ruchu oka zakłada od badanego założenia na gałki oczne soczewek kontaktowych, które posiadają lustra, bądź cewkę z kablem, która obkrążała soczewkę kontaktową. Cewka ta była połączona do systemu cewek magnetycznych, co powodowało mierzenie ruchu gałek ocznych za pomocą zmian sił pola magnetycznego. Pomimo większego rozwoju technologicznego, ze względu na inwazyjność całego rozwiązania, jak również konieczność unieruchomienia głowy w trakcie przeprowadzenia pomiarów. Podgląd takich rozwiązań zaprezentowano na rysunku \ref{fig:soczewki}.
@@ -73,31 +73,68 @@ W celu przetworzenia danych z urządzenia pomiarowego, których przykłady zapre
 Analiza fiksacji między innymi poprzez translacje danych ruchu oka z urządzenia wejściowego na fiksacje, co pozwala również określić sakady na pomiarze. Daje to możliwość pozbycia się zbędnych danych z próbki, takich jak sakad, oraz pomniejszych ruchów oka, które mogły nastąpić przy niedokładnym pomiarze, czy mikroskopijnym ruchu oka. Zezwala to nam na zmniejszenie rozmiaru danych, poprzez zbijająnia rzeczywistych fiksacji do jednego, większego punktu danych. Najczęściej otrzymane wartości są wykorzystywane do metryk pomiaru typu czas fiksacji, prędkości i amplitudy sakad, jak również miary pomiędzy fiksacjami a sakadami. Jednak cytując \cite{Main} \emph{"w większości badań naukowych, dane z sakad nie stanowią aż takiej przydatności"}.\\[\baselineskip]
 Wyniki algorytmów wykrywania fiksacji są wynikami typowo statystycznymi, tzn. możemy określić ile wystąpiło fiksacji, a przez to ile elementów jest sakadami, ale dalsza analiza danych należy do badającego. Stwarza to problem interpretacji danych, zgodnie z \cite{Main} \emph{"jednym ze sposobów walidacji tych algorytmów jest porównanie wynikowych fiksacji z wrażeniami wizualnymi obserwującego"}.
 \section{Algorytmy wykrywania fiksacji}
-\label{ssec:num1}
-Wyróżniamy trzy główne rodzaje algorytmów wykrywania fiksacji: prędkościowe, dyspersyjne oraz powierzchniowe. Algorytmem prędkościowym możemy nazwać algorytm, który analizuje punkty pod kątem różnicy prędkości pomiędzy nimi, biorąc pod uwagę, iż fiksacje posiadają niską prędkość pomiędzy swoimi punktami, a sakady wysoką. Algorytmy dyspersyjne bazują na odległościach rozproszenia między punktami, gdzie fiksacje posiadają je małe, a sakady duże. Algorytmy powierzchniowe to algorytmy, których zadaniem jest identyfikacja punktów w wybranych powierzchniach zainteresowania (z ang. \textit{Area of Interest - AOI}).
-\subsection{Wybrane algorytmy}
-Celem poniższego podrozdziału jest opis teoretyczny algorytmów wykrywania fiksacji zastosowanych w pracy. Opis teoretyczny wybranych algorytmów bazuje na pracy \cite{Main}.
-\subsubsection{Algorytm I-VT}
-Algorytm I-VT (z ang. \emph{Identification-Velocity Threshold}) jest przykładem algorytmu z grupy prędkościowych, jak wspomniano w podrozdziale \ref{ssec:num1}. Ze względu na małą złożoność algorytmu, jest on najprostszą metodą do zaimplementowania.\\
+\label{sec:fixations}
+Wyróżniamy trzy główne typy algorytmów wykrywania fiksacji ze względu na obszar badania:
+\begin{itemize}
+    \item prędkościowe
+    \item dyspersyjne
+    \item powierzchniowe
+\end{itemize} 
+Algorytmem prędkościowym możemy nazwać algorytm, który analizuje punkty pod kątem różnicy prędkości pomiędzy nimi, biorąc pod uwagę, iż fiksacje posiadają niską prędkość pomiędzy swoimi punktami, a sakady wysoką. Algorytmy dyspersyjne bazują na odległościach pomiędzy punktami, zakładając, iż fiksacje posiadają małe odległości międzypunktowe. Algorytmy powierzchniowe to algorytmy, których zadaniem jest identyfikacja punktów w wybranych powierzchniach zainteresowania (AOI)\footnote{ang. area of interest}. Algorytmy tego rodzaju posiadają, w przeciwieństwie do innych algorytmów, możliwość identyfikacji zarówno nisko- jak i wysoko-poziomowej, przez to, iż parametrem algorytmów AOI może być fiksacja.\par
 
-Pseudokod algorytmu I-VT zaprezentowano w tabeli \ref{tab:ivt}.
-\begin{table}[H]
-    \begin{tttabular}{|p{0.9\linewidth}|}
-        \hline
-        Oblicz prędkości pomiędzy punktami dla każdego punktu w protokole.\\
-        \smallskip
-        Określ punkty poniżej progu jako fiksacje, a powyżej jako sakady.\\
-        \smallskip
-        Połącz wszystkie punkty fiksacji w grupy fiksacji, usuń wszystkie sakady.\\
-        \smallskip
-        Zmapuj każdą grupę fiksacji do punktu znajdującego się w środku każdej grupy.\\
-        \smallskip
-        Zwróć fiksacje.\\
-        \hline
-    \end{tttabular}
+Algorytmy mogą także zostać podzielone ze względu na ich charakterystykę czasową, wyróżniamy dwa główne rodzaje:
+\begin{itemize}
+    \item czułe na czas trwania
+    \item adaptujące się lokalnie
+\end{itemize}
+Ten podział został stworzony ze względu na to, iż fiksacje bardzo rzadko trwają mniej niż 100 ms, a regularny czas ich trwania potrafi wynosić od 200 ms do 400 ms. Implementacja adaptacji lokalnych umożliwia na dokładniejszy pomiar fiksacji.
+\subsection{Wybrane algorytmy}
+Celem poniższego podrozdziału jest opis teoretyczny algorytmów wykrywania fiksacji zastosowanych w pracy. Opis teoretyczny wybranych algorytmów bazuje na pracy \cite{Main} oraz \cite{EvaluationMethodology}.
+\subsubsection{Algorytm I-VT}
+\label{ssec:ivt}
+Algorytm I-VT\footnote{z ang. Identification-Velocity Threshold} jest przykładem algorytmu z grupy prędkościowych. Jak wspomniano w podrozdziale \ref{sec:fixations} te algorytmy bazują na różnicach prędkości międzypunktowych. W większości przypadków te różnice wynoszą mniej niż 100 ms dla fiksacji, a więcej niż 300-400 ms dla sakad. Ze względu na proste wymagania algorytmu, nie jest on skomplikowany w implementacji. Pseudokod algorytmu I-VT zaprezentowano na rysunku \ref{fig:ivt}.
+{
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \setstretch{1.35}
+    \SetKwInOut{Input}{Input}
+    \SetKwInOut{Output}{Output}
+    Oblicz prędkości pomiędzy punktami dla każdego punktu w protokole\;
+    Określ punkty poniżej progu jako fiksacje, a powyżej jako sakady\;
+    Połącz wszystkie punkty fiksacji w grupy fiksacji, usuń wszystkie sakady\;
+    Zmapuj każdą grupę fiksacji do punktu znajdującego się w środku każdej grupy\;
+    \Return{Zmapowane punkty}\;
+    \label{fig:ivt}
     \caption{Pseudokod algorytmu I-VT}
-    \label{tab:ivt}
-\end{table}
+\end{algorithm}}
+Jak można zauważyć w pseudokodzie powyżej, pierwszym krokiem algorytmu I-VT jest obliczenie prędkości między każdym punktem w badanym obszarze. Prędkość ta jest mierzona jako odległość między obecnym punktem a następnym (lub poprzednim) punktem. Następnie każdy punkt jest klasyfikowany jako fiksacja lub sakada w zależności od spełnienia warunku progu, którym w tym wypadku jest prędkość. Zgodnie z zasadami tego typu algorytmów, wszystkie elementy ponad granicą zaliczamy jako sakady, a resztę jako fiksacje. Kolejnym krokiem jest pozbycie się danych niepotrzebnych - sakad, i połączenie wszystkich sakad w grupy fiksacji. Ostatnim krokiem algorytmu jest wyznaczenie środka masy każdej grupy fiksacji, co pozwala nam ukazać fiksację w danym miejscu.\par
+Według specyfikacji, ten algorytm wymaga podania jednego parametru wejściowego - progu prędkości.
 \subsubsection{Algorytm I-DT}
+\label{ssec:idt}
+{
+\begin{algorithm}[H]
+    \SetKwInOut{Input}{Input}
+    \SetKwInOut{Output}{Output}
+    \setstretch{1.35}
+
+    \While{istnieją punkty do zbadania}
+    {
+        Zainicjalizuj okno na pierwszych punktach, celem pokrycia progu czasowego.\;
+        \If{dyspersja punktów w oknie $\leq$ próg}{
+            Dodaj dodatkowe punkty do okna aż dyspersja $>$ próg\;
+            Zanotuj fiksacje jako centroid punktów w oknie\;
+            Usuń punkty w oknie z listy punktów\;
+        }
+        \Else{
+            Usuń pierwszy punkt z listy punktów\;
+        }
+    }
+    \Return{fiksacje}\;
+    \caption{Pseudokod algorytmu I-DT}
+    \label{fig:idt}
+\end{algorithm}}
+Następnym badanym algorytmem jest algorytm dyspersyjny I-DT\footnote{z ang. Identification Dispersion-Threshold}. W przeciwieństwie do algorytmów prędkościowych, algorytm I-VT wykorzystuje fakt, iż fiksacje ze względu na swoją małą prędkość mają tendencje do grupowania się. Algorytm I-DT identyfikuje te fiksacje za pomocą okien (grup punktów) o określonej dyspersji (\emph{maksymalna separacja}). Jak napisano w rozdziale \ref{ssec:ivt}, fiksacja trwa zazwyczaj 100 ms, co pozwala nam określić dolny próg wejściowy dla algorytmu na poziomie 100-200 ms. Pseudokod algorytmu można znaleźć w na rysunku \ref{fig:idt}.\par
+Algorytm I-DT wykorzystuje ruchome okno, do którego należą punkty będące potencjalnymi fiksacjami. Zgodnie z powyższym pseudokodem, inicjalizacja okna następuje na podanym przez użytkownika progu czasowym. Następnie sprawdzana jest dyspersja pomiędzy punktami, którą można obliczyć za pomocą wzoru: $D = [max(x) - min(x)] + [max(y) - min(y)]$. Jest to wzór dla płaszczyzny dwuwymiarowej, jednak można zastosować inne wzory w wypadku zastosowania innych płaszczyzn. W wypadku gdy obliczona dyspersja przekroczyła zadany próg, nie znaleziono fiksacji, okno zostaje przesunięte na kolejny punkt. W przeciwnym wypadku okno należy zanotować jako fiksację. W tym oknie należy dodawać elementy aż obliczona dyspersja przekroczy próg dyspersji. Algorytm się kończy w momencie gdy wszystkie punkty zostaną przeanalizowane.\par
+Algorytm I-DT wymaga podania dwóch parametrów wejściowych: progu dyspersji oraz progu czasowego. Obydwa progi można podać na podstawie obserwacji analizowanych danych. Próg czasowy zazwyczaj jest ustawiany na wartości 100-200 ms.
 \subsubsection{Uczenie maszynowe}
 \section{Inne metody analizy okulograficznej}
