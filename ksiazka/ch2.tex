@@ -137,4 +137,30 @@ Następnym badanym algorytmem jest algorytm dyspersyjny I-DT\footnote{z ang. Ide
 Algorytm I-DT wykorzystuje ruchome okno, do którego należą punkty będące potencjalnymi fiksacjami. Zgodnie z powyższym pseudokodem, inicjalizacja okna następuje na podanym przez użytkownika progu czasowym. Następnie sprawdzana jest dyspersja pomiędzy punktami, którą można obliczyć za pomocą wzoru: $D = [max(x) - min(x)] + [max(y) - min(y)]$. Jest to wzór dla płaszczyzny dwuwymiarowej, jednak można zastosować inne wzory w wypadku zastosowania innych płaszczyzn. W wypadku gdy obliczona dyspersja przekroczyła zadany próg, nie znaleziono fiksacji, okno zostaje przesunięte na kolejny punkt. W przeciwnym wypadku okno należy zanotować jako fiksację. W tym oknie należy dodawać elementy aż obliczona dyspersja przekroczy próg dyspersji. Algorytm się kończy w momencie gdy wszystkie punkty zostaną przeanalizowane.\par
 Algorytm I-DT wymaga podania dwóch parametrów wejściowych: progu dyspersji oraz progu czasowego. Obydwa progi można podać na podstawie obserwacji analizowanych danych. Próg czasowy zazwyczaj jest ustawiany na wartości 100-200 ms.
 \subsubsection{Uczenie maszynowe}
-\section{Inne metody analizy okulograficznej}
+\label{ssec:machinelearning}
+W przeciągu ostatniej dekady można zauważyć znaczący wzrost zainteresowania technologiami powiązanymi z zagadnieniem sztucznej inteligencji, czy też uczenia maszynowego. Dzięki temu, iż dane wydobyte przez urządzenie śledzące ruch oka można łatwo sparametryzować, czy to przez podanie prędkości międzypunktowych, czy przez obliczanie dyspersji pomiędzy każdym punktem, również w dziedzinie eye-trackingu można zaobserwować wzrost wykorzystania technologii ML\footnote{Machine Learning}. Dla okulografii głównym wykorzystaniem tego typu rozwiązań jest możliwość automatycznej analizy danych wprowadzonych, bez konieczności podawania parametrów wejściowych, takich jak w tradycyjnych algorytmach zaprezentowanych w sekcjach powyżej. Możliwość analizy danych bez parametrów eliminuje błędy powiązane z ich niepoprawnymi wartościami. Kolejną zaletą tego typu rozwiązań jest zwiększenie wydajności obróbki danych podanych do aplikacji. Użycie tego sposobu wymaga od użytkownika podania już scharakteryzowanych danych, w wypadku wykrywania fiksacji jest to, czy dany punkt należy do fiksacji, czy jest sakadą.\par
+Opis działania algorytmu, jak również sposób analizy danych został zaprezentowany w sekcji \ref{ssec:machinelearningalg}.
+\section{Metody prezentacji danych}
+\label{sec:othereyetracking}
+Analiza fiksacji jest tylko jednym z wielu rodzajów analizy danych pochodzących z urządzenia mierzącego. Zgodnie z pracą \cite[rozdział 2.2]{OtherEyetrack}, możemy analizować dane w sposób wizualny, poprzez mapy cieplne, których przykład pokazano na rysunku \ref{fig:heatmap}. Mapy cieplne to obszary reprezentujące zwiększoną aktywność oka w danym miejscu, czy też punkty skupienia.
+
+Podobną metodą analizy danych są ścieżki skanowania, których zadaniem jest pokazanie linii, w jakich przebiega obserwacja na obrazie. Rysunek \ref{fig:scanpaths} ukazuje przykład ścieżek skanowania wraz z numeracją, jak przebiegał ruch oka. Powyżej zaprezentowane metody posiadają jednak pewne wady, mapy cieplne ukazują nam tylko pewną reprezentacje skupienia objektu, nie ukazując nam kolejności w jakiej obraz został przeglądany. Natomiast ścieżki skanowania dają nam dokładny przebieg w jaki sposób oko obserwowało dany rysunek, jednak główną wadą, jak zauważono na rysunku \ref{fig:scanpaths} jest zbytnie nagromadzenie danych, powodowane przez to, że należy nanieść na konkretny rysunek wszystkie dane w odpowiedniej kolejności.
+\begin{figure}[H]
+    \centering
+    \captionsetup{justification=centering,margin=2cm}
+    \begin{subfigure}{.5\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{resources/heatmaps.png}
+      \caption{Przykład mapy cieplnej}
+      \label{fig:heatmap}
+    \end{subfigure}%
+    \begin{subfigure}{.5\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{resources/scanpaths.png}
+      \caption{Przykład ścieżki skanowania}
+      \label{fig:scanpaths}
+    \end{subfigure}
+    \caption[Inne reprezentacje mierzonych punktów]{Inne reprezentacje mierzonych punktów.\\\hspace{\textwidth}
+    \small(źródło: \url{https://bit.ly/2MZnIev}\footnote{ze względu na długi adres, należało skrócić link} [dostęp 10.09.2019])}
+    \label{fig:otherfigures}
+\end{figure}
