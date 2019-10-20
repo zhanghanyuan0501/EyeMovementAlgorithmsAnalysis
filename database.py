@@ -4,9 +4,11 @@ import collections
 from Data import Data
 import time
 
+LOCALHOST = "mongodb://localhost:27017/"
+
 def initialize_db(pointsList):
         start = time.process_time()
-        myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+        myclient = pymongo.MongoClient(LOCALHOST)
         mydb = myclient["mydatabase"]
         myclient.drop_database("mydatabase")
         col = mydb["elements"]
@@ -25,7 +27,7 @@ def initialize_db(pointsList):
 
 def getFromDatabase():
         start = time.process_time()
-        myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+        myclient = pymongo.MongoClient(LOCALHOST)
         mydb = myclient["mydatabase"]
         elements = mydb["elements"].find()
         dataArray = []

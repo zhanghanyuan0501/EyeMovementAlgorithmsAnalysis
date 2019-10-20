@@ -1,3 +1,4 @@
+\label{chapter:ch2}
 W poniższym rozdziale zawarty został krótki opis oka, analiza teoretyczna dziedziny eye-trackingu, jak również pokaznie algorytmów wykrywania fiksacji wykorzystanych do przeprowadzenia badań. Rozdział ten oparto głównie o prace \cite{Main}, \cite{EvaluationMethodology}, \cite{MachineLearning}.
 \section{Opis ludzkiej gałki ocznej}
 Zadaniem poniższej sekcji jest zaprezentowanie podstawowych terminologii związanych z ludzkim okiem oraz jego budową. Krótka analiza oka została przygotowana zgodnie z pracą numer \cite{EvaluationMethodology}.\par
@@ -89,6 +90,7 @@ Algorytmy mogą także zostać podzielone ze względu na ich charakterystykę cz
 \end{itemize}
 Ten podział został stworzony ze względu na to, iż fiksacje bardzo rzadko trwają mniej niż 100 ms, a regularny czas ich trwania potrafi wynosić od 200 ms do 400 ms. Implementacja adaptacji lokalnych umożliwia na dokładniejszy pomiar fiksacji.
 \subsection{Wybrane algorytmy}
+\label{ssec:algorithms}
 Celem poniższego podrozdziału jest opis teoretyczny algorytmów wykrywania fiksacji zastosowanych w pracy. Opis teoretyczny wybranych algorytmów bazuje na pracy \cite{Main} oraz \cite{EvaluationMethodology}.
 \subsubsection{Algorytm I-VT}
 \label{ssec:ivt}
@@ -142,9 +144,7 @@ W przeciągu ostatniej dekady można zauważyć znaczący wzrost zainteresowania
 Opis działania algorytmu, jak również sposób analizy danych został zaprezentowany w sekcji \ref{ssec:machinelearningalg}.
 \section{Metody prezentacji danych}
 \label{sec:othereyetracking}
-Analiza fiksacji jest tylko jednym z wielu rodzajów analizy danych pochodzących z urządzenia mierzącego. Zgodnie z pracą \cite[rozdział 2.2]{OtherEyetrack}, możemy analizować dane w sposób wizualny, poprzez mapy cieplne, których przykład pokazano na rysunku \ref{fig:heatmap}. Mapy cieplne to obszary reprezentujące zwiększoną aktywność oka w danym miejscu, czy też punkty skupienia.
-
-Podobną metodą analizy danych są ścieżki skanowania, których zadaniem jest pokazanie linii, w jakich przebiega obserwacja na obrazie. Rysunek \ref{fig:scanpaths} ukazuje przykład ścieżek skanowania wraz z numeracją, jak przebiegał ruch oka. Powyżej zaprezentowane metody posiadają jednak pewne wady, mapy cieplne ukazują nam tylko pewną reprezentacje skupienia objektu, nie ukazując nam kolejności w jakiej obraz został przeglądany. Natomiast ścieżki skanowania dają nam dokładny przebieg w jaki sposób oko obserwowało dany rysunek, jednak główną wadą, jak zauważono na rysunku \ref{fig:scanpaths} jest zbytnie nagromadzenie danych, powodowane przez to, że należy nanieść na konkretny rysunek wszystkie dane w odpowiedniej kolejności.
+Analiza fiksacji jest tylko jednym z wielu rodzajów analizy danych pochodzących z urządzenia mierzącego. Zgodnie z pracą \cite[rozdział 2.2]{OtherEyetrack}, możemy analizować dane w sposób wizualny, poprzez mapy cieplne, których przykład pokazano na rysunku \ref{fig:heatmap}. Mapy cieplne to obszary reprezentujące zwiększoną aktywność oka w danym miejscu, czy też punkty skupienia. Podobną metodą analizy danych są ścieżki skanowania, których zadaniem jest pokazanie linii, w jakich przebiega obserwacja na obrazie. Rysunek \ref{fig:scanpaths} ukazuje przykład ścieżek skanowania wraz z numeracją, jak przebiegał ruch oka. Powyżej zaprezentowane metody posiadają jednak pewne wady, mapy cieplne ukazują nam tylko pewną reprezentacje skupienia objektu, nie ukazując nam kolejności w jakiej obraz został przeglądany. Natomiast ścieżki skanowania dają nam dokładny przebieg w jaki sposób oko obserwowało dany rysunek, jednak główną wadą, jak zauważono na rysunku \ref{fig:scanpaths} jest zbytnie nagromadzenie danych, powodowane przez to, że należy nanieść na konkretny rysunek wszystkie dane w odpowiedniej kolejności.
 \begin{figure}[H]
     \centering
     \captionsetup{justification=centering,margin=2cm}

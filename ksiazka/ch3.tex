@@ -1,14 +1,91 @@
-Wewnątrz tego rodziału znajduje się krótki opis aplikacji.
+Wewnątrz tego rodziału znajduje się krótki opis aplikacji służącej do przeprowadzenia badań, oraz implementującej algorytmy zaprezentowane w rozdziale \ref{ssec:algorithms}, specyfikacja zewnętrzna oraz wewnętrzna.
+\section{Krótki opis aplikacji}
+\label{sec:shortdesc}
+Program, który został wykorzystany przy przeprowadzeniu badań został przygotowany jako aplikacja konsolowa. Tego typu aplikacja pozwala na implementację algorytmów, jak również sposobów mierzenia, bez obciążania maszyny o zbędne GUI\footnote{z ang. Graphical User Interface - graficzny interfejs użytkownika}, który może powodować przekłamania względem analizy czasowej i pamięciowej. Aplikacja wykorzystuje celem weryfikacji wpływu czasu połączenia z bazą danych na łączny czas trwania analizy danych wejściowych bazę danych MongoDB, będącej typem bazy NoSQL. Zadecydowano o wykorzystaniu bazy NoSQL, przez typ danych, który nie wymaga posiadania większej ilości tabel niż jedna. W tabeli \ref{tab:nosqlschema} pokazano schemat tabeli z elementami.
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|}
+    \hline
+    \textbf{Nazwa} & \textbf{Typ danych} \\ \hline
+    \_id           & ObjectId \textit{Unique PK} \\ \hline
+    Type           & String              \\ \hline
+    CoordX         & Double              \\ \hline
+    CoordY         & Double              \\ \hline
+    TimeStamp      & String              \\ \hline
+    \end{tabular}
+    \caption{Schemat tabeli z elementami}
+    \label{tab:nosqlschema}
+\end{table}
+Jak można zaobserwować na schemacie, identyfikator tabeli jest kluczem głównym, generowanym automatycznie przez silnik bazodanowy.
 \section{Wykorzystane narzędzia}
 \label{sec:calibration}
 \section{Specyfikacja zewnętrzna aplikacji}
+Celem poniższego podrozdziału jest zaprezentowanie sposobu działania aplikacji, oraz najważniejszych modułów.
 \subsection{Parametry wejściowe}
 \subsection{Format danych wejściowych}
 \subsection{Format danych wyjściowych}
+\subsection{Prezentacja fiksacji}
 \section{Specyfikacja wewnętrzna aplikacji}
+W tym podrozdziale przedstawiono informacje dotyczące sposobu implementacji algorytmów przedstawionych w rozdziale \ref{ssec:algorithms}. Przed tymi informacjami przedstawiono moduły języka Python wymagane do uruchomienia aplikacji, oraz sposób ich wykorzystania, jak również opisano metodykę konwersji danych wejściowych na format czytelny dla algorytmów, i sposób połączenia z bazą danych MongoDB.
+\subsection{Wymagania aplikacji}
 \subsection{Kalibracja danych wejściowych}
+\subsection{Połączenie z bazą danych}
+\begin{lstlisting}[language=Python, caption=Połączenie z bazą danych, label={lst:connectDB}]
+    myclient = pymongo.MongoClient(LOCALHOST)
+    mydb = myclient["mydatabase"]
+\end{lstlisting}
+
+\subsubsection{Umieszczenie danych w bazie danych}
+Fragment dotyczący umieszczenia danych w bazie danych został zaprezentowany w kodzie \ref{lst:insertDB}.
+\begin{lstlisting}[language=Python, caption=Umieszczenie danych w bazie danych, label={lst:insertDB}]
+def initialize_db(pointsList):
+    ...
+    myclient = pymongo.MongoClient(LOCALHOST)
+    mydb = myclient["mydatabase"]
+    myclient.drop_database("mydatabase")
+    col = mydb["elements"]
+    odbcarr = []
+    for element in list(pointsList):
+            for value in element:
+                    doc = collections.OrderedDict()
+                    doc['Type'] = value.Type
+                    doc['CoordX'] = value.CoordX
+                    doc['CoordY'] = value.CoordY
+                    doc['TimeStamp'] = value.TimeStamp
+                    odbcarr.append(doc)
+    col.insert_many(odbcarr)
+    ...
+\end{lstlisting}
+\subsubsection{Wydobycie danych z bazy danych}
+\begin{lstlisting}[language=Python, caption=Wydobycie danych z bazy danych, label={lst:getFromDB}]
+def getFromDatabase():
+    ...
+    elements = mydb["elements"].find()
+    dataArray = []
+    for element in elements:
+            item = Data(element['Type'], element['TimeStamp'], element['CoordX'], element['CoordY'])
+            dataArray.append(item)
+    i = 0
+    loopFlag = True
+    retList = []
+    returnList = []
+    while loopFlag:
+            for element in dataArray:
+                    if i + 1 == len(dataArray):
+                            retList.append(dataArray[i])
+                            loopFlag = False
+                            break
+                    if dataArray[i + 1].Type == 'SS':
+                            retList.append(dataArray[i])
+                            break
+                    retList.append(dataArray[i])
+                    i += 1
+            i += 1
+            returnList.append(retList)
+            retList = []
+    ...
+    \end{lstlisting}
 \subsection{Algorytm I-VT}
 \subsection{Algorytm I-DT}
 \subsection{Algorytm wykorzystujący uczenie maszynowe}
-\subsection{Prezentacja fiksacji}
 \label{ssec:machinelearningalg}
