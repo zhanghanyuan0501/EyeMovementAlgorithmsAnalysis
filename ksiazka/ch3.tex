@@ -1,7 +1,7 @@
 Wewnątrz tego rodziału znajduje się krótki opis aplikacji służącej do przeprowadzenia badań, oraz implementującej algorytmy zaprezentowane w rozdziale \ref{ssec:algorithms}, specyfikacja zewnętrzna oraz wewnętrzna.
 \section{Krótki opis aplikacji}
 \label{sec:shortdesc}
-Program, który został wykorzystany przy przeprowadzeniu badań został przygotowany jako aplikacja konsolowa. Tego typu aplikacja pozwala na implementację algorytmów, jak również sposobów mierzenia, bez obciążania maszyny o zbędne GUI\footnote{z ang. Graphical User Interface - graficzny interfejs użytkownika}, który może powodować przekłamania względem analizy czasowej i pamięciowej. Aplikacja wykorzystuje celem weryfikacji wpływu czasu połączenia z bazą danych na łączny czas trwania analizy danych wejściowych bazę danych MongoDB, będącej typem bazy NoSQL. Zadecydowano o wykorzystaniu bazy NoSQL, przez typ danych, który nie wymaga posiadania większej ilości tabel niż jedna. W tabeli \ref{tab:nosqlschema} pokazano schemat tabeli z elementami.
+Program, który został wykorzystany przy przeprowadzeniu badań został przygotowany jako aplikacja konsolowa. Tego typu aplikacja pozwala na implementację algorytmów, jak również sposobów mierzenia, bez obciążania maszyny o zbędne GUI\footnote{z ang. Graphical User Interface - graficzny interfejs użytkownika}, który może powodować przekłamania względem analizy czasowej i pamięciowej. Aplikacja wykorzystuje celem weryfikacji wpływu czasu połączenia z bazą danych na łączny czas trwania analizy danych wejściowych bazę danych MongoDB, będącej typem bazy NoSQL. Zadecydowano o wykorzystaniu bazy NoSQL, dlatego iż typ danych, nie wymaga posiadania większej ilości tabel niż jedna. W tabeli \ref{tab:nosqlschema} pokazano schemat tabeli z elementami.
 \begin{table}[H]
     \centering
     \begin{tabular}{|l|l|}
@@ -16,7 +16,7 @@ Program, który został wykorzystany przy przeprowadzeniu badań został przygot
     \caption{Schemat tabeli z elementami}
     \label{tab:nosqlschema}
 \end{table}
-Jak można zaobserwować na schemacie, identyfikator tabeli jest kluczem głównym, generowanym automatycznie przez silnik bazodanowy.
+Jak można zaobserwować na schemacie, identyfikator tabeli jest kluczem głównym, unikalnym, generowanym automatycznie przez silnik bazodanowy.
 \section{Wykorzystane narzędzia}
 \label{sec:calibration}
 \section{Specyfikacja zewnętrzna aplikacji}
@@ -31,17 +31,17 @@ W tym podrozdziale przedstawiono informacje dotyczące sposobu implementacji alg
 \subsection{Kalibracja danych wejściowych}
 \subsection{Połączenie z bazą danych}
 \begin{lstlisting}[language=Python, caption=Połączenie z bazą danych, label={lst:connectDB}]
-    myclient = pymongo.MongoClient(LOCALHOST)
-    mydb = myclient["mydatabase"]
+        LOCALHOST = "mongodb://localhost:27017/"
+        ...
+        myclient = pymongo.MongoClient(LOCALHOST)
+        mydb = myclient["mydatabase"]
 \end{lstlisting}
 
 \subsubsection{Umieszczenie danych w bazie danych}
-Fragment dotyczący umieszczenia danych w bazie danych został zaprezentowany w kodzie \ref{lst:insertDB}.
+Fragment dotyczący umieszczenia danych w bazie danych został zaprezentowany w kodzie \ref{lst:insertDB}. 
 \begin{lstlisting}[language=Python, caption=Umieszczenie danych w bazie danych, label={lst:insertDB}]
 def initialize_db(pointsList):
     ...
-    myclient = pymongo.MongoClient(LOCALHOST)
-    mydb = myclient["mydatabase"]
     myclient.drop_database("mydatabase")
     col = mydb["elements"]
     odbcarr = []
@@ -87,5 +87,48 @@ def getFromDatabase():
     \end{lstlisting}
 \subsection{Algorytm I-VT}
 \subsection{Algorytm I-DT}
+\begin{lstlisting}[language=Python, caption=Kod algorytmu I-DT, label={lst:idt}]
+def calculateIdtAlgorithm(pointsList):
+        start = time.process_time()
+        i = 0
+        timeStart = int(pointsList[0].TimeStamp)
+        windowList = []
+        coordXList = []
+        coordYList = []
+        countPoints = len(pointsList)
+        while i < countPoints - 1:
+        if pointsList[i].Type == 'SS':
+                i += 1
+                continue
+        currTime = int(pointsList[i].TimeStamp)
+        while currTime - timeStart <= constants.WINDOW_TIME_THRESHOLD:
+                windowList.append(pointsList[i])
+                i += 1
+                if i >= countPoints:
+                break
+                currTime = int(pointsList[i].TimeStamp)
+        if i >= countPoints:
+                break
+        if len(windowList) > 1:
+                Dispersion = (max(maxX.CoordX for maxX in windowList) - min(minX.CoordX for minX in windowList)) + (max(maxY.CoordY for maxY in windowList) - min(minY.CoordY for minY in windowList))
+        while len(windowList) > 1:
+                if Dispersion <= constants.DISPERSION_THRESHOLD and len(windowList) > 1:
+                while (Dispersion < constants.DISPERSION_THRESHOLD):
+                        windowList.append(pointsList[i])
+                        i += 1
+                        if i >= countPoints:
+                        break
+                        Dispersion = (max(maxX.CoordX for maxX in windowList) - min(minX.CoordX for minX in windowList)) + (max(maxY.CoordY for maxY in windowList) - min(minY.CoordY for minY in windowList))
+                if i >= countPoints:
+                        break
+                coordXList.append(sum(sumX.CoordX for sumX in windowList) / len(windowList))
+                coordYList.append(sum(sumY.CoordY for sumY in windowList) / len(windowList))
+                else:
+                windowList.pop(0)
+        if i <= countPoints - 1:
+                timeStart = int(pointsList[i].TimeStamp)
+        end = time.process_time()
+        return coordXList, coordYList, end - start, len(coordXList)
+\end{lstlisting}
 \subsection{Algorytm wykorzystujący uczenie maszynowe}
 \label{ssec:machinelearningalg}
