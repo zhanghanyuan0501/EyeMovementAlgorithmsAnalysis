@@ -95,13 +95,12 @@ Celem poniższego podrozdziału jest opis teoretyczny algorytmów wykrywania fik
 \subsubsection{Algorytm I-VT}
 \label{ssec:ivt}
 Algorytm I-VT\footnote{z ang. Identification-Velocity Threshold} jest przykładem algorytmu z grupy prędkościowych. Jak wspomniano w podrozdziale \ref{sec:fixations} te algorytmy bazują na różnicach prędkości międzypunktowych. W większości przypadków te różnice wynoszą mniej niż 100 ms dla fiksacji, a więcej niż 300-400 ms dla sakad. Ze względu na proste wymagania algorytmu, nie jest on skomplikowany w implementacji. Pseudokod algorytmu I-VT zaprezentowano na rysunku \ref{fig:ivt}.
-{
-\begin{algorithm}[H]
+{\begin{algorithm}[H]
     \SetAlgoLined
     \setstretch{1.35}
     \SetKwInOut{Input}{Input}
     \SetKwInOut{Output}{Output}
-    Oblicz prędkości pomiędzy punktami dla każdego punktu w protokole\;
+    Oblicz prędkości pomiędzy punktami dla wszystkich punktów w protokole\;
     Określ punkty poniżej progu jako fiksacje, a powyżej jako sakady\;
     Połącz wszystkie punkty fiksacji w grupy fiksacji, usuń wszystkie sakady\;
     Zmapuj każdą grupę fiksacji do punktu znajdującego się w środku każdej grupy\;
@@ -109,7 +108,7 @@ Algorytm I-VT\footnote{z ang. Identification-Velocity Threshold} jest przykłade
     \label{fig:ivt}
     \caption{Pseudokod algorytmu I-VT}
 \end{algorithm}}
-Jak można zauważyć w pseudokodzie powyżej, pierwszym krokiem algorytmu I-VT jest obliczenie prędkości między każdym punktem w badanym obszarze. Prędkość ta jest mierzona jako odległość między obecnym punktem a następnym (lub poprzednim) punktem. Następnie każdy punkt jest klasyfikowany jako fiksacja lub sakada w zależności od spełnienia warunku progu, którym w tym wypadku jest prędkość. Zgodnie z zasadami tego typu algorytmów, wszystkie elementy ponad granicą zaliczamy jako sakady, a resztę jako fiksacje. Kolejnym krokiem jest pozbycie się danych niepotrzebnych - sakad, i połączenie wszystkich sakad w grupy fiksacji. Ostatnim krokiem algorytmu jest wyznaczenie środka masy każdej grupy fiksacji, co pozwala nam ukazać fiksację w danym miejscu.\par
+Jak można zauważyć na rysunku \ref{fig:ivt}, pierwszym krokiem algorytmu I-VT jest obliczenie prędkości między każdym punktem w badanym obszarze. Prędkość ta jest mierzona jako odległość między obecnym punktem a następnym (lub poprzednim) punktem. Następnie każdy punkt jest klasyfikowany jako fiksacja lub sakada w zależności od spełnienia warunku progu, którym w tym wypadku jest prędkość. Zgodnie z zasadami tego typu algorytmów, wszystkie elementy ponad granicą zaliczamy jako sakady, a resztę jako fiksacje. Kolejnym krokiem jest pozbycie się danych niepotrzebnych - sakad, i połączenie wszystkich sakad w grupy fiksacji. Ostatnim krokiem algorytmu jest wyznaczenie środka masy każdej grupy fiksacji, co pozwala nam ukazać fiksację w danym miejscu.\par
 Według specyfikacji, ten algorytm wymaga podania jednego parametru wejściowego - progu prędkości.
 \subsubsection{Algorytm I-DT}
 \label{ssec:idt}
