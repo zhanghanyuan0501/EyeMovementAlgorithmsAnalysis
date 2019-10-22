@@ -1,7 +1,7 @@
 Wewnątrz tego rodziału znajduje się krótki opis aplikacji służącej do przeprowadzenia badań, oraz implementującej algorytmy zaprezentowane w rozdziale \ref{ssec:algorithms}, specyfikacja zewnętrzna oraz wewnętrzna.
 \section{Krótki opis aplikacji}
 \label{sec:shortdesc}
-Program, który został wykorzystany przy przeprowadzeniu badań został przygotowany jako aplikacja konsolowa. Tego typu aplikacja pozwala na implementację algorytmów, jak również sposobów mierzenia, bez obciążania maszyny o zbędne GUI\footnote{z ang. Graphical User Interface - graficzny interfejs użytkownika}, który może powodować przekłamania względem analizy czasowej i pamięciowej. Aplikacja wykorzystuje celem weryfikacji wpływu czasu połączenia z bazą danych na łączny czas trwania analizy danych wejściowych bazę danych MongoDB, będącej typem bazy NoSQL. Zadecydowano o wykorzystaniu bazy NoSQL, dlatego iż typ danych, nie wymaga posiadania większej ilości tabel niż jedna. W tabeli \ref{tab:nosqlschema} pokazano schemat tabeli z elementami.
+Program, który został wykorzystany przy przeprowadzeniu badań został przygotowany jako aplikacja konsolowa. Tego typu aplikacja pozwala na implementację algorytmów, jak również sposobów mierzenia, bez obciążania maszyny o zbędne GUI\footnote{z ang. Graphical User Interface - graficzny interfejs użytkownika}, który może powodować przekłamania względem analizy czasowej i pamięciowej. Aplikacja wykorzystuje celem weryfikacji wpływu czasu połączenia z bazą danych na łączny czas trwania analizy danych wejściowych bazę danych MongoDB, będącej typem bazy NoSQL. W tabeli \ref{tab:nosqlschema} pokazano schemat tabeli z elementami.
 \begin{table}[H]
     \centering
     \begin{tabular}{|l|l|}
@@ -16,20 +16,42 @@ Program, który został wykorzystany przy przeprowadzeniu badań został przygot
     \caption{Schemat tabeli z elementami}
     \label{tab:nosqlschema}
 \end{table}
-Jak można zaobserwować na schemacie, identyfikator tabeli jest kluczem głównym, unikalnym, generowanym automatycznie przez silnik bazodanowy.
+Jak można zaobserwować na schemacie, identyfikator tabeli jest kluczem głównym, unikalnym, generowanym automatycznie przez silnik bazodanowy.\par
+Utworzono system działający w następujący sposób:
+\begin{itemize}
+        \item Podając odpowiednie parametry wejściowe uruchom aplikację.
+        \item Skalibruj dane rzeczywiste do formatu układu współrzędnych dwuwymiarowych
+        \item Dla każdego punktu oddzielonego punktem posiadającym parametr 'RR' uruchom wybrany algorytm
+        \item Zaprezentuj dane wyjściowe na rysunku dla użytkownika
+        \item Zapisz dane wyjściowe do pliku
+\end{itemize}
+Dokładny opis działania każdego z powyższych punktów zaprezentowano w sekcji \ref{sec:internal}.
 \section{Wykorzystane narzędzia}
-\label{sec:calibration}
+\label{sec:tools}
+Projekt został stworzony wykorzystując język programowania \emph{Python} \cite{Python} w wersji 3.7.3. Ten język został wybrany ze względu na jego czytelność oraz modułowość. Kolejnym czynnikiem była prostota w implementacji algorytmów, ze względu na wykorzystanie gotowych funkcjonalności języka Python. Rozważanymi alternatywami był język \emph{F\#} oraz język \emph{R}, Język F\# wykorzystuje platformę .NET, co na pewno ułatwiło by możliwość rozwiązania problemu uczenia maszynowego zaprezentowanego w sekcji \ref{ssec:machinelearningalg}, ze względu na połączenie go z modułem \emph{ML.NET}\footnote{Machine Learning .NET}. Język R w budowie jest bardzo podobny do języka F\#, ale jego kod źródłowy jest otwarty, w przeciwieństwie do F\#\footnote{Należy nadmienić, iż chodzi o standard .NET Framework, a nie .NET Core, dla którego F\# posiada otwarty kod źródłowy} jednak podstawowa znajomość języka Python zadecydowała o wykorzystaniu tej platformy. Wszystkie wymagane moduły oraz sposób użycia opisano w sekcji \ref{ssec:apprequirements}.\par
+Praca magisterska została napisana z wykorzystaniem narzędzia \LaTeX\cite{Latex}. Głównym powodem wybrania tego narzędzia jest to, iż prace pisemne tego typu tworzy się łatwo, istnieje dużo rozszerzeń ułatwiających np. wklejanie fragmentów kodu, tworzenie pseudokodu oraz umieszczanie obrazków w dowolnym miejscu oraz formacie. Kolejną zaletą jest darmowość tego pakietu, w przeciwieństwie do pakietu Office firmy Microsoft. Istnieją również rozwiązania darmowe typu OpenOffice, LibreOffice, jednak nie posiadają one takich ułatwień dla prac naukowych. Użyto edytora tekstu Visual Studio Code.\par
+Jak wspomniano w sekcji \ref{sec:shortdesc} do stworzenia bazy danych wykorzystano silnik bazodanowy \emph{MongoDB} typu NoSQL. Jest to nierelacyjna baza danych wykorzystująca \textbf{Dokument} jako model danych. Oznacza to, iż dane są zapisywane w formacie BSON\footnote{binary JSON}. Ze względu na wykorzystany typ danych, będący jednym typem, postanowiono użyć tego rozwiązania. Język Python umożliwia w bardzo prosty sposób integrację z bazą danych MongoDB, jak zaprezentowano w sekcji \ref{ssec:connectionDB}.
 \section{Specyfikacja zewnętrzna aplikacji}
 Celem poniższego podrozdziału jest zaprezentowanie sposobu działania aplikacji, oraz najważniejszych modułów.
 \subsection{Parametry wejściowe}
+\blindtext
 \subsection{Format danych wejściowych}
+\blindtext
 \subsection{Format danych wyjściowych}
+\blindtext
 \subsection{Prezentacja fiksacji}
+\blindtext
 \section{Specyfikacja wewnętrzna aplikacji}
+\label{sec:internal}
 W tym podrozdziale przedstawiono informacje dotyczące sposobu implementacji algorytmów przedstawionych w rozdziale \ref{ssec:algorithms}. Przed tymi informacjami przedstawiono moduły języka Python wymagane do uruchomienia aplikacji, oraz sposób ich wykorzystania, jak również opisano metodykę konwersji danych wejściowych na format czytelny dla algorytmów, i sposób połączenia z bazą danych MongoDB.
 \subsection{Wymagania aplikacji}
+\label{ssec:apprequirements}
+\blindtext
 \subsection{Kalibracja danych wejściowych}
+\label{ssec:calibration}
+\blindtext
 \subsection{Połączenie z bazą danych}
+\label{ssec:connectionDB}
 \begin{lstlisting}[language=Python, caption=Połączenie z bazą danych, label={lst:connectDB}]
         LOCALHOST = "mongodb://localhost:27017/"
         ...
@@ -86,6 +108,7 @@ def getFromDatabase():
     ...
     \end{lstlisting}
 \subsection{Algorytm I-VT}
+\blindtext
 \subsection{Algorytm I-DT}
 \begin{lstlisting}[language=Python, caption=Kod algorytmu I-DT, label={lst:idt}]
 def calculateIdtAlgorithm(pointsList):
@@ -132,3 +155,4 @@ def calculateIdtAlgorithm(pointsList):
 \end{lstlisting}
 \subsection{Algorytm wykorzystujący uczenie maszynowe}
 \label{ssec:machinelearningalg}
+\blindtext
