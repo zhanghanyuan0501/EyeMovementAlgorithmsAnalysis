@@ -105,7 +105,7 @@ def main(argv):
                 for i, item in enumerate(m1):
                     if item.Type == 'SS':
                         plt.plot(m1[i].CoordX, m1[i].CoordY, 'ko', markersize=10, label='Eye-tracker points' if i == 0 else "")
-                coordX, coordY, statistics.AlgorithmRunTimeStatistic, statistics.NumberOfFixationsCount = calculateIvtAlgorithm(m1)
+                coordX, coordY, timealgorithm, fixationsForPoint = calculateIvtAlgorithm(m1)
                 statistics.AlgorithmRunTimeStatistic += timealgorithm
                 statistics.NumberOfFixationsCount += fixationsForPoint
                 plt.plot(coordX, coordY, 'wo', markersize=5, markeredgecolor='r', label='Calculated fixations')
