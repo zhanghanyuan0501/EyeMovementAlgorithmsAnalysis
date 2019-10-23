@@ -58,6 +58,7 @@ Kolejnym parametrem wejściowym jest nazwa pliku umieszczona w katalogu \emph{/d
 \end{itemize}
 Ostatni, \emph{nieobowiązkowy} parametr odpowiada za wybór miejsca, z którego dane mają być wczytywane, \emph{\textbf{-d}} wykonuje połączenie z bazą danych, a \emph{\textbf{-f}} z pliku. W wypadku braku parametru, wykonywana jest ta druga akcja.
 \subsection{Format danych wejściowych}
+\label{ssec:importdata}
 W tej sekcji zaprezentowane zostaną dane wejściowe, otrzymane w wyniku pomiarów z kamery.\par
 Wszystkie dane wejściowe zostały umieszczone w folderze \emph{\textbf{/data}} znajdującym się w katalogu głównym aplikacji. Przechowywane one są w formacie \emph{.cal}, który można otworzyć za pomocą dowolnego edytora tekstowego. Zachowaniem przypomina on format \emph{.csv}, z tą różnicą, iż zamiast znaków \emph{;} lub \emph{,} rozdzielających elementy w jednej linii występuje znak specjalny \textbf{/t} odpowiadający jednemu wciśnięciu przycisku TAB na klawiaturze. Przykład pliku wejściowego umieszczono na rysunku \ref{fig:plikwejsciowy}.
 \begin{figure}[H]
@@ -70,9 +71,48 @@ Wszystkie dane wejściowe zostały umieszczone w folderze \emph{\textbf{/data}} 
 Pierwsza kolumna reprezentuje typ danych odczytanych, zawiera ona dwie wartości: \textbf{SS} oraz \textbf{R}. SS oznacza zmianę mierzonego punktu, a wszyskie elementy R oznaczają pomiar. Kolejna kolumna przetrzymuje czas wykonania pomiaru w formacie \emph{UNIX} obliczanym w milisekundach. Jak można zauważyć, pomiar wykonywany jest z częstotliwością 1 ms, przez co odczytane wyniki powinny być dokładne. Trzeci oraz ostatni parametr to nieskalibrowane punkty wejściowe, odpowiednio X i Y. Ich wartości wynoszą od 0 do 1 względem punktu RR\footnote{dopytać}. Kalibrację danych opisano w sekcji \ref{ssec:calibration}.\par
 Podobny format danych można znaleźć w bazie danych, zgodnie z podrozdziałem \ref{sec:shortdesc}.
 \subsection{Format danych wyjściowych}
-\blindtext
+Ten podrozdział zaprezentuje format danych wyjściowych, jak również miejsce ich zapisywania.\par
+Wynikiem działania programu jest dwójka plików, plik \emph{.csv} zawierający obliczone dane, oraz plik .png będący reprezentacją graficzną obliczonych fiksacji. Zapis danych odbywa się w momencie zakończenia obliczeń. Opis pliku graficznego został zaprezentowany w sekcji \ref{ssec:fixations}.\par
+Plik \emph{.csv} zostaje zapisany w folderze \textbf{/result}, posiadając w nazwie nazwę pliku wejściowego, i dołączając do niego datę wykonania programu, np. 
+\begin{verbatim}
+        1_01_1311201811.cal23-10-2019-173857.csv
+\end{verbatim}
+Plik ten został zbudowany w sposób zaprezentowany na rysunku \ref{fig:exportfile}. Posiada on 6 parametrów, każdy odpowiadający pewnej statystyce obliczonej, bądź zmierzonej w trakcie działania programu. Są to w kolejności lewo-prawo:
+\begin{figure}[H]
+        \centering
+        \captionsetup{justification=centering,margin=2cm}
+        \includegraphics[width=0.8\linewidth]{resources/exportfile.png}
+        \caption{Plik wyjściowy}
+        \label{fig:exportfile}
+\end{figure}
+\begin{enumerate}
+        \itemsep0em 
+        \item ImportAndConvertFileStatistic
+        \item CalibrationSummaryTime
+        \item AlgorithmRunTimeStatistic
+        \item NumberOfFixationsCount
+        \item ImportDataToDatabase
+        \item ImportAndConvertDatabaseStatistic
+        \item MemoryChangeDuringAlgorithm
+\end{enumerate}
+Wszystkie czasy zaprezentowane podano w sekundach. Pierwsza kolumna prezentuje czas trwania importu danych do pamięci oraz czas trwania konwersji plików do formatu czytelnego dla aplikacji, zgodnie z fragmentem \ref{ssec:importdata}. Następna kolumna przedstawia łączny czas trwania kalibracji współrzędnych wejściowych do formy układu współrzędnych odpowiadającej mierzonym punktom RR. Trzecia kolumna pokazuje czas trwania algorytmu wykrywania fiksacji, a czwarta ilość odnalezionych fiksacji. Piąta i szósta kolumna mogą być puste, gdyż wykazują czas trwania importu danych do bazy danych, oraz odpowiednik importu i konwersji z pierwszej kolumny dla bazy danych, celem porównania czy pobranie z bazy danych może być szybsze od pobrania z pliku. Ostatnie dwie kolumny mierzą różnicę wykorzystania pamięci pomiędzy końcem i początkiem działania algorytmu - jak dużo pamięci zużywa algorytm.
 \subsection{Prezentacja fiksacji}
-\blindtext
+\label{ssec:fixations}
+\begin{figure}[H]
+        \centering
+        \captionsetup{justification=centering,margin=2cm}
+        \includegraphics[width=0.8\linewidth]{resources/calculated_fixations.png}
+        \caption{Przykład zaprezentowanych fiksacji}
+        \label{fig:presentationfixation}
+\end{figure}
+Rysunek \ref{fig:presentationfixation} pokazuje w jaki sposób po wykonaniu algorytmu dane są wyświetlane. Czarne punkty przedstawiają punkty zaprezentowane użytkownikowi w trakcie przeprowadzenia badań, a czerwone punkty prezentują wszystkie wykryte fiksacje. W celu zaprezentowania wszystkich elementów wykorzystano moduł matplotlib języka Python, który umożliwia takie rozwiązanie. Zezwala on również na przybliżanie otrzymanego wykresu, co pozwala na dokładniejszą analizę danych. Przykład ten zaprezentowano na rysunku \ref{fig:zoomedfixation}.
+\begin{figure}[H]
+        \centering
+        \captionsetup{justification=centering,margin=2cm}
+        \includegraphics[width=0.8\linewidth]{resources/zoomed_fixation.png}
+        \caption{Przybliżony podgląd fiksacji}
+        \label{fig:zoomedfixation}
+\end{figure}
 \section{Specyfikacja wewnętrzna aplikacji}
 \label{sec:internal}
 W tym podrozdziale przedstawiono informacje dotyczące sposobu implementacji algorytmów przedstawionych w rozdziale \ref{ssec:algorithms}. Przed tymi informacjami przedstawiono moduły języka Python wymagane do uruchomienia aplikacji, oraz sposób ich wykorzystania, jak również opisano metodykę konwersji danych wejściowych na format czytelny dla algorytmów, i sposób połączenia z bazą danych MongoDB.
@@ -140,8 +180,9 @@ def getFromDatabase():
     ...
     \end{lstlisting}
 \subsection{Algorytm I-VT}
-\blindtext
+\label{ssec:implementivt}
 \subsection{Algorytm I-DT}
+\label{ssec:implementidt}
 \begin{lstlisting}[language=Python, caption=Kod algorytmu I-DT, label={lst:idt}]
 def calculateIdtAlgorithm(pointsList):
         start = time.process_time()

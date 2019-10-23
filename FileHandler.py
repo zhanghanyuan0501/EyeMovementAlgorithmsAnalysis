@@ -50,7 +50,8 @@ def createExitFile(fileName, statisticClass):
         'NumberOfFixationsCount',
         'ImportDataToDatabase',
         'ImportAndConvertDatabaseStatistic']
-    with open('./result/' + fileName + str(uuid.uuid4().hex) + '.csv', 'w', newline='') as csvFile:
+    now = datetime.datetime.now()
+    with open('./result/' + fileName + now.strftime("%d-%m-%Y-%H%M%S") + '.csv', 'w', newline='') as csvFile:
         writer = csv.DictWriter(csvFile, fieldnames=fieldNames)
         writer.writeheader()
         writer.writerow({

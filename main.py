@@ -37,7 +37,6 @@ def calibrate(xList, yList):
     
     return retX, retY
 
-
 def convertPointsToCalibration(pointsList):
     start = time.process_time()
     coordX = []
@@ -88,7 +87,7 @@ def main(argv):
                 print('Ended calibration')
                 for i, item in enumerate(m1):
                     if item.Type == 'SS':
-                        plt.plot(m1[i].CoordX, m1[i].CoordY, 'ko', markersize=10, label='Eye-tracker points')
+                        plt.plot(m1[i].CoordX, m1[i].CoordY, 'ko', markersize=10, label='Eye-tracker points' if i == 0 else "")
                 coordX, coordY, timealgorithm, fixationsForPoint = calculateIdtAlgorithm(m1)
                 statistics.AlgorithmRunTimeStatistic += timealgorithm
                 statistics.NumberOfFixationsCount += fixationsForPoint
@@ -105,8 +104,10 @@ def main(argv):
                 print('Ended calibration')
                 for i, item in enumerate(m1):
                     if item.Type == 'SS':
-                        plt.plot(m1[i].CoordX, m1[i].CoordY, 'ko', markersize=10, label='Eye-tracker points')
+                        plt.plot(m1[i].CoordX, m1[i].CoordY, 'ko', markersize=10, label='Eye-tracker points' if i == 0 else "")
                 coordX, coordY, statistics.AlgorithmRunTimeStatistic, statistics.NumberOfFixationsCount = calculateIvtAlgorithm(m1)
+                statistics.AlgorithmRunTimeStatistic += timealgorithm
+                statistics.NumberOfFixationsCount += fixationsForPoint
                 plt.plot(coordX, coordY, 'wo', markersize=5, markeredgecolor='r', label='Calculated fixations')
             print('Ending measurement using I-VT algorithm')
             plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
