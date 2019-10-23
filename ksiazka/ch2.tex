@@ -66,9 +66,9 @@ Ostatnia, trzecia metoda pomiarów wykorzystuje kamery, montowane w okularach, j
 \end{figure}
 \section{Eye-tracking}
 \label{sec:eyetracking}
-W następującej sekcji zaprezentowana zostanie technologia eye-trackingu, oraz jej zastosowania.\\[\baselineskip]
-Jak wspomniano we wstępie do pracy, rozwój okulografii w przeciągu ostatnich kilkudziesięciu lat pozwala nam przeanalizować sposób w jakim operują ludzkie procesy obserwacji oraz sposobu rozpoznawania obrazu. Analiza tych procesów umożliwia badającym na wykorzystywanie wyników badań w zastosowaniach komercyjnych, np. badanie sposobu patrzenia na jezdnię w trakcie jazdy pojazdem \cite{CarSteering}, analiza psychologiczna \cite{GazeEyeTrackingSolutions} czy też w wykorzystaniu komercyjnym \cite{Advertising}.\\[\baselineskip]
-W celu przetworzenia danych z urządzenia pomiarowego, których przykłady zaprezentowano w podrozdziale \ref{sec:movement} do dalszej analizy stosuje się typowo dwie wartości: fiksacje, czyli miejsca, na których badana próbka wzroku się skupiła, oraz sakady, szybkie ruchy pomiędzy fiksacjami. Podział ten został odkryty w XIX wieku we Francji za pomocą obserwacji fizycznych, ponieważ zauważono, że ludzkie oko podczas czytania nie porusza się płynnie, a wykonuje "skoki" pomiędzy obszarami tekstu. Przykład takiego ruchu oraz punktów skupienia można zaobserwować na rysunku \ref{fig:fiksacje}.
+W tej sekcji przybliżono technologię eye-trackingu, oraz jej zastosowania.\\[\baselineskip]
+Jak wspomniano we wstępie do pracy\, rozwój okulografii w przeciągu ostatnich kilkudziesięciu lat pozwala nam przeanalizować sposób w jakim operują ludzkie procesy obserwacji oraz sposobu rozpoznawania obrazu. Analiza tych procesów umożliwia badającym na wykorzystywanie wyników badań w zastosowaniach komercyjnych, np. badanie sposobu patrzenia na jezdnię w trakcie jazdy pojazdem \cite{CarSteering}, analiza psychologiczna \cite{GazeEyeTrackingSolutions} czy też w przygotowaniach do tworzenia reklam \cite{Advertising}.\\[\baselineskip]
+W celu przetworzenia danych z urządzenia pomiarowego, których przykłady zaprezentowano w podrozdziale \ref{sec:movement}, do dalszej analizy stosuje się typowo dwie wartości: fiksacje, czyli miejsca, na których badana próbka wzroku się skupiła, oraz sakady, szybkie ruchy pomiędzy fiksacjami. Podział ten został odkryty w XIX wieku we Francji za pomocą obserwacji fizycznych, ponieważ zauważono, że ludzkie oko podczas czytania nie porusza się płynnie, a wykonuje "skoki" pomiędzy obszarami tekstu. Przykład takiego ruchu oraz punktów skupienia można zaobserwować na rysunku \ref{fig:fiksacje}.
 \begin{figure}[H]
     \centering
     \captionsetup{justification=centering,margin=2cm}
@@ -77,31 +77,31 @@ W celu przetworzenia danych z urządzenia pomiarowego, których przykłady zapre
     \small(źródło: \url{https://upload.wikimedia.org/wikipedia/commons/e/ef/Reading_Fixations_Saccades.jpg} [dostęp 10.09.2019])}
     \label{fig:fiksacje}
 \end{figure}
-Analiza fiksacji między innymi poprzez translacje danych ruchu oka z urządzenia wejściowego na fiksacje, co pozwala również określić sakady na pomiarze. Daje to możliwość pozbycia się zbędnych danych z próbki, takich jak sakad, oraz pomniejszych ruchów oka, które mogły nastąpić przy niedokładnym pomiarze, czy mikroskopijnym ruchu oka. Zezwala to nam na zmniejszenie rozmiaru danych, poprzez zbijająnia rzeczywistych fiksacji do jednego, większego punktu danych. Najczęściej otrzymane wartości są wykorzystywane do metryk pomiaru typu czas fiksacji, prędkości i amplitudy sakad, jak również miary pomiędzy fiksacjami a sakadami. Jednak cytując \cite{Main} \emph{"w większości badań naukowych, dane z sakad nie stanowią aż takiej przydatności"}.\\[\baselineskip]
+Analiza danych odbywa się między innymi poprzez translacje danych ruchu oka z urządzenia wejściowego na fiksacje, zezwalając na wykonanie podziału danych. Daje to możliwość pozbycia się mniej interesujących danych z próbki, takich jak sakad, pomniejszych ruchów oka, które mogły nastąpić przy niedokładnym pomiarze, czy przy mikroskopijnym ruchu oka. Cytując \cite{Main} \emph{"w większości badań naukowych, dane z sakad nie stanowią aż takiej przydatności"}. Zezwala to nam na zmniejszenie rozmiaru danych, poprzez zbijanie rzeczywistych fiksacji do jednego, większego punktu danych. Najczęściej otrzymane wartości są wykorzystywane do metryk pomiaru typu czas fiksacji, prędkości i amplitudy sakad, jak również miary pomiędzy fiksacjami a sakadami.\par
 Wyniki algorytmów wykrywania fiksacji są wynikami typowo statystycznymi, tzn. możemy określić ile wystąpiło fiksacji, a przez to ile elementów jest sakadami, ale dalsza analiza danych należy do badającego. Stwarza to problem interpretacji danych, zgodnie z \cite{Main} \emph{"jednym ze sposobów walidacji tych algorytmów jest porównanie wynikowych fiksacji z wrażeniami wizualnymi obserwującego"}.
 \section{Algorytmy wykrywania fiksacji}
 \label{sec:fixations}
-Wyróżniamy trzy główne typy algorytmów wykrywania fiksacji ze względu na obszar badania:
+Wyróżniamy trzy typy algorytmów wykrywania fiksacji ze względu na badany obszar:
 \begin{itemize}
     \item prędkościowe
     \item dyspersyjne
     \item powierzchniowe
 \end{itemize} 
 Algorytmem prędkościowym możemy nazwać algorytm, który analizuje punkty pod kątem różnicy prędkości pomiędzy nimi, biorąc pod uwagę, iż fiksacje posiadają niską prędkość pomiędzy swoimi punktami, a sakady wysoką. Algorytmy dyspersyjne bazują na odległościach pomiędzy punktami, zakładając, iż fiksacje posiadają małe odległości międzypunktowe. Algorytmy powierzchniowe to algorytmy, których zadaniem jest identyfikacja punktów w wybranych powierzchniach zainteresowania (AOI)\footnote{ang. area of interest}. Algorytmy tego rodzaju posiadają, w przeciwieństwie do innych algorytmów, możliwość identyfikacji zarówno nisko- jak i wysoko-poziomowej, przez to, iż parametrem algorytmów AOI może być fiksacja.\par
-
-Algorytmy mogą także zostać podzielone ze względu na ich charakterystykę czasową, wyróżniamy dwa główne rodzaje:
+Można także podzielić algorytmy ze względu na ich charakterystykę czasową, wyróżniamy dwa główne rodzaje:
 \begin{itemize}
     \item czułe na czas trwania
     \item adaptujące się lokalnie
 \end{itemize}
-Ten podział został stworzony ze względu na to, iż fiksacje bardzo rzadko trwają mniej niż 100 ms, a regularny czas ich trwania potrafi wynosić od 200 ms do 400 ms. Implementacja adaptacji lokalnych umożliwia na dokładniejszy pomiar fiksacji.
+Ten podział został stworzony dlatego, iż fiksacje bardzo rzadko trwają mniej niż 100 ms, a regularny czas ich trwania potrafi wynosić od 200 ms do 400 ms. Implementacja adaptacji lokalnych umożliwia na dokładniejszy pomiar fiksacji, co znalazło zastosowanie w bardziej skomplikowanych algorytmach prędkościowych i powierzchniowych.
 \subsection{Wybrane algorytmy}
 \label{ssec:algorithms}
 Celem poniższego podrozdziału jest opis teoretyczny algorytmów wykrywania fiksacji zastosowanych w pracy. Opis teoretyczny wybranych algorytmów bazuje na pracy \cite{Main} oraz \cite{EvaluationMethodology}.
 \subsubsection{Algorytm I-VT}
 \label{ssec:ivt}
-Algorytm I-VT\footnote{z ang. Identification-Velocity Threshold} jest przykładem algorytmu z grupy prędkościowych. Jak wspomniano w podrozdziale \ref{sec:fixations} te algorytmy bazują na różnicach prędkości międzypunktowych. W większości przypadków te różnice wynoszą mniej niż 100 ms dla fiksacji, a więcej niż 300-400 ms dla sakad. Ze względu na proste wymagania algorytmu, nie jest on skomplikowany w implementacji. Pseudokod algorytmu I-VT zaprezentowano na rysunku \ref{fig:ivt}.
-{\begin{algorithm}[H]
+Algorytm I-VT\footnote{z ang. Identification-Velocity Threshold} jest przykładem algorytmu z grupy prędkościowych. Jak wspomniano w podrozdziale \ref{sec:fixations} te algorytmy bazują na różnicach prędkości międzypunktowych. W większości przypadków te różnice wynoszą mniej niż 150 ms dla fiksacji, a więcej niż 300-400 ms dla sakad. Ze względu na proste wymagania algorytmu, nie jest on skomplikowany w implementacji. Pseudokod algorytmu I-VT zaprezentowano na rysunku \ref{fig:ivt}.
+{
+\begin{algorithm}[H]
     \SetAlgoLined
     \setstretch{1.35}
     \SetKwInOut{Input}{Input}
@@ -111,8 +111,8 @@ Algorytm I-VT\footnote{z ang. Identification-Velocity Threshold} jest przykłade
     Połącz wszystkie punkty fiksacji w grupy fiksacji, usuń wszystkie sakady\;
     Zmapuj każdą grupę fiksacji do punktu znajdującego się w środku każdej grupy\;
     \Return{Zmapowane punkty}\;
-    \label{fig:ivt}
     \caption{Pseudokod algorytmu I-VT}
+    \label{fig:ivt}
 \end{algorithm}}
 Jak można zauważyć na rysunku \ref{fig:ivt}, pierwszym krokiem algorytmu I-VT jest obliczenie prędkości między każdym punktem w badanym obszarze. Prędkość ta jest mierzona jako odległość między obecnym punktem a następnym (lub poprzednim) punktem. Następnie każdy punkt jest klasyfikowany jako fiksacja lub sakada w zależności od spełnienia warunku progu, którym w tym wypadku jest prędkość. Zgodnie z zasadami tego typu algorytmów, wszystkie elementy ponad granicą zaliczamy jako sakady, a resztę jako fiksacje. Kolejnym krokiem jest pozbycie się danych niepotrzebnych - sakad, i połączenie wszystkich sakad w grupy fiksacji. Ostatnim krokiem algorytmu jest wyznaczenie środka masy każdej grupy fiksacji, co pozwala nam ukazać fiksację w danym miejscu.\par
 Według specyfikacji, ten algorytm wymaga podania jednego parametru wejściowego - progu prędkości.
@@ -140,8 +140,8 @@ Według specyfikacji, ten algorytm wymaga podania jednego parametru wejściowego
     \caption{Pseudokod algorytmu I-DT}
     \label{fig:idt}
 \end{algorithm}}
-Następnym badanym algorytmem jest algorytm dyspersyjny I-DT\footnote{z ang. Identification Dispersion-Threshold}. W przeciwieństwie do algorytmów prędkościowych, algorytm I-VT wykorzystuje fakt, iż fiksacje ze względu na swoją małą prędkość mają tendencje do grupowania się. Algorytm I-DT identyfikuje te fiksacje za pomocą okien (grup punktów) o określonej dyspersji (\emph{maksymalna separacja}). Jak napisano w rozdziale \ref{ssec:ivt}, fiksacja trwa zazwyczaj 100 ms, co pozwala nam określić dolny próg wejściowy dla algorytmu na poziomie 100-200 ms. Pseudokod algorytmu można znaleźć w na rysunku \ref{fig:idt}.\par
-Algorytm I-DT wykorzystuje ruchome okno, do którego należą punkty będące potencjalnymi fiksacjami. Zgodnie z powyższym pseudokodem, inicjalizacja okna następuje na podanym przez użytkownika progu czasowym. Następnie sprawdzana jest dyspersja pomiędzy punktami, którą można obliczyć za pomocą wzoru: $D = [max(x) - min(x)] + [max(y) - min(y)]$. Jest to wzór dla płaszczyzny dwuwymiarowej, jednak można zastosować inne wzory w wypadku zastosowania innych płaszczyzn. W wypadku gdy obliczona dyspersja przekroczyła zadany próg, nie znaleziono fiksacji, okno zostaje przesunięte na kolejny punkt. W przeciwnym wypadku okno należy zanotować jako fiksację. W tym oknie należy dodawać elementy aż obliczona dyspersja przekroczy próg dyspersji. Algorytm się kończy w momencie gdy wszystkie punkty zostaną przeanalizowane.\par
+Następnym badanym algorytmem jest algorytm dyspersyjny I-DT\footnote{z ang. Identification Dispersion-Threshold}. W przeciwieństwie do algorytmów prędkościowych, algorytm I-VT wykorzystuje fakt, iż fiksacje ze względu na swoją małą prędkość mają tendencje do grupowania się. Algorytm I-DT identyfikuje te fiksacje za pomocą okien (grup punktów) o określonej dyspersji (\emph{maksymalna separacja}). Jak napisano w rozdziale \ref{ssec:ivt}, fiksacja trwa zazwyczaj 150 ms, co pozwala nam określić dolny próg wejściowy dla algorytmu na poziomie 150-200 ms. Pseudokod algorytmu można znaleźć w na rysunku \ref{fig:idt}.\par
+Algorytm I-DT wykorzystuje ruchome okno, do którego należą punkty będące potencjalnymi fiksacjami. Zgodnie z powyższym pseudokodem, inicjalizacja okna następuje na podanym przez użytkownika progu czasowym. Następnie sprawdzana jest dyspersja pomiędzy punktami, którą można obliczyć za pomocą wzoru: $D = [max(x) - min(x)] + [max(y) - min(y)]$. Jest to wzór dla płaszczyzny dwuwymiarowej, jednak można zastosować inne wzory w wypadku użycia innych płaszczyzn przy wykonywaniu pomiaru. W wypadku gdy obliczona dyspersja przekroczyła zadany próg, nie znaleziono fiksacji, okno zostaje przesunięte na kolejny punkt. W przeciwnym wypadku okno należy zanotować jako fiksację. W tym oknie należy dodawać elementy aż obliczona dyspersja przekroczy próg dyspersji. Algorytm się kończy w momencie gdy wszystkie punkty zostaną przeanalizowane.\par
 Algorytm I-DT wymaga podania dwóch parametrów wejściowych: progu dyspersji oraz progu czasowego. Obydwa progi można podać na podstawie obserwacji analizowanych danych. Próg czasowy zazwyczaj jest ustawiany na wartości 100-200 ms.
 \subsubsection{Uczenie maszynowe}
 \label{ssec:machinelearning}

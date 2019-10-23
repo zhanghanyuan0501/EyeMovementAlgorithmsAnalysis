@@ -34,9 +34,40 @@ Jak wspomniano w sekcji \ref{sec:shortdesc} do stworzenia bazy danych wykorzysta
 \section{Specyfikacja zewnętrzna aplikacji}
 Celem poniższego podrozdziału jest zaprezentowanie sposobu działania aplikacji, oraz najważniejszych modułów.
 \subsection{Parametry wejściowe}
-\blindtext
+\label{ssec:parameters}
+Zadaniem tej sekcji jest przedstawienie dostępnych parametrów wejściowych dla aplikacji.\\
+Przez to iż projekt został przygotowany jako program konsolowy, nie posiadający interfejsu użytkownika, konieczne było zaprojektowanie odpowiedniego systemu wprowadzania danych do programu, wraz z wyborem odpowiedniego algorytmu. W tym celu, został przygotowany skrypt uruchomieniowy napisany w języku Powershell. Znajduje się on w głównym katalogu aplikacji. Przykładowa treść została przedstawiona w kodzie \ref{lst:runapp}.\par
+\begin{lstlisting}[language=Python, caption=Skrypt uruchomieniowy aplikacji, label={lst:runapp}]
+        Set-Location $PSScriptRoot
+        python main.py -i '1_01_1311201811.cal' 'ML' -d
+        pause
+\end{lstlisting}
+Jak można zauważyć, druga linia kodu \ref{lst:runapp} odpowiada za uruchomienie aplikacji. Pierwsza linijka ustawia lokalizację środowiska okna w głównym folderze aplikacji, gdyż bez tego domyślną wartością jest wartość \emph{C:/Użytkownicy/nazwaużytkownika}. Ostatnia linia skryptu wymusza na użytkowniku wciśnięcie klawisza żeby zamknąć okno aplikacji.\par
+Wszystkie wymagania, żeby uruchomić skrypt zostały podane w sekcji \ref{ssec:apprequirements}.\par
+Po nazwie pliku głównego został zaprezentowany przełącznik, który wymaga podania jednej z trzech wartości:
+\begin{itemize}
+        \item \emph{-i}, odpowiadająca za dalsze działanie aplikacji,
+        \item \emph{-h}, wyświetlająca pomoc z aplikacji,
+        \item \emph{-a}, pokazującą dostępne algorytmy i wygląd ich parametrów
+\end{itemize}
+Kolejnym parametrem wejściowym jest nazwa pliku umieszczona w katalogu \emph{/data} w głównym folderze aplikacji. Czwartym parametrem jest algorytm, którym użytkownik chce zbadać wybrany plik wejściowy. Wyróżnia się trzy parametry:
+\begin{itemize}
+        \item \emph{'ML'}, algorytm wykorzystujący uczenie maszynowe.
+        \item \emph{'I-DT'}, algorytm I-DT,
+        \item \emph{'I-VT'}, algorytm I-VT
+\end{itemize}
+Ostatni, \emph{nieobowiązkowy} parametr odpowiada za wybór miejsca, z którego dane mają być wczytywane, \emph{\textbf{-d}} wykonuje połączenie z bazą danych, a \emph{\textbf{-f}} z pliku. W wypadku braku parametru, wykonywana jest ta druga akcja.
 \subsection{Format danych wejściowych}
-\blindtext
+W tej sekcji zaprezentowane zostaną dane wejściowe, otrzymane w wyniku pomiarów z kamery.\par
+Wszystkie dane wejściowe zostały umieszczone w folderze \emph{\textbf{/data}} znajdującym się w katalogu głównym aplikacji. Przechowywane one są w formacie \emph{.cal}, który można otworzyć za pomocą dowolnego edytora tekstowego. Zachowaniem przypomina on format \emph{.csv}, z tą różnicą, iż zamiast znaków \emph{;} lub \emph{,} rozdzielających elementy w jednej linii występuje znak specjalny \textbf{/t} odpowiadający jednemu wciśnięciu przycisku TAB na klawiaturze. Przykład pliku wejściowego umieszczono na rysunku \ref{fig:plikwejsciowy}.
+\begin{figure}[H]
+        \centering
+        \captionsetup{justification=centering,margin=2cm}
+        \includegraphics[width=0.8\linewidth]{resources/plikwejsciowy.png}
+        \caption{Fragment pliku wejściowego}
+        \label{fig:plikwejsciowy}
+\end{figure}
+Pierwsza kolumna reprezentuje typ danych odczytanych, zawiera ona dwie wartości: \textbf{SS} oraz \textbf{R}. SS oznacza zmianę mierzonego punktu, a wszyskie elementy R oznaczają pomiar. Kolejna kolumna przetrzymuje czas wykonania pomiaru w formacie \emph{UNIX} obliczanym w milisekundach. Jak można zauważyć, pomiar wykonywany jest z częstotliwością 1 ms, przez co odczytane wyniki powinny być dokładne. Trzeci oraz ostatni parametr to nieskalibrowane punkty wejściowe, odpowiednio X i Y. Ich wartości wynoszą od 0 do 1.
 \subsection{Format danych wyjściowych}
 \blindtext
 \subsection{Prezentacja fiksacji}
@@ -46,7 +77,7 @@ Celem poniższego podrozdziału jest zaprezentowanie sposobu działania aplikacj
 W tym podrozdziale przedstawiono informacje dotyczące sposobu implementacji algorytmów przedstawionych w rozdziale \ref{ssec:algorithms}. Przed tymi informacjami przedstawiono moduły języka Python wymagane do uruchomienia aplikacji, oraz sposób ich wykorzystania, jak również opisano metodykę konwersji danych wejściowych na format czytelny dla algorytmów, i sposób połączenia z bazą danych MongoDB.
 \subsection{Wymagania aplikacji}
 \label{ssec:apprequirements}
-\blindtext
+Żeby uruchomić skrypt \emph{run.ps1} opisany w sekcji \ref{ssec:parameters} na platformie Windows, należy ustawić parametr \emph{\textbf{ExecutionPolicy}} na wartość \emph{\textbf{Unrestricted}}. Można to wykonać za pomocą polecenia \emph{\textbf{Set-ExecutionPolicy Unrestricted}} w oknie konsoli PowerShell.\par
 \subsection{Kalibracja danych wejściowych}
 \label{ssec:calibration}
 \blindtext
