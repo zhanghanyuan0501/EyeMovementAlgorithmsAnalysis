@@ -86,7 +86,7 @@ Plik ten został zbudowany w sposób zaprezentowany na rysunku \ref{fig:exportfi
         \label{fig:exportfile}
 \end{figure}
 \begin{enumerate}
-        \itemsep0em 
+        \itemsep1em 
         \item ImportAndConvertFileStatistic
         \item CalibrationSummaryTime
         \item AlgorithmRunTimeStatistic
@@ -95,7 +95,8 @@ Plik ten został zbudowany w sposób zaprezentowany na rysunku \ref{fig:exportfi
         \item ImportAndConvertDatabaseStatistic
         \item MemoryChangeDuringAlgorithm
 \end{enumerate}
-Wszystkie czasy zaprezentowane podano w sekundach. Pierwsza kolumna prezentuje czas trwania importu danych do pamięci oraz czas trwania konwersji plików do formatu czytelnego dla aplikacji, zgodnie z fragmentem \ref{ssec:importdata}. Następna kolumna przedstawia łączny czas trwania kalibracji współrzędnych wejściowych do formy układu współrzędnych odpowiadającej mierzonym punktom RR. Trzecia kolumna pokazuje czas trwania algorytmu wykrywania fiksacji, a czwarta ilość odnalezionych fiksacji. Piąta i szósta kolumna mogą być puste, gdyż wykazują czas trwania importu danych do bazy danych, oraz odpowiednik importu i konwersji z pierwszej kolumny dla bazy danych, celem porównania czy pobranie z bazy danych może być szybsze od pobrania z pliku. Ostatnie dwie kolumny mierzą różnicę wykorzystania pamięci pomiędzy końcem i początkiem działania algorytmu - jak dużo pamięci zużywa algorytm.
+Wszystkie czasy zaprezentowane podano w sekundach. Pierwsza kolumna prezentuje czas trwania importu danych do pamięci oraz czas trwania konwersji plików do formatu czytelnego dla aplikacji, zgodnie z fragmentem \ref{ssec:importdata}. Następna kolumna przedstawia łączny czas trwania kalibracji współrzędnych wejściowych do formy układu współrzędnych odpowiadającej mierzonym punktom RR. Trzecia kolumna pokazuje czas trwania algorytmu wykrywania fiksacji, a czwarta ilość odnalezionych fiksacji. Piąta i szósta kolumna mogą być puste, gdyż wykazują czas trwania importu danych do bazy danych, oraz odpowiednik importu i konwersji z pierwszej kolumny dla bazy danych, celem porównania czy pobranie z bazy danych może być szybsze od pobrania z pliku. Ostatnie dwie kolumny mierzą różnicę wykorzystania pamięci pomiędzy końcem i początkiem działania algorytmu - jak dużo pamięci zużywa algorytm.\par
+Dodatkowo generowany jest plik posiadający wszystkie pary punktów należących do fiksacji.\todo{Stwórz ten plik :)}
 \subsection{Prezentacja fiksacji}
 \label{ssec:fixations}
 \begin{figure}[H]
