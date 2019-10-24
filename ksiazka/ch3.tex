@@ -1,4 +1,4 @@
-Wewnątrz tego rodziału znajduje się krótki opis aplikacji służącej do przeprowadzenia badań, oraz implementującej algorytmy zaprezentowane w rozdziale \ref{ssec:algorithms}, specyfikacja zewnętrzna oraz wewnętrzna.
+Wewnątrz tego rozdziału znajduje się krótki opis aplikacji służącej do przeprowadzenia badań, oraz implementującej algorytmy zaprezentowane w rozdziale \ref{ssec:algorithms}, specyfikacja zewnętrzna oraz wewnętrzna.
 \section{Krótki opis aplikacji}
 \label{sec:shortdesc}
 Program, który został wykorzystany przy przeprowadzeniu badań został przygotowany jako aplikacja konsolowa. Tego typu aplikacja pozwala na implementację algorytmów, jak również sposobów mierzenia, bez obciążania maszyny o zbędne GUI\footnote{z ang. Graphical User Interface - graficzny interfejs użytkownika}, który może powodować przekłamania względem analizy czasowej i pamięciowej. Aplikacja wykorzystuje celem weryfikacji wpływu czasu połączenia z bazą danych na łączny czas trwania analizy danych wejściowych bazę danych MongoDB, będącej typem bazy NoSQL. W tabeli \ref{tab:nosqlschema} pokazano schemat tabeli z elementami.
@@ -30,7 +30,7 @@ Dokładny opis działania każdego z powyższych punktów zaprezentowano w sekcj
 \label{sec:tools}
 Projekt został stworzony wykorzystując język programowania \emph{Python} \cite{Python} w wersji 3.7.3. Ten język został wybrany ze względu na jego czytelność oraz modułowość. Kolejnym czynnikiem była prostota w implementacji algorytmów, ze względu na wykorzystanie gotowych funkcjonalności języka Python. Rozważanymi alternatywami był język \emph{F\#} oraz język \emph{R}, Język F\# wykorzystuje platformę .NET, co na pewno ułatwiło by możliwość rozwiązania problemu uczenia maszynowego zaprezentowanego w sekcji \ref{ssec:machinelearningalg}, ze względu na połączenie go z modułem \emph{ML.NET}\footnote{Machine Learning .NET}. Język R w budowie jest bardzo podobny do języka F\#, ale jego kod źródłowy jest otwarty, w przeciwieństwie do F\#\footnote{Należy nadmienić, iż chodzi o standard .NET Framework, a nie .NET Core, dla którego F\# posiada otwarty kod źródłowy} jednak podstawowa znajomość języka Python zadecydowała o wykorzystaniu tej platformy. Wszystkie wymagane moduły oraz sposób użycia opisano w sekcji \ref{ssec:apprequirements}.\par
 Praca magisterska została napisana z wykorzystaniem narzędzia \LaTeX\cite{Latex}. Głównym powodem wybrania tego narzędzia jest to, iż prace pisemne tego typu tworzy się łatwo, istnieje dużo rozszerzeń ułatwiających np. wklejanie fragmentów kodu, tworzenie pseudokodu oraz umieszczanie obrazków w dowolnym miejscu oraz formacie. Kolejną zaletą jest darmowość tego pakietu, w przeciwieństwie do pakietu Office firmy Microsoft. Istnieją również rozwiązania darmowe typu OpenOffice, LibreOffice, jednak nie posiadają one takich ułatwień dla prac naukowych. Użyto edytora tekstu Visual Studio Code.\par
-Jak wspomniano w sekcji \ref{sec:shortdesc} do stworzenia bazy danych wykorzystano silnik bazodanowy \emph{MongoDB} typu NoSQL. Jest to nierelacyjna baza danych wykorzystująca \textbf{Dokument} jako model danych. Oznacza to, iż dane są zapisywane w formacie BSON\footnote{binary JSON}. Ze względu na wykorzystany typ danych, będący jednym typem, postanowiono użyć tego rozwiązania. Język Python umożliwia w bardzo prosty sposób integrację z bazą danych MongoDB, jak zaprezentowano w sekcji \ref{ssec:connectionDB}.
+Jak wspomniano w sekcji \ref{sec:shortdesc} do stworzenia bazy danych wykorzystano silnik bazodanowy \emph{MongoDB} typu NoSQL. Jest to nierelacyjna baza danych wykorzystująca \textbf{Dokument} jako model danych. Oznacza to, iż dane są zapisywane w formacie BSON\footnote{binary JSON}. Ze względu na wykorzystany typ danych, będący jednym typem, postanowiono użyć tego rozwiązania. Język Python umożliwia w bardzo prosty sposób integrację z bazą danych MongoDB, jak zaprezentowano w sekcji \ref{ssec:db}.
 \section{Specyfikacja zewnętrzna aplikacji}
 Celem poniższego podrozdziału jest zaprezentowanie sposobu działania aplikacji, oraz najważniejszych modułów.
 \subsection{Parametry wejściowe}
@@ -69,7 +69,7 @@ Wszystkie dane wejściowe zostały umieszczone w folderze \emph{\textbf{/data}} 
         \label{fig:plikwejsciowy}
 \end{figure}
 Pierwsza kolumna reprezentuje typ danych odczytanych, zawiera ona dwie wartości: \textbf{SS} oraz \textbf{R}. SS oznacza zmianę mierzonego punktu, a wszyskie elementy R oznaczają pomiar. Kolejna kolumna przetrzymuje czas wykonania pomiaru w formacie \emph{UNIX} obliczanym w milisekundach. Jak można zauważyć, pomiar wykonywany jest z częstotliwością 1 ms, przez co odczytane wyniki powinny być dokładne. Trzeci oraz ostatni parametr to nieskalibrowane punkty wejściowe, odpowiednio X i Y. Ich wartości wynoszą od 0 do 1 względem punktu RR\footnote{dopytać}. Kalibrację danych opisano w sekcji \ref{ssec:calibration}.\par
-Podobny format danych można znaleźć w bazie danych, zgodnie z podrozdziałem \ref{sec:shortdesc}.
+Podobny format danych można znaleźć w bazie danych, zgodnie z podrozdziałem \ref{sec:shortdesc}.\par
 \subsection{Format danych wyjściowych}
 Ten podrozdział zaprezentuje format danych wyjściowych, jak również miejsce ich zapisywania.\par
 Wynikiem działania programu jest dwójka plików, plik \emph{.csv} zawierający obliczone dane, oraz plik .png będący reprezentacją graficzną obliczonych fiksacji. Zapis danych odbywa się w momencie zakończenia obliczeń. Opis pliku graficznego został zaprezentowany w sekcji \ref{ssec:fixations}.\par
@@ -113,24 +113,38 @@ Rysunek \ref{fig:presentationfixation} pokazuje w jaki sposób po wykonaniu algo
         \caption{Przybliżony podgląd fiksacji}
         \label{fig:zoomedfixation}
 \end{figure}
+W trakcie analizy danych, zaobserwowano iż w danych wejściowych istnieją dwa punkty 'SS' o wartościach $(0.5,0.5)$ co powoduje zwiększenie ilości mierzonych fiksacji w okolicach tego punktu. Można to zauważyć na rysunku \ref{fig:presentationfixation}.
 \section{Specyfikacja wewnętrzna aplikacji}
 \label{sec:internal}
-W tym podrozdziale przedstawiono informacje dotyczące sposobu implementacji algorytmów przedstawionych w rozdziale \ref{ssec:algorithms}. Przed tymi informacjami przedstawiono moduły języka Python wymagane do uruchomienia aplikacji, oraz sposób ich wykorzystania, jak również opisano metodykę konwersji danych wejściowych na format czytelny dla algorytmów, i sposób połączenia z bazą danych MongoDB.
+W tym podrozdziale przedstawiono informacje dotyczące sposobu implementacji algorytmów przedstawionych w rozdziale \ref{ssec:algorithms}. Przed tymi informacjami przedstawiono moduły języka Python wymagane do uruchomienia aplikacji, oraz sposób ich wykorzystania, jak również opisano metodykę konwersji danych wejściowych na format czytelny dla algorytmów, i sposób połączenia z bazą danych MongoDB. Celem zwięzłości pokazanych fragmentów kodu, pominięto wyświetlanie inicjalizacji tablic, list oraz elementów nieistotnych dla działania, typu pomiar czasu i pamięci.
 \subsection{Wymagania aplikacji}
 \label{ssec:apprequirements}
 Żeby uruchomić skrypt \emph{run.ps1} opisany w sekcji \ref{ssec:parameters} na platformie Windows, należy ustawić parametr \emph{\textbf{ExecutionPolicy}} na wartość \emph{\textbf{Unrestricted}}. Można to wykonać za pomocą polecenia \emph{\textbf{Set-ExecutionPolicy Unrestricted}} w oknie konsoli PowerShell.\par
+Zgodnie z fragmentem \ref{sec:tools}, aplikacja korzysta z języka \emph{Python}. Celem uruchomienia programu należy dodać do zmiennych środowiskowych ścieżki do środowiska Python. Przykład takich elementów pokazano na rysunku \ref{fig:path}, są to zaznaczone elementy.
+\begin{figure}[H]
+        \centering
+        \captionsetup{justification=centering,margin=2cm}
+        \includegraphics[width=\linewidth]{resources/path.png}
+        \caption{Konfiguracja zmiennych środowiskowych}
+        \label{fig:path}
+\end{figure}
+Projekt wymaga zainstalowania poniższych modułów języka Python, celem poprawnego działania konkretnych elementów aplikacji. Poniżej zaprezentowano te moduły, wraz z ich przeznaczeniem.\par
+Wszystkie moduły można pobrać za pomocą pakietu \textbf{pip}, domyślnie instalowanego wraz z instancją Pythona. Pierwszym modułem jest \textbf{NumPy}, które jest wiodącym pakietem przeznaczonym do bardziej skomplikowanych operacji na danych naukowych. W projekcie znalazł on zastosowanie m.in. w kalibracji danych wejściowych. Rozwiązanie przedstawiono w sekcji \ref{ssec:calibration}, gdzie wykorzystano metodę najmniejszych kwadratów celem obliczenia regresji liniowej. Kolejną biblioteką jest biblioteka \textbf{Matplotlib.pyplot}, umożliwiająca wyświetlanie danych wyjściowych. Prezentację modułu można znaleźć w rozdziale \ref{ssec:datashow}. Celem połączenia z bazą danych oraz prawidłową konwersją danych należało zainstalować moduły \textbf{pymongo} oraz \textbf{bson}. Zaprezentowano ich wykorzystanie w podsekcji \ref{ssec:db}. Kolejną ważną funkcjonalnością jest moduł \textbf{Guppy.Heapy}, któego celem jest pomiar zużycia pamięci w trakcie wykonywania obliczeń. Ostatnim modułem, którego wykorzystuje się w sekcji \ref{ssec:machinelearningalg} jest podmoduł dla \textbf{NumPy}, mianowicie \textbf{scikit-learn}. Zawiera on wszystkie potrzebne narzędzia do tworzenia i analizy uczenia maszynowego.\par
+Domyślnie zainstalowanymi pakietami, które również znalazły swoje zastosowanie w pracy są pakiety \textbf{time}, \textbf{os}, \textbf{sys}. Odpowiadają one za pomiar czasu, obsługę plików oraz komunikację z systemem.\par
+Ostatnim wymaganym elementem jest posiadanie bazy \textbf{MongoDB}. W tym celu należy zainstalować wybraną wersję pakietu ze strony \url{https://www.mongodb.com/}. Podczas instalacji automatycznie tworzona jest sesja pod wybranym przez użytkownika portem. Domyślną wartością jest \textbf{27017}. Ścieżka połączenia z bazą danych dla tego projektu pokazana jest w kodzie \ref{lst:connectDB}.
 \subsection{Kalibracja danych wejściowych}
+Ta sekcja ma za zadanie prezentację metodyki kalibracji danych wejściowych, jak również opis teoretyczny wykorzystanego zastosowania.\par
+Kalibracja danych ma za zadanie konwersję danych z czujnika ruchu, do formatu danych na liniowym układzie współrzędnych. Jak można zauważyć na rysunku \ref{fig:plikwejsciowy}, współrzędne X i Y, dla danych typu \emph{'RR'} w pliku wejściowym posiadają nietypowe wartości, co powoduje błędne działanie algorytmów wykrywania fiksacji. Rozwiązaniem tego problemu jest metody najmniejszych kwadratów. Jak wykazano w sekcji \ref{ssec:regression}, należało wykorzystać metodę liniową, a nie wielomianową.\par
+Zadaniem liniowej metody najmniejszych kwadratów jest znalezienie współczynników funkcji liniowej, przez którą przebiegają wszystkie mierzone punkty. W tej metodzie zakładamy iż nasze równanie wynosi $Ax = b$, dlatego każda akcja wykonywana jest dwa razy, dla punktów osi X oraz Y.\par
+Funkcja jest wywoływana osobno dla każdego punktu, ze względu na wstępną kalibrację przeprowadzoną przez urządzenie pomiarowe. Kod algorytmu znajduje się na listingu \ref{lst:calibration}.
 \label{ssec:calibration}
 \begin{lstlisting}[language=Python, caption=Algorytm kalibracji, label={lst:calibration}]
 def calibrate(xList, yList):
         i = 1
-        ssxArr = []
-        ssyArr = []
-        X = []
-        Y = []
+        ...
         while i < len(xList):
-                X.append([xList[i]*xList[i],xList[i],yList[i]*yList[i],yList[i]])
-                Y.append([yList[i]*yList[i],yList[i],xList[i]*xList[i],xList[i]])
+                X.append([xList[i]**2,xList[i],yList[i]**2,yList[i]])
+                Y.append([yList[i]**2,yList[i],xList[i]**2,xList[i]])
                 ssxArr.append(xList[0])
                 ssyArr.append(yList[0])
                 i+=1
@@ -139,32 +153,34 @@ def calibrate(xList, yList):
         y = np.linalg.lstsq(Y,ssyArr,rcond=None)
 
         i = 1
-        retX = []
-        retY = []
+        ...
         while i < len(xList):
-                retX.append(x[0][0]*xList[i]*xList[i] + x[0][1]*xList[i] + x[0][2]*yList[i]*yList[i] + x[0][3]*yList[i])
-                retY.append(y[0][0]*yList[i]*yList[i] + y[0][1]*yList[i] + y[0][2]*xList[i]*xList[i] + y[0][3]*xList[i])
+                retX.append(x[0][0]*xList[i]**2 + x[0][1]*xList[i] + x[0][2]*yList[i]**2 + x[0][3]*yList[i])
+                retY.append(y[0][0]*yList[i]**2 + y[0][1]*yList[i] + y[0][2]*xList[i]**2 + y[0][3]*xList[i])
                 i += 1
-        
         return retX, retY
 \end{lstlisting}
-\subsection{Połączenie z bazą danych}
-\label{ssec:connectionDB}
+Pierwszymi krokami algorytmu jest przygotowanie danych do obliczenia. Możemy znaleźć to w liniach 4-9 algorytmu. Tablice \textbf{ssxArr} oraz \textbf{ssyArr} są tablicami jednowymiarowymi o długości pomiaru punktu. Zawierają one wartość punktu 'SS', który jest znany, oraz jest dla równania liniowego jest wartością wolną $b$. Tablice dwuwymiarowe \textbf{X} oraz \textbf{Y} odpowiadają macierzom współczynników $A$. Po umieszczeniu wszystkich elementów następuje obliczenie wartości $x$ za pomocą dostępnej metody \emph{np.linalg.lstsq}. Jako parametry przyjmuje ona wartości (A, b). Trzecim, opcjonalnym parametrem jest parametr odcięcia dla małych wartości w macierzy A. Zauważono, iż dla dostępnych danych należy ustawić go na \emph{None}, żeby uzyskać dokładniejsze rezultaty.\par
+Ostatnim krokiem algorytmu jest zapisanie obliczonych wartości punktów x oraz y. Następuje to za pomocą przyrównania ich do wartości z macierzy współczynników oraz zsumowania obliczonych wartości. Rezultatem algorytmu są skalibrowane punkty X oraz Y.
+\subsection{Obsługa bazy danych}
+W tym podrozdziale pokazano sposób dostępu do bazy danych.
+\label{ssec:db}
+\subsubsection{Połączenie z bazą danych}
 \begin{lstlisting}[language=Python, caption=Połączenie z bazą danych, label={lst:connectDB}]
         LOCALHOST = "mongodb://localhost:27017/"
         ...
         myclient = pymongo.MongoClient(LOCALHOST)
         mydb = myclient["mydatabase"]
 \end{lstlisting}
-
+Jak można zauważyć w kodzie \ref{lst:connectDB} pakiet \textbf{PyMongo} umożliwia w bardzo prosty sposób połączenie z bazą danych. Pierwsza linia kodu to ścieżka połączenia, trzecia i czwarta odpowiadają za samo połączenie oraz inicjalizację lub wybór istniejącej bazy danych. Te linie są wykorzystywane we fragmentach \ref{lst:insertDB} oraz \ref{lst:getFromDB} celem inicjalizacji zmiennych lokalnych.
 \subsubsection{Umieszczenie danych w bazie danych}
+\label{ssec:insertDB}
 Fragment dotyczący umieszczenia danych w bazie danych został zaprezentowany w kodzie \ref{lst:insertDB}. 
 \begin{lstlisting}[language=Python, caption=Umieszczenie danych w bazie danych, label={lst:insertDB}]
 def initialize_db(pointsList):
     ...
     myclient.drop_database("mydatabase")
     col = mydb["elements"]
-    odbcarr = []
     for element in list(pointsList):
             for value in element:
                     doc = collections.OrderedDict()
@@ -176,19 +192,18 @@ def initialize_db(pointsList):
     col.insert_many(odbcarr)
     ...
 \end{lstlisting}
+Parametrem wejściowym funkcji jest lista wszystkich istniejących punktów. Fragment kodu w liniach 3 oraz 4 przedstawia inicjalizację elementów w bazie danych, najpierw następuje wyczyszczenie istniejących elementów wraz z usunięciem bazy danych, a potem utworzenie bazy danych \emph{"mydatabase"} z tabelą \emph{"elements"}. Linie kodu od 6 do 13 przedstawia umieszczenie elementów typu OrderedDict w tablicy. Tego typu obiekty zgodnie z dokumentacją dla większej ilości elementów są najprostszym sposobem realizacji operacji INSERT w bazie danych. W linii 14 następuje umieszczenie elementów w tabeli.
 \subsubsection{Wydobycie danych z bazy danych}
+\label{ssec:getDB}
 \begin{lstlisting}[language=Python, caption=Wydobycie danych z bazy danych, label={lst:getFromDB}]
 def getFromDatabase():
     ...
     elements = mydb["elements"].find()
-    dataArray = []
     for element in elements:
             item = Data(element['Type'], element['TimeStamp'], element['CoordX'], element['CoordY'])
             dataArray.append(item)
     i = 0
     loopFlag = True
-    retList = []
-    returnList = []
     while loopFlag:
             for element in dataArray:
                     if i + 1 == len(dataArray):
@@ -205,8 +220,44 @@ def getFromDatabase():
             retList = []
     ...
     \end{lstlisting}
+Listing kodu \ref{lst:getFromDB} przedstawia rozwiązanie problemu wydobycia danych z tabeli. Linia 3 wykorzystując bibliotekę \textbf{MongoDB} pobiera elementy za pomocą funkcji \emph{find()}. Funkcja ta pobiera wszystkie elementy, można ją przyrównać do wykonania zapytania 
+\begin{verbatim}
+        SELECT * FROM mydatabase.elements;
+\end{verbatim}
+Następnym elementem funkcji jest przetworzenie danych na dane czytelne dla algorytmów wykrywania fiksacji, co zapewniają linie 4-6. Linie 9-22 odpowiadają za podział wszystkich punktów w celu umieszczenia ich do tablicy, której elementami są punkty przedzielone wartościami 'SS'.
 \subsection{Algorytm I-VT}
 \label{ssec:implementivt}
+\begin{lstlisting}[language=Python, caption=Kod algorytmu I-VT, label={lst:ivt}]
+def calculateIvtAlgorithm(pointList):
+    i = 0
+    for element in pointList:
+        velocity = 0
+        if pointList[i].Type == 'SS':
+            i += 1
+            continue
+        if i + 1 == len(pointList) - 1:
+            velocity = math.sqrt(math.pow(pointList[i + 1].CoordX - pointList[i].CoordX, 2) + math.pow(pointList[i + 1].CoordY - pointList[i].CoordY, 2))
+            if velocity < constants.FIXATION_VELOCITY_THRESHOLD:
+                fixations.append(pointList[i])
+                fixations.append(pointList[i + 1])
+            break
+        velocity = math.sqrt(math.pow(pointList[i + 1].CoordX - pointList[i].CoordX, 2) + math.pow(pointList[i + 1].CoordY - pointList[i].CoordY, 2))
+        if (velocity < constants.FIXATION_VELOCITY_THRESHOLD):
+            fixations.append(pointList[i])
+        i += 1
+    
+    i = 0
+    while i < len(fixations) - 1:
+        velocity = math.sqrt(math.pow(fixations[i + 1].CoordX - fixations[i].CoordX, 2) + math.pow(fixations[i + 1].CoordY - fixations[i].CoordY, 2))
+        if velocity < constants.FIXATION_VELOCITY_THRESHOLD:
+            combineFixationsArray.append(fixations[i])
+        else:
+            if len(combineFixationsArray) != 0:
+                coordX.append(sum(sumX.CoordX for sumX in combineFixationsArray) / len(combineFixationsArray))
+                coordY.append(sum(sumY.CoordY for sumY in combineFixationsArray) / len(combineFixationsArray))
+        i += 1
+    return coordX, coordY, end - start, len(coordX)
+\end{lstlisting}
 \subsection{Algorytm I-DT}
 \label{ssec:implementidt}
 \begin{lstlisting}[language=Python, caption=Kod algorytmu I-DT, label={lst:idt}]
@@ -254,4 +305,7 @@ def calculateIdtAlgorithm(pointsList):
 \end{lstlisting}
 \subsection{Algorytm wykorzystujący uczenie maszynowe}
 \label{ssec:machinelearningalg}
-\blindtext
+Opis teoretyczny biblioteki bazuje na pracy \cite{MLPython}.\par
+\subsection{Wyświetlanie danych}
+\label{ssec:datashow}
+

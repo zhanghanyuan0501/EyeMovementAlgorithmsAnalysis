@@ -18,21 +18,30 @@ def calibrate(xList, yList):
     X = []
     Y = []
     while i < len(xList):
-        X.append([xList[i]*xList[i],xList[i],yList[i]*yList[i],yList[i]])
-        Y.append([yList[i]*yList[i],yList[i],xList[i]*xList[i],xList[i]])
+        X.append([xList[i]**2,xList[i],yList[i]**2,yList[i]])
+        Y.append([yList[i]**2,yList[i],xList[i]**2,xList[i]])
         ssxArr.append(xList[0])
         ssyArr.append(yList[0])
         i+=1
+
+    tmp1 = np.polyfit(xList, yList, 2)
+    tmp2 = np.polyfit(yList, xList, 2)
+
+    print(tmp1, tmp2)
+    yn = np.polyval(tmp1, xList[1:])
+    yn2 = np.polyval(tmp2, yList[1:])
+
     
-    x = np.linalg.lstsq(X,ssxArr,rcond=None)
-    y = np.linalg.lstsq(Y,ssyArr,rcond=None)
+
+    x = np.linalg.lstsq(X,ssxArr, rcond=None)
+    y = np.linalg.lstsq(Y,ssyArr, rcond=None)
 
     i = 1
     retX = []
     retY = []
     while i < len(xList):
-        retX.append(x[0][0]*xList[i]*xList[i] + x[0][1]*xList[i] + x[0][2]*yList[i]*yList[i] + x[0][3]*yList[i])
-        retY.append(y[0][0]*yList[i]*yList[i] + y[0][1]*yList[i] + y[0][2]*xList[i]*xList[i] + y[0][3]*xList[i])
+        retX.append(x[0][0]*xList[i]**2 + x[0][1]*xList[i] + x[0][2]*yList[i]**2 + x[0][3]*yList[i])
+        retY.append(y[0][0]*yList[i]**2 + y[0][1]*yList[i] + y[0][2]*xList[i]**2 + y[0][3]*xList[i])
         i += 1
     
     return retX, retY
