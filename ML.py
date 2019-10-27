@@ -1,6 +1,7 @@
 import constants
 from operator import attrgetter
 from math import sqrt
+from Data import Data
 
 ###
 #prędkość pomiędzy każdymi dwoma punktami,
@@ -16,7 +17,8 @@ from math import sqrt
 # - czy najpierw dodać wszystko do okna i potem zacząć obliczanie wszystkich pól
 ##
 class MLHelper:
-    def __init__(self, *args, **kwargs):
+    def __init__(self, Type, CoordX, CoordY, TimeStamp,  *args, **kwargs):
+        self.Data = Data(Type, TimeStamp, CoordX, CoordY)
         self.VelocityBetweenPoints = float(0)
         self.DistancesBetweenPoints = float(0)
         self.DistancesWindow = float(0)
@@ -29,13 +31,12 @@ def calculateMlAlgorithm(pointList):
     i = 0
     helperArr = []
     while i < len(pointList):
-        
+        helper = MLHelper(pointList[i].Type, pointList[i].CoordX, pointList[i].CoordY, pointList[i].TimeStamp)
         if (len(pointList) == i + 1):
             break
         if (len(tempArr) == 0 or (int(pointList[i + 1].TimeStamp) - int(tempArr[0].TimeStamp) < constants.WINDOW_MACHINE_LEARNING_TIME_THRESHOLD)):
             tempArr.append(pointList[i])
         else:
-            helper = MLHelper()
             Xmin = min(tempArr, key=attrgetter('CoordX'))
             Ymin = min(tempArr, key=attrgetter('CoordY'))
             Xmax = max(tempArr, key=attrgetter('CoordX'))

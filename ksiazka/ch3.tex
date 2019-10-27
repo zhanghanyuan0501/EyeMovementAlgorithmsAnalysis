@@ -73,10 +73,7 @@ Podobny format danych można znaleźć w bazie danych, zgodnie z podrozdziałem 
 \subsection{Format danych wyjściowych}
 Ten podrozdział zaprezentuje format danych wyjściowych, jak również miejsce ich zapisywania.\par
 Wynikiem działania programu jest dwójka plików, plik \emph{.csv} zawierający obliczone dane, oraz plik .png będący reprezentacją graficzną obliczonych fiksacji. Zapis danych odbywa się w momencie zakończenia obliczeń. Opis pliku graficznego został zaprezentowany w sekcji \ref{ssec:fixations}.\par
-Plik \emph{.csv} zostaje zapisany w folderze \textbf{/result}, posiadając w nazwie nazwę pliku wejściowego, i dołączając do niego datę wykonania programu, np. 
-\begin{verbatim}
-        1_01_1311201811.cal23-10-2019-173857.csv
-\end{verbatim}
+Plik \emph{.csv} zostaje zapisany w folderze \textbf{/result}, posiadając w nazwie nazwę pliku wejściowego, i dołączając do niego datę wykonania programu, np. 1\_01\_1311201811.cal23\-10\-2019\-173857.csv.
 Plik ten został zbudowany w sposób zaprezentowany na rysunku \ref{fig:exportfile}. Posiada on 6 parametrów, każdy odpowiadający pewnej statystyce obliczonej, bądź zmierzonej w trakcie działania programu. Są to w kolejności lewo-prawo:
 \begin{figure}[H]
         \centering
@@ -225,7 +222,20 @@ Listing kodu \ref{lst:getFromDB} przedstawia rozwiązanie problemu wydobycia dan
 \begin{verbatim}
         SELECT * FROM mydatabase.elements;
 \end{verbatim}
-Następnym elementem funkcji jest przetworzenie danych na dane czytelne dla algorytmów wykrywania fiksacji, co zapewniają linie 4-6. Linie 9-22 odpowiadają za podział wszystkich punktów w celu umieszczenia ich do tablicy, której elementami są punkty przedzielone wartościami 'SS'.
+Następnym krokiem funkcji jest przetworzenie danych na dane czytelne dla algorytmów wykrywania fiksacji, co zapewniają linie 4-6. Linie 9-22 odpowiadają za podział wszystkich punktów w celu umieszczenia ich do tablicy, której elementami są punkty przedzielone wartościami 'SS'.
+\subsection{Przygotowanie danych do analizy}
+\label{ssec:Dataanalysis}
+\begin{lstlisting}[language=Python, caption=Przygotowanie danych do dalszej analizy, label={lst:datapreparation}]
+        if sys.argv[3] == 'I-DT':
+        print('Starting measurement using I-DT algorithm')
+        for measurement in parsedMeasurements:
+            print('Starting calibration')
+            m1, convertingTime = convertPointsToCalibration(measurement)
+            print('Ended calibration')
+            coordX, coordY, timealgorithm, fixationsForPoint = calculateIdtAlgorithm(m1)
+        print('Ending measurement using I-DT algorithm')
+\end{lstlisting}
+Na listingu \ref{lst:datapreparation} zaprezentowano metodykę przygotowania danych do analizy za pomocą algorytmami. Przygotowuje on dane dla algorytmu I-DT. W pierwszej linii zaprezentowano fragment pętli wybierającej odpowiednią gałąź aplikacji, zgodnie z parametrami uruchomieniowymi zaprezentowanymi w sekcji \ref{ssec:parameters}. W pętli \textbf{for} elementem iterowanym jest jeden odczytany pomiar. Każdy pomiar jest oddzielany punktem 'SS'. W pierwszym kroku wykonywana jest kalibracja danych. Zwracaną wartością jest czas kalibracji oraz lista punktów skalibrowanych - \emph{m1}. Kolejnym krokiem jest wykonanie algorytmu wykrywania fiksacji.
 \subsection{Algorytm I-VT}
 \label{ssec:implementivt}
 \begin{lstlisting}[language=Python, caption=Kod algorytmu I-VT, label={lst:ivt}]
@@ -259,50 +269,88 @@ def calculateIvtAlgorithm(pointList):
         i += 1
     return coordX, coordY, end - start, len(coordX)
 \end{lstlisting}
+W kodzie \ref{lst:ivt} przedstawiono implementację algorytmu I-VT w języku Python, zgodnie z pseudokodem \ref{fig:ivt}. Jako parametr wejściowy funkcja otrzymuje podzieloną listę punktów zgodnie z opisem w sekcji \ref{ssec:Dataanalysis}. Główna pętla \textbf{for} iteruje po każdym punkcie z parametrów wejściowych. Zadaniem linii 5-7 jest pominięcie każdego punktu 'SS', gdyż nie są one potrzebne do obliczeń. Wiersz 8 prezentuje warunek, gdy badany jest przedostatni i ostatni punkt. Obliczana jest prędkość pomiędzy tymi punktami, i jeżeli warunek nr 2 zaprezentowany w pseudokodzie \ref{fig:ivt} jest spełniony, dodaje się te punkty do listy fiksacji. Linie 14 do 17 prezentują działanie algorytmu dla punktów innych niż przedostatni i ostatni. Prędkość pomiędzy elementami jest obliczana zgodnie ze wzorem:
+\[\sqrt{(p[i+1].X - p[i].X)^2 + (p[i+1].Y - p[i].Y)^2}\]
+gdzie \emph{p} jest tablicą elementów, \emph{X} i \emph{Y} są współrzędnymi punktu, \emph{i} jest iteratorem tablicy.\\
+Wiersze 20-28 odpowiadają za podział elementów na grupy fiksacji, zgodnie z linią 3 pseudokodu. Ten podział odbywa się za pomocą weryfikacji prędkości międzypunktowych. W wypadku znalezienia końca grupy fiksacji, następuje wydzielenie środka grupy fiksacji za pomocą równania poniżej, gdzie P jest punktem X lub punktem Y, a N to liczba elementów w tablicy \emph{combineFixationsArray}: 
+\[
+        \frac{\sum_{i = 0}^{n}{P_i}}{n}
+\]
+Po obliczeniu wszystkich fiksacji zwracane są następujące elementy: współrzędne X fiksacji, współrzędne Y fiksacji, czas trwania algorytmu oraz ilość fiksacji. Jak można zauważyć, w kodzie algorytmu znalazł się parametr \textbf{constants.FIXATION\_VELOCITY\_THRESHOLD}. Odpowiada on za próg prędkości opisany we fragmencie \ref{ssec:ivt}.
 \subsection{Algorytm I-DT}
 \label{ssec:implementidt}
+W kodzie \ref{lst:idt} przedstawiono zaimplementowany algorytm I-DT. Jako parametr wejściowy funkcja przyjmuje podzieloną listę punktów. Podział zaprezentowano w sekcji \ref{ssec:Dataanalysis}. W 4 linii rozpoczyna się główna \textbf{while} pętla algorytmu, działająca przez wszystkie punkty. Tak jak w algorytmie I-VT \ref{lst:ivt}, punkty 'SS' są pomijane. Następnie należy przygotować okno do przeprowadzenia obliczeń. Zgodnie z dokumentacją, potrzeba do tego celu parametru czasowego rozmiaru okna, który określono jako \textbf{constants.WINDOW\_TIME\_THRESHOLD}. Tworzenie okna pokazano w pętli \textbf{while} pomiędzy liniami 8-14. Dwie zmienne lokalne \textbf{timeStart} i \textbf{currTime} służą do pomiaru czasu. W wypadku przekroczenia ilości elementów w liście wejściowej pętla główna jest przerywana. Po dodaniu wszystkich elementów zgodnych z warunkiem pętli należy obliczyć dyspersję w oknie. Zastosowano do tego następujący wzór:
+\[
+        D = (\max{P_X} - \min{P_X}) + (\max{P_Y} - \min{P_Y})
+\]
+Kolejnym krokiem, po obliczeniu wstępnej dyspersji, jest porównanie czy spełnia ona warunek graniczny opisany w kroku 3 pseudokodu algorymu \ref{fig:idt}. Warunek graniczny przechowywany jest w zmiennej \textbf{constants. DISPERSION\_THRESHOLD}. W wypadku gdy dyspersja jest mniejsza, należy dodawać kolejne punkty aż zostanie przekroczony warunek graniczny, co zaprezentowano w pętli \textbf{while} pomiędzy wierszami 22 i 27. Po przekroczeniu wartości zostaje dodany punkt centralny okna, obliczony za pomocą wzoru
+\[
+        P = \sum_{i = 0}^{n}{P_i}
+\]
+P może być punktem X lub Y. Po tym okno jest czyszczone do momentu spełnienia warunku granicznego, i algorytm jest wykonywany do skończenia punktów.\\
+Algorytm zwraca listę współrzędnych X i Y, czas trwania algorytmu oraz ilość fiksacji.
 \begin{lstlisting}[language=Python, caption=Kod algorytmu I-DT, label={lst:idt}]
 def calculateIdtAlgorithm(pointsList):
-        i = 0
         timeStart = int(pointsList[0].TimeStamp)
         countPoints = len(pointsList)
         while i < countPoints - 1:
-        if pointsList[i].Type == 'SS':
-                i += 1
-                continue
-        currTime = int(pointsList[i].TimeStamp)
-        while currTime - timeStart <= constants.WINDOW_TIME_THRESHOLD:
-                windowList.append(pointsList[i])
-                i += 1
-                if i >= countPoints:
-                break
+                if pointsList[i].Type == 'SS':
+                        i += 1
+                        continue
                 currTime = int(pointsList[i].TimeStamp)
-        if i >= countPoints:
-                break
-        if len(windowList) > 1:
-                Dispersion = (max(maxX.CoordX for maxX in windowList) - min(minX.CoordX for minX in windowList)) + (max(maxY.CoordY for maxY in windowList) - min(minY.CoordY for minY in windowList))
-        while len(windowList) > 1:
-                if Dispersion <= constants.DISPERSION_THRESHOLD and len(windowList) > 1:
-                while (Dispersion < constants.DISPERSION_THRESHOLD):
+                while currTime - timeStart <= constants.WINDOW_TIME_THRESHOLD:
                         windowList.append(pointsList[i])
                         i += 1
                         if i >= countPoints:
-                        break
-                        Dispersion = (max(maxX.CoordX for maxX in windowList) - min(minX.CoordX for minX in windowList)) + (max(maxY.CoordY for maxY in windowList) - min(minY.CoordY for minY in windowList))
+                                break
+                        currTime = int(pointsList[i].TimeStamp)
                 if i >= countPoints:
                         break
-                coordXList.append(sum(sumX.CoordX for sumX in windowList) / len(windowList))
-                coordYList.append(sum(sumY.CoordY for sumY in windowList) / len(windowList))
-                else:
-                windowList.pop(0)
-        if i <= countPoints - 1:
-                timeStart = int(pointsList[i].TimeStamp)
-        end = time.process_time()
+                if len(windowList) > 1:
+                        Dispersion = (max(maxX.CoordX for maxX in windowList) - min(minX.CoordX for minX in windowList)) + (max(maxY.CoordY for maxY in windowList) - min(minY.CoordY for minY in windowList))
+                while len(windowList) > 1:
+                        if Dispersion <= constants.DISPERSION_THRESHOLD and len(windowList) > 1:
+                                while (Dispersion < constants.DISPERSION_THRESHOLD):
+                                        windowList.append(pointsList[i])
+                                        i += 1
+                                        if i >= countPoints:
+                                                break
+                                        Dispersion = (max(maxX.CoordX for maxX in windowList) - min(minX.CoordX for minX in windowList)) + (max(maxY.CoordY for maxY in windowList) - min(minY.CoordY for minY in windowList))
+                                if i >= countPoints:
+                                        break
+                                coordXList.append(sum(sumX.CoordX for sumX in windowList) / len(windowList))
+                                coordYList.append(sum(sumY.CoordY for sumY in windowList) / len(windowList))
+                        else:
+                                windowList.pop(0)
+                if i <= countPoints - 1:
+                        timeStart = int(pointsList[i].TimeStamp)
         return coordXList, coordYList, end - start, len(coordXList)
 \end{lstlisting}
 \subsection{Algorytm wykorzystujący uczenie maszynowe}
 \label{ssec:machinelearningalg}
 Opis teoretyczny biblioteki przeznaczonej do wykorzystywania uczenia maszynowego bazuje na pracy \cite{MLPython}.\par
-\subsection{Wyświetlanie danych}
+\subsection{Wyświetlanie wyników}
 \label{ssec:datashow}
-
+\begin{lstlisting}[language=Python, caption=Wyświetlanie wyników, label={lst:plot}]
+        import pyplot as plt
+        ...
+        plt.plot(m1[i].CoordX, m1[i].CoordY, 'ko', markersize=10, label='Eye-tracker points' if i == 0 else "")
+                ...
+                coordX, coordY, timealgorithm, fixationsForPoint = calculateIdtAlgorithm(m1)
+                plt.plot(coordX, coordY, 'wo', markersize=5, markeredgecolor='r', label='Calculated fixations')
+                ...
+            plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
+            plt.show()
+\end{lstlisting}
+Listing \ref{lst:plot} prezentuje wykorzystanie biblioteki \textbf{pyplot} odpowiadającej za tworzenie wykresów oraz wyświetlanie punktów na układzie współrzędnych w języku Python. Funkcja \emph{plot()} przyjmuje jako parametry wejściowe następujące wartości: \textbf{X, Y, color+style}. Celem wyświetlenia wartości należy użyć funkcji \textbf{plt.show()}. Otwiera ona nowe okno, przedstawiono je na rysunku \ref{fig:presentationfixation}.
+\subsection{Pomiar czasu}
+\label{ssec:timemethod}
+W trakcie wykonywania aplikacji wykonywany jest pomiar czasu działania różnych funkcji aplikacji. W tym celu została wykorzystana biblioteka \textbf{time}. W kodzie \ref{lst:time} zaprezentowano sposób działania biblioteki. Funkcja \textbf{time.process\_time} zwraca obecny czas systemowy w sekundach, więc różnica tych wartości prezentuje czas trwania danego kodu.
+\begin{lstlisting}[language=Python, caption=Pomiar czasu, label={lst:time}]
+    start = time.process_time()
+        # wykonywana akcja
+    end = time.process_time()
+    return ..., end - start, ...
+\end{lstlisting}
+\subsection{Pomiar wykorzystania pamięci}
+\label{ssec:memorymethod}
