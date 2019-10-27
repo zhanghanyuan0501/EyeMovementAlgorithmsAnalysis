@@ -43,7 +43,7 @@ def createObjectsFromFile(fileName):
     end = time.process_time()
     return returnList, '%.3f' % (end - start)
 
-def createExitFile(fileName, statisticClass):
+def createExitFile(fileName, statisticClass, alg):
     fieldNames = ['ImportAndConvertFileStatistic',
         'CalibrationSummaryTime',
         'AlgorithmRunTimeStatistic',
@@ -51,7 +51,7 @@ def createExitFile(fileName, statisticClass):
         'ImportDataToDatabase',
         'ImportAndConvertDatabaseStatistic']
     now = datetime.datetime.now()
-    with open('./result/' + fileName + now.strftime("%d-%m-%Y-%H%M%S") + '.csv', 'w', newline='') as csvFile:
+    with open('./result/' + alg + fileName + now.strftime("%d-%m-%Y-%H%M%S") + '.csv', 'w', newline='') as csvFile:
         writer = csv.DictWriter(csvFile, fieldnames=fieldNames)
         writer.writeheader()
         writer.writerow({
@@ -63,12 +63,12 @@ def createExitFile(fileName, statisticClass):
             'ImportAndConvertDatabaseStatistic': str(statisticClass.ImportAndConvertDatabaseStatistic)
         })
 
-def createExitFixationFile(fileName, data):
+def createExitFixationFile(fileName, data, alg):
     fieldNames = ['CoordX',
         'CoordY',
         'TimeStamp']
     now = datetime.datetime.now()
-    with open('./result/fixation_' + fileName + now.strftime("%d-%m-%Y-%H%M%S") + '.csv', 'w', newline='') as csvFile:
+    with open('./result/fixation_' + alg + fileName + now.strftime("%d-%m-%Y-%H%M%S") + '.csv', 'w', newline='') as csvFile:
         writer = csv.DictWriter(csvFile, fieldnames=fieldNames)
         writer.writeheader()
         for list in data:

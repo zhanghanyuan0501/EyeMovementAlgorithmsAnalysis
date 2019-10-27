@@ -40,3 +40,29 @@ def calculateIvtAlgorithm(pointList):
         
     end = time.process_time()
     return coordX, coordY, end - start, len(coordX), fixations
+
+
+def prepareDataIvt(pointList):
+    fx = []
+    i = 0
+    for element in pointList:
+        velocity = 0
+        if pointList[i].Type == 'SS':
+            i += 1
+            continue
+        if i + 1 == len(pointList) - 1:
+            velocity = math.sqrt(math.pow(pointList[i + 1].CoordX - pointList[i].CoordX, 2) + math.pow(pointList[i + 1].CoordY - pointList[i].CoordY, 2))
+            if velocity < constants.FIXATION_VELOCITY_THRESHOLD:
+                fx.append(pointList[i])
+                fx.append(pointList[i + 1])
+            break
+        velocity = math.sqrt(math.pow(pointList[i + 1].CoordX - pointList[i].CoordX, 2) + math.pow(pointList[i + 1].CoordY - pointList[i].CoordY, 2))
+
+        if (velocity < constants.FIXATION_VELOCITY_THRESHOLD):
+            fx.append(pointList[i])
+        i += 1
+
+    return fx
+
+def calculateVelocitiesBetweenPoints(element, nextelement):
+    return math.sqrt(math.pow(nextelement.CoordX - element.CoordX, 2) + math.pow(nextelement.CoordY - element.CoordY, 2))

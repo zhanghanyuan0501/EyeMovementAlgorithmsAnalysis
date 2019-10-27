@@ -2,6 +2,23 @@ import constants
 from operator import attrgetter
 from math import sqrt
 from Data import Data
+import IVT as ivt
+
+# Load libraries
+import pandas as pd
+from pandas.plotting import scatter_matrix
+import matplotlib.pyplot as plt
+from sklearn import model_selection
+from sklearn.metrics import classification_report
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import accuracy_score
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.naive_bayes import GaussianNB
+from sklearn.svm import SVC
+import numpy as np
 
 ###
 #prędkość pomiędzy każdymi dwoma punktami,
@@ -18,6 +35,7 @@ from Data import Data
 ##
 class MLHelper:
     def __init__(self, Type, CoordX, CoordY, TimeStamp,  *args, **kwargs):
+        self.id = int(0)
         self.Data = Data(Type, TimeStamp, CoordX, CoordY)
         self.VelocityBetweenPoints = float(0)
         self.DistancesBetweenPoints = float(0)
@@ -25,35 +43,63 @@ class MLHelper:
         self.AverageVelocityInWindow = float(0)
         self.DeviationWindowVelocity = float(0)
         self.DeviationWindowDistances = float(0)
+        self.IsFixation = bool
 
-def calculateMlAlgorithm(pointList):
-    tempArr = []
+    def __iter__(self):
+        yield 'id', self.id
+        yield 'Vel', self.VelocityBetweenPoints
+        yield 'IsFixation', 1 if self.IsFixation == True else 0
+
+
+
+def calculateMlHelper(pointList, existingFixations):
     i = 0
+    j = 0
     helperArr = []
     while i < len(pointList):
         helper = MLHelper(pointList[i].Type, pointList[i].CoordX, pointList[i].CoordY, pointList[i].TimeStamp)
-        if (len(pointList) == i + 1):
-            break
-        if (len(tempArr) == 0 or (int(pointList[i + 1].TimeStamp) - int(tempArr[0].TimeStamp) < constants.WINDOW_MACHINE_LEARNING_TIME_THRESHOLD)):
-            tempArr.append(pointList[i])
-        else:
-            Xmin = min(tempArr, key=attrgetter('CoordX'))
-            Ymin = min(tempArr, key=attrgetter('CoordY'))
-            Xmax = max(tempArr, key=attrgetter('CoordX'))
-            Ymax = max(tempArr, key=attrgetter('CoordY'))
-            helper.DistancesWindow = (Xmax.CoordX - Xmin.CoordX) + (Ymax.CoordY - Ymin.CoordY)
-            if (len(tempArr) > 0):
-                prevMeasurement = tempArr[len(tempArr) - 1]
-                timeDiff = int(pointList[i].TimeStamp) - int(prevMeasurement.TimeStamp)
-                helper.DistancesBetweenPoints = sqrt(pow((prevMeasurement.CoordX + pointList[i].CoordX), 2) + pow((prevMeasurement.CoordY + pointList[i].CoordY), 2))
-                if (timeDiff != 0):
-                    helper.VelocityBetweenPoints = (helper.DistancesBetweenPoints / timeDiff)
-            print(helper.DistancesWindow, helper.DistancesBetweenPoints, helper.VelocityBetweenPoints)
-            helperArr.append(helper)            
-            tempArr = []
+        helper.id = i+1
+        helper.IsFixation = pointList[i] in existingFixations
+        if helper.IsFixation is True:
+            j+=1
+        if i+1 < len(pointList):
+            helper.VelocityBetweenPoints = ivt.calculateVelocitiesBetweenPoints(pointList[i], pointList[i + 1])
         i += 1
-    print('Helper array count:', len(helperArr))
+        helperArr.append(helper)
+    return helperArr
 
-            
+
+def calculateML(pointList):
+    XArr = np.empty([1,2])
+    YArr = np.empty([1])
+    XArr2 = np.empty([1,2])
+    YArr2 = np.empty([1])
+    for i, point in enumerate(pointList):
+        tmpArr = list()
+        for item in point:
+            el = dict(item)
+            tmpArr.append(el)
+        values = pd.DataFrame(tmpArr)
+        array = values.values
+        X = array[:,0:2]
+        Y = array[:,2]
         
+        if len(X) != len(Y):
+            print('W punkcie ' + i + ' jest bład')
+        if i < 3:
+            XArr = np.concatenate([XArr,X])
+            YArr = np.concatenate([YArr,Y])
+        else:
+            XArr2 = np.concatenate([XArr2,X])
+            YArr2 = np.concatenate([YArr2,Y])
+    print(XArr[1:,1:])
+    model = LogisticRegression()
+    model.fit(XArr[1:,1:], YArr[1:])
 
+    prediction = model.predict(XArr2[1:,1:])
+    
+    ite = np.sum(YArr2[1:] == prediction)
+    print(ite)
+    print(prediction)
+    retX = np.concatenate([XArr[1:,1:],XArr2[1:,1:]])
+    
