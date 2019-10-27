@@ -35,7 +35,6 @@ import numpy as np
 ##
 class MLHelper:
     def __init__(self, Type, CoordX, CoordY, TimeStamp,  *args, **kwargs):
-        self.id = int(0)
         self.Data = Data(Type, TimeStamp, CoordX, CoordY)
         self.VelocityBetweenPoints = float(0)
         self.DistancesBetweenPoints = float(0)
@@ -46,7 +45,7 @@ class MLHelper:
         self.IsFixation = bool
 
     def __iter__(self):
-        yield 'id', self.id
+        yield 'Data', self.Data
         yield 'Vel', self.VelocityBetweenPoints
         yield 'IsFixation', 1 if self.IsFixation == True else 0
 
@@ -58,7 +57,6 @@ def calculateMlHelper(pointList, existingFixations):
     helperArr = []
     while i < len(pointList):
         helper = MLHelper(pointList[i].Type, pointList[i].CoordX, pointList[i].CoordY, pointList[i].TimeStamp)
-        helper.id = i+1
         helper.IsFixation = pointList[i] in existingFixations
         if helper.IsFixation is True:
             j+=1
@@ -83,7 +81,7 @@ def calculateML(pointList):
         array = values.values
         X = array[:,0:2]
         Y = array[:,2]
-        
+        Y=Y.astype('int')
         if len(X) != len(Y):
             print('W punkcie ' + i + ' jest bład')
         if i < 3:
@@ -99,7 +97,17 @@ def calculateML(pointList):
     prediction = model.predict(XArr2[1:,1:])
     
     ite = np.sum(YArr2[1:] == prediction)
-    print(ite)
-    print(prediction)
-    retX = np.concatenate([XArr[1:,1:],XArr2[1:,1:]])
-    
+
+    endXArr = np.concatenate([XArr[1:,:],XArr2[1:,:]])
+    endYArr = np.concatenate([YArr[1:],prediction])
+    endAll = np.c_[endXArr,endYArr]
+
+    retX = []
+    retY = []
+    for item in endAll:
+        if item[2] == 1:
+            for element in item:
+                retX.append(element.CoordX)
+                retY.append(element.CoordY)
+
+    return retX, retY, len(retX)

@@ -126,6 +126,9 @@ def main(argv):
             for measurement in parsedMeasurements:
                 m1, convertingTime = convertPointsToCalibration(measurement)
                 statistics.CalibrationSummaryTime += convertingTime
+                for i, item in enumerate(m1):
+                    if item.Type == 'SS':
+                        plt.plot(m1[i].CoordX, m1[i].CoordY, 'ko', markersize=10, label='Eye-tracker points' if i == 0 else "")
                 fixations = ivt.prepareDataIvt(m1)
                 allFixations.extend(fixations)
                 convertedData.append(m1)
@@ -137,11 +140,12 @@ def main(argv):
                 print(i)
                 if (i == 5):
                     break;
-            ml.calculateML(points)
-                #plt.plot(coordX, coordY, 'wo', markersize=5, markeredgecolor='r', label='Calculated fixations')
+            coordX, coordY, fixationsForPoint = ml.calculateML(points)
+            plt.plot(coordX, coordY, 'wo', markersize=5, markeredgecolor='r', label='Calculated fixations')
+            statistics.NumberOfFixationsCount += fixationsForPoint
             print('Ending measurement using Machine Learning algorithm')
-            #plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
-            #plt.show()
+            plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
+            plt.show()
         else:
             print('INCORRECT ALGORITHM')
         print('Number of fixations: %s, Algorithm runtime: %s s' % (statistics.NumberOfFixationsCount, statistics.AlgorithmRunTimeStatistic))
