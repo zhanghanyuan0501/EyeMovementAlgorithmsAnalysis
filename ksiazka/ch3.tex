@@ -90,10 +90,17 @@ Plik ten został zbudowany w sposób zaprezentowany na rysunku \ref{fig:exportfi
         \item NumberOfFixationsCount
         \item ImportDataToDatabase
         \item ImportAndConvertDatabaseStatistic
-        \item MemoryChangeDuringAlgorithm
 \end{enumerate}
-Wszystkie czasy zaprezentowane podano w sekundach. Pierwsza kolumna prezentuje czas trwania importu danych do pamięci oraz czas trwania konwersji plików do formatu czytelnego dla aplikacji, zgodnie z fragmentem \ref{ssec:importdata}. Następna kolumna przedstawia łączny czas trwania kalibracji współrzędnych wejściowych do formy układu współrzędnych odpowiadającej mierzonym punktom RR. Trzecia kolumna pokazuje czas trwania algorytmu wykrywania fiksacji, a czwarta ilość odnalezionych fiksacji. Piąta i szósta kolumna mogą być puste, gdyż wykazują czas trwania importu danych do bazy danych, oraz odpowiednik importu i konwersji z pierwszej kolumny dla bazy danych, celem porównania czy pobranie z bazy danych może być szybsze od pobrania z pliku. Ostatnie dwie kolumny mierzą różnicę wykorzystania pamięci pomiędzy końcem i początkiem działania algorytmu - jak dużo pamięci zużywa algorytm.\par
-Dodatkowo generowany jest plik posiadający wszystkie pary punktów należących do fiksacji.\todo{Stwórz ten plik :)}
+Wszystkie czasy zaprezentowane podano w sekundach. Pierwsza kolumna prezentuje czas trwania importu danych do pamięci oraz czas trwania konwersji plików do formatu czytelnego dla aplikacji, zgodnie z fragmentem \ref{ssec:importdata}. Następna kolumna przedstawia łączny czas trwania kalibracji współrzędnych wejściowych do formy układu współrzędnych odpowiadającej mierzonym punktom RR. Trzecia kolumna pokazuje czas trwania algorytmu wykrywania fiksacji, a czwarta ilość odnalezionych fiksacji. Piąta i szósta kolumna mogą być puste, gdyż wykazują czas trwania importu danych do bazy danych, oraz odpowiednik importu i konwersji z pierwszej kolumny dla bazy danych, celem porównania czy pobranie z bazy danych może być szybsze od pobrania z pliku. \par
+Dodatkowo generowany jest plik posiadający wszystkie pary punktów należących do fiksacji.\par
+Celem obliczenia zużycia pamięci przez algorytm tworzony jest kolejny plik, tym razem z profilem pamięciowym aplikacji, czyli wykorzystaniem pamięci przez każdą linijkę użytego kodu. Fragment takiego pliku zaprezentowano na rysunku \ref{fig:memoryfile}.
+\begin{figure}[H]
+        \centering
+        \captionsetup{justification=centering,margin=2cm}
+        \includegraphics[width=\linewidth]{resources/memory_file.png}
+        \caption{Fragment pliku ze zrzutem pamięci}
+        \label{fig:memoryfile}
+\end{figure}
 \subsection{Prezentacja fiksacji}
 \label{ssec:fixations}
 \begin{figure}[H]
@@ -127,7 +134,7 @@ Zgodnie z fragmentem \ref{sec:tools}, aplikacja korzysta z języka \emph{Python}
         \label{fig:path}
 \end{figure}
 Projekt wymaga zainstalowania poniższych modułów języka Python, celem poprawnego działania konkretnych elementów aplikacji. Poniżej zaprezentowano te moduły, wraz z ich przeznaczeniem.\par
-Wszystkie moduły można pobrać za pomocą pakietu \textbf{pip}, domyślnie instalowanego wraz z instancją Pythona. Pierwszym modułem jest \textbf{NumPy}, które jest wiodącym pakietem przeznaczonym do bardziej skomplikowanych operacji na danych naukowych. W projekcie znalazł on zastosowanie m.in. w kalibracji danych wejściowych. Rozwiązanie przedstawiono w sekcji \ref{ssec:calibration}, gdzie wykorzystano metodę najmniejszych kwadratów celem obliczenia regresji liniowej. Kolejną biblioteką jest biblioteka \textbf{Matplotlib.pyplot}, umożliwiająca wyświetlanie danych wyjściowych. Prezentację modułu można znaleźć w rozdziale \ref{ssec:datashow}. Celem połączenia z bazą danych oraz prawidłową konwersją danych należało zainstalować moduły \textbf{pymongo} oraz \textbf{bson}. Zaprezentowano ich wykorzystanie w podsekcji \ref{ssec:db}. Kolejną ważną funkcjonalnością jest moduł \textbf{Guppy.Heapy}, któego celem jest pomiar zużycia pamięci w trakcie wykonywania obliczeń. Ostatnim modułem, którego wykorzystuje się w sekcji \ref{ssec:machinelearningalg} jest podmoduł dla \textbf{NumPy}, mianowicie \textbf{scikit-learn}. Zawiera on wszystkie potrzebne narzędzia do tworzenia i analizy uczenia maszynowego.\par
+Wszystkie moduły można pobrać za pomocą pakietu \textbf{pip}, domyślnie instalowanego wraz z instancją Pythona. Pierwszym modułem jest \textbf{NumPy}, które jest wiodącym pakietem przeznaczonym do bardziej skomplikowanych operacji na danych naukowych. W projekcie znalazł on zastosowanie m.in. w kalibracji danych wejściowych. Rozwiązanie przedstawiono w sekcji \ref{ssec:calibration}, gdzie wykorzystano metodę najmniejszych kwadratów celem obliczenia regresji liniowej. Kolejną biblioteką jest biblioteka \textbf{Matplotlib.pyplot}, umożliwiająca wyświetlanie danych wyjściowych. Prezentację modułu można znaleźć w rozdziale \ref{ssec:datashow}. Celem połączenia z bazą danych oraz prawidłową konwersją danych należało zainstalować moduły \textbf{pymongo} oraz \textbf{bson}. Zaprezentowano ich wykorzystanie w podsekcji \ref{ssec:db}. Kolejną ważną funkcjonalnością jest moduł \textbf{memory\_profiler}, któego celem jest pomiar zużycia pamięci w trakcie wykonywania obliczeń. Ostatnim modułem, którego wykorzystuje się w sekcji \ref{ssec:machinelearningalg} jest podmoduł dla \textbf{NumPy}, mianowicie \textbf{scikit-learn}. Zawiera on wszystkie potrzebne narzędzia do tworzenia i analizy uczenia maszynowego.\par
 Domyślnie zainstalowanymi pakietami, które również znalazły swoje zastosowanie w pracy są pakiety \textbf{time}, \textbf{os}, \textbf{sys}. Odpowiadają one za pomiar czasu, obsługę plików oraz komunikację z systemem.\par
 Ostatnim wymaganym elementem jest posiadanie bazy \textbf{MongoDB}. W tym celu należy zainstalować wybraną wersję pakietu ze strony \url{https://www.mongodb.com/}. Podczas instalacji automatycznie tworzona jest sesja pod wybranym przez użytkownika portem. Domyślną wartością jest \textbf{27017}. Ścieżka połączenia z bazą danych dla tego projektu pokazana jest w kodzie \ref{lst:connectDB}.
 \subsection{Kalibracja danych wejściowych}
@@ -329,7 +336,7 @@ def calculateIdtAlgorithm(pointsList):
 \subsection{Algorytm wykorzystujący uczenie maszynowe}
 \label{ssec:machinelearningalg}
 Opis teoretyczny biblioteki przeznaczonej do wykorzystywania uczenia maszynowego bazuje na pracy \cite{MLPython}.\par
-\subsection{Wyświetlanie wyników}
+\subsection{Prezentacja wyników}
 \label{ssec:datashow}
 \begin{lstlisting}[language=Python, caption=Wyświetlanie wyników, label={lst:plot}]
         import pyplot as plt
@@ -354,3 +361,9 @@ W trakcie wykonywania aplikacji wykonywany jest pomiar czasu działania różnyc
 \end{lstlisting}
 \subsection{Pomiar wykorzystania pamięci}
 \label{ssec:memorymethod}
+W sekcji \ref{ssec:apprequirements} przybliżono zastosowanie modułu \textbf{memory\_profiler}, którego zadaniem jest pomiar wykorzystania pamięci przez algorytmy. W aplikacji wykorzystano go zgodnie z kodem \ref{lst:memory}. Jak widać użyto go do całej aplikacji, ze względu na użycie go przed funkcją \textbf{main}. Ta biblioteka wypisuje zużycie pamięci w MB przez każdą linijkę aplikacji, oraz zapisuje ją do pliku. W wypadku aplikacji zastosowano precyzję do 4 miejsc po przecinku, ze względu na mniejsze zapotrzebowanie przez aplikację.
+\begin{lstlisting}[language=Python, caption=Pomiar wykorzystania pamięci, label={lst:memory}]
+@profile(stream=open('result/' + sys.argv[2] + '-' + sys.argv[3] + '.log','w+'), precision=4)
+def main(argv):
+\end{lstlisting}
+Na rysunku \ref{fig:memoryfile} zaprezentowano fragment rezultatu takiego kodu.

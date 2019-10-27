@@ -10,6 +10,8 @@ from ML import calculateMlAlgorithm
 import numpy as np
 import matplotlib.pyplot as plt
 import time
+import logging
+from memory_profiler import profile, LogFile
 
 def calibrate(xList, yList):
     i = 1
@@ -65,6 +67,7 @@ def convertPointsToCalibration(pointsList):
     end = time.process_time()
     return pointsList, end - start
 
+@profile(stream=open('result/' + sys.argv[2] + '-' + sys.argv[3] + '.log','w+'), precision=4)
 def main(argv):
     statistics = StatisticsClass()
     if sys.argv[1] == '-h':
@@ -113,7 +116,7 @@ def main(argv):
                 print('Ended calibration')
                 for i, item in enumerate(m1):
                     if item.Type == 'SS':
-                        plt.plot(m1[i].CoordX, m1[i].CoordY, 'ko', markersize=10, label='Eye-tracker points' if i == 0 else "")
+                        plt.plot(m1[i].CoordX, m1[i].CoordY, 'ko', markersize=10, label='Eye-tracker points' if i == 0 else "")               
                 coordX, coordY, timealgorithm, fixationsForPoint = calculateIvtAlgorithm(m1)
                 statistics.AlgorithmRunTimeStatistic += timealgorithm
                 statistics.NumberOfFixationsCount += fixationsForPoint

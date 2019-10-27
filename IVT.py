@@ -1,4 +1,5 @@
-import time, Data, math, constants
+import time, Data, math, constants, sys
+from memory_profiler import profile, LogFile
 
 def calculateIvtAlgorithm(pointList):
     start = time.process_time()

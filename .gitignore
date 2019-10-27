@@ -572,3 +572,6 @@ TSWLatexianTemp*
 
 # Makeindex log files
 *.lpz
+
+#exe
+*.exe

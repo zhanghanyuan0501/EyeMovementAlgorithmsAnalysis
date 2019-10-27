@@ -2,3 +2,4 @@
 *.fdb_latexmk
 *.fls
 latexout/
+*.exe
