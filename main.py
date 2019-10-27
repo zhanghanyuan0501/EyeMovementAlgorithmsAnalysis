@@ -1,6 +1,6 @@
 import sys, getopt, helpers
 from Data import Data
-from FileHandler import createObjectsFromAllFiles, createObjectsFromFile, createExitFile
+from FileHandler import createObjectsFromAllFiles, createObjectsFromFile, createExitFile, createExitFixationFile
 from StatisticsClass import StatisticsClass
 from IDT import calculateIdtAlgorithm
 from IVT import calculateIvtAlgorithm
@@ -25,15 +25,6 @@ def calibrate(xList, yList):
         ssxArr.append(xList[0])
         ssyArr.append(yList[0])
         i+=1
-
-    tmp1 = np.polyfit(xList, yList, 2)
-    tmp2 = np.polyfit(yList, xList, 2)
-
-    print(tmp1, tmp2)
-    yn = np.polyval(tmp1, xList[1:])
-    yn2 = np.polyval(tmp2, yList[1:])
-
-    
 
     x = np.linalg.lstsq(X,ssxArr, rcond=None)
     y = np.linalg.lstsq(Y,ssyArr, rcond=None)
@@ -76,6 +67,7 @@ def main(argv):
         coordX = []
         coordY = []
         parsedFile, statistics.ImportAndConvertFileStatistic = createObjectsFromFile(sys.argv[2])
+        measurementFixations = []
 
         if (sys.argv[4] == '-d'):
             statistics.ImportDataToDatabase = initialize_db(parsedFile)
@@ -92,7 +84,25 @@ def main(argv):
 
         if sys.argv[3] == 'I-DT':
             print('Starting measurement using I-DT algorithm')
-            for measurement in parsedMeasurements:
+            for e, measurement in enumerate(parsedMeasurements):
+                print('Starting calibration')
+                m1, convertingTime = convertPointsToCalibration(measurement)
+                statistics.CalibrationSummaryTime += convertingTime
+                for i, item in enumerate(m1):
+                    if item.Type == 'SS':
+                        plt.plot(m1[i].CoordX, m1[i].CoordY, 'ko', markersize=10, label='Eye-tracker points' if i == 0 else "")
+                print('Calculating using I-DT point #' + str(e))     
+                coordX, coordY, timealgorithm, fixationsForPoint, fixations = calculateIdtAlgorithm(m1)
+                statistics.AlgorithmRunTimeStatistic += timealgorithm
+                statistics.NumberOfFixationsCount += fixationsForPoint
+                measurementFixations.append(fixations)
+                plt.plot(coordX, coordY, 'wo', markersize=5, markeredgecolor='r', label='Calculated fixations')
+            print('Ending measurement using I-DT algorithm')
+            plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
+            plt.show()
+        elif sys.argv[3] == 'I-VT':
+            print('Starting measurement using I-VT algorithm')
+            for e, measurement in enumerate(parsedMeasurements):
                 print('Starting calibration')
                 m1, convertingTime = convertPointsToCalibration(measurement)
                 statistics.CalibrationSummaryTime += convertingTime
@@ -100,26 +110,11 @@ def main(argv):
                 for i, item in enumerate(m1):
                     if item.Type == 'SS':
                         plt.plot(m1[i].CoordX, m1[i].CoordY, 'ko', markersize=10, label='Eye-tracker points' if i == 0 else "")
-                coordX, coordY, timealgorithm, fixationsForPoint = calculateIdtAlgorithm(m1)
+                print('Calculating using I-VT point #' + str(e))               
+                coordX, coordY, timealgorithm, fixationsForPoint, fixations = calculateIvtAlgorithm(m1)
                 statistics.AlgorithmRunTimeStatistic += timealgorithm
                 statistics.NumberOfFixationsCount += fixationsForPoint
-                plt.plot(coordX, coordY, 'wo', markersize=5, markeredgecolor='r', label='Calculated fixations')
-            print('Ending measurement using I-DT algorithm')
-            plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
-            plt.show()
-        elif sys.argv[3] == 'I-VT':
-            print('Starting measurement using I-VT algorithm')
-            for measurement in parsedMeasurements:
-                print('Starting calibration')
-                m1, convertingTime = convertPointsToCalibration(measurement)
-                statistics.CalibrationSummaryTime += convertingTime
-                print('Ended calibration')
-                for i, item in enumerate(m1):
-                    if item.Type == 'SS':
-                        plt.plot(m1[i].CoordX, m1[i].CoordY, 'ko', markersize=10, label='Eye-tracker points' if i == 0 else "")               
-                coordX, coordY, timealgorithm, fixationsForPoint = calculateIvtAlgorithm(m1)
-                statistics.AlgorithmRunTimeStatistic += timealgorithm
-                statistics.NumberOfFixationsCount += fixationsForPoint
+                measurementFixations.append(fixations)
                 plt.plot(coordX, coordY, 'wo', markersize=5, markeredgecolor='r', label='Calculated fixations')
             print('Ending measurement using I-VT algorithm')
             plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
@@ -127,10 +122,8 @@ def main(argv):
         elif sys.argv[3] == 'ML':
             print('Starting measurement using Machine Learning algorithm')
             for measurement in parsedMeasurements:
-                print('Starting calibration')
                 m1, convertingTime = convertPointsToCalibration(measurement)
                 statistics.CalibrationSummaryTime += convertingTime
-                print('Ended calibration')
                 for i, item in enumerate(m1):
                     if item.Type == 'SS':
                         plt.plot(m1[i].CoordX, m1[i].CoordY, 'ko', markersize=10, label='Eye-tracker points')
@@ -143,6 +136,7 @@ def main(argv):
             print('INCORRECT ALGORITHM')
         print('Number of fixations: %s, Algorithm runtime: %s s' % (statistics.NumberOfFixationsCount, statistics.AlgorithmRunTimeStatistic))
         createExitFile(sys.argv[2], statistics)
+        createExitFixationFile(sys.argv[2], measurementFixations)
     elif sys.argv[1] == '-a':
         print('Available algorithms: "I-DT", "I-VT", "ML"')
     else:

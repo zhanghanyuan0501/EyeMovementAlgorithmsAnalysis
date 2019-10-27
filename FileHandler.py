@@ -62,3 +62,19 @@ def createExitFile(fileName, statisticClass):
             'ImportDataToDatabase': str(statisticClass.ImportDataToDatabase),
             'ImportAndConvertDatabaseStatistic': str(statisticClass.ImportAndConvertDatabaseStatistic)
         })
+
+def createExitFixationFile(fileName, data):
+    fieldNames = ['CoordX',
+        'CoordY',
+        'TimeStamp']
+    now = datetime.datetime.now()
+    with open('./result/fixation_' + fileName + now.strftime("%d-%m-%Y-%H%M%S") + '.csv', 'w', newline='') as csvFile:
+        writer = csv.DictWriter(csvFile, fieldnames=fieldNames)
+        writer.writeheader()
+        for list in data:
+            for item in list:
+                writer.writerow({
+                    'CoordX': str(item.CoordX),
+                    'CoordY': str(item.CoordY),
+                    'TimeStamp': str(item.TimeStamp)
+                })

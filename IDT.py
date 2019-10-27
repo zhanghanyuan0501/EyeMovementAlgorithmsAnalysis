@@ -1,5 +1,6 @@
 import constants, time
 from helpers import convertToReadableDate
+from memory_profiler import profile, LogFile
 
 def calculateIdtAlgorithm(pointsList):
     start = time.process_time()
@@ -8,6 +9,7 @@ def calculateIdtAlgorithm(pointsList):
     windowList = []
     coordXList = []
     coordYList = []
+    retList = []
     countPoints = len(pointsList)
     while i < countPoints - 1:
         if pointsList[i].Type == 'SS':
@@ -34,11 +36,13 @@ def calculateIdtAlgorithm(pointsList):
                     Dispersion = (max(maxX.CoordX for maxX in windowList) - min(minX.CoordX for minX in windowList)) + (max(maxY.CoordY for maxY in windowList) - min(minY.CoordY for minY in windowList))
                 if i >= countPoints:
                     break
+                retList.extend(windowList)
                 coordXList.append(sum(sumX.CoordX for sumX in windowList) / len(windowList))
                 coordYList.append(sum(sumY.CoordY for sumY in windowList) / len(windowList))
+                windowList = []
             else:
                 windowList.pop(0)
         if i <= countPoints - 1:
             timeStart = int(pointsList[i].TimeStamp)
     end = time.process_time()
-    return coordXList, coordYList, end - start, len(coordXList)
+    return coordXList, coordYList, end - start, len(coordXList), retList

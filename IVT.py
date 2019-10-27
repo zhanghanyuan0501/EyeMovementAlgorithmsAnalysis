@@ -39,4 +39,4 @@ def calculateIvtAlgorithm(pointList):
 
         
     end = time.process_time()
-    return coordX, coordY, end - start, len(coordX)
+    return coordX, coordY, end - start, len(coordX), fixations
