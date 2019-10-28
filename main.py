@@ -137,12 +137,10 @@ def main(argv):
             for i, item in enumerate(convertedData): 
                 mlHelperArray = ml.calculateMlHelper(item, allFixations)
                 points.append(mlHelperArray)
-                print(i)
-                if (i == 5):
-                    break;
-            coordX, coordY, fixationsForPoint = ml.calculateML(points)
+            coordX, coordY, fixationsForPoint, timealgorithm, ite = ml.calculateML(points)
             plt.plot(coordX, coordY, 'wo', markersize=5, markeredgecolor='r', label='Calculated fixations')
             statistics.NumberOfFixationsCount += fixationsForPoint
+            statistics.AlgorithmRunTimeStatistic += timealgorithm
             print('Ending measurement using Machine Learning algorithm')
             plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
             plt.show()

@@ -276,7 +276,7 @@ def calculateIvtAlgorithm(pointList):
         i += 1
     return coordX, coordY, end - start, len(coordX)
 \end{lstlisting}
-W kodzie \ref{lst:ivt} przedstawiono implementację algorytmu I-VT w języku Python, zgodnie z pseudokodem \ref{fig:ivt}. Jako parametr wejściowy funkcja otrzymuje podzieloną listę punktów zgodnie z opisem w sekcji \ref{ssec:Dataanalysis}. Główna pętla \textbf{for} iteruje po każdym punkcie z parametrów wejściowych. Zadaniem linii 5-7 jest pominięcie każdego punktu 'SS', gdyż nie są one potrzebne do obliczeń. Wiersz 8 prezentuje warunek, gdy badany jest przedostatni i ostatni punkt. Obliczana jest prędkość pomiędzy tymi punktami, i jeżeli warunek nr 2 zaprezentowany w pseudokodzie \ref{fig:ivt} jest spełniony, dodaje się te punkty do listy fiksacji. Linie 14 do 17 prezentują działanie algorytmu dla punktów innych niż przedostatni i ostatni. Prędkość pomiędzy elementami jest obliczana zgodnie ze wzorem:
+W kodzie \ref{lst:ivt} przedstawiono implementację algorytmu I-VT w języku Python, zgodnie z pseudokodem \ref{lst:ivtpseudocode}. Jako parametr wejściowy funkcja otrzymuje podzieloną listę punktów zgodnie z opisem w sekcji \ref{ssec:Dataanalysis}. Główna pętla \textbf{for} iteruje po każdym punkcie z parametrów wejściowych. Zadaniem linii 5-7 jest pominięcie każdego punktu 'SS', gdyż nie są one potrzebne do obliczeń. Wiersz 8 prezentuje warunek, gdy badany jest przedostatni i ostatni punkt. Obliczana jest prędkość pomiędzy tymi punktami, i jeżeli warunek nr 2 zaprezentowany w pseudokodzie \ref{lst:ivtpseudocode} jest spełniony, dodaje się te punkty do listy fiksacji. Linie 14 do 17 prezentują działanie algorytmu dla punktów innych niż przedostatni i ostatni. Prędkość pomiędzy elementami jest obliczana zgodnie ze wzorem:
 \[\sqrt{(p[i+1].X - p[i].X)^2 + (p[i+1].Y - p[i].Y)^2}\]
 gdzie \emph{p} jest tablicą elementów, \emph{X} i \emph{Y} są współrzędnymi punktu, \emph{i} jest iteratorem tablicy.\\
 Wiersze 20-28 odpowiadają za podział elementów na grupy fiksacji, zgodnie z linią 3 pseudokodu. Ten podział odbywa się za pomocą weryfikacji prędkości międzypunktowych. W wypadku znalezienia końca grupy fiksacji, następuje wydzielenie środka grupy fiksacji za pomocą równania poniżej, gdzie P jest punktem X lub punktem Y, a N to liczba elementów w tablicy \emph{combineFixationsArray}: 
@@ -290,7 +290,7 @@ W kodzie \ref{lst:idt} przedstawiono zaimplementowany algorytm I-DT. Jako parame
 \[
         D = (\max{P_X} - \min{P_X}) + (\max{P_Y} - \min{P_Y})
 \]
-Kolejnym krokiem, po obliczeniu wstępnej dyspersji, jest porównanie czy spełnia ona warunek graniczny opisany w kroku 3 pseudokodu algorymu \ref{fig:idt}. Warunek graniczny przechowywany jest w zmiennej \textbf{constants. DISPERSION\_THRESHOLD}. W wypadku gdy dyspersja jest mniejsza, należy dodawać kolejne punkty aż zostanie przekroczony warunek graniczny, co zaprezentowano w pętli \textbf{while} pomiędzy wierszami 22 i 27. Po przekroczeniu wartości zostaje dodany punkt centralny okna, obliczony za pomocą wzoru
+Kolejnym krokiem, po obliczeniu wstępnej dyspersji, jest porównanie czy spełnia ona warunek graniczny opisany w kroku 3 pseudokodu algorymu \ref{lst:idtpseudocode}. Warunek graniczny przechowywany jest w zmiennej \textbf{constants. DISPERSION\_THRESHOLD}. W wypadku gdy dyspersja jest mniejsza, należy dodawać kolejne punkty aż zostanie przekroczony warunek graniczny, co zaprezentowano w pętli \textbf{while} pomiędzy wierszami 22 i 27. Po przekroczeniu wartości zostaje dodany punkt centralny okna, obliczony za pomocą wzoru
 \[
         P = \sum_{i = 0}^{n}{P_i}
 \]
@@ -335,7 +335,76 @@ def calculateIdtAlgorithm(pointsList):
 \end{lstlisting}
 \subsection{Algorytm wykorzystujący uczenie maszynowe}
 \label{ssec:machinelearningalg}
-Opis teoretyczny biblioteki przeznaczonej do wykorzystywania uczenia maszynowego bazuje na pracy \cite{MLPython}.\par
+Opis teoretyczny biblioteki przeznaczonej do wykorzystywania uczenia maszynowego bazuje na pracy \cite{MLPython}.\par Jak zostało napisane w rozdziale \ref{ssec:machinelearning}, uczenie maszynowe ze względu na rozwój technologiczny stało się jedną z najczęściej wykorzystywanych technologii, szczególnie przy analizie danych. W celu użycia tych rozwiązań, w języku Python należy wykorzystać pakiet \textbf{scikit-learn}. Zezwala on na stworzenie projektu z wykorzystaniem wielu dostępnych klasyfikatorów uczenia maszynowego.\\
+Celem wykonywania przewidywań w aplikacji wykorzystano model regresji logistycznej. Jest to metoda statystyczna, której zadaniem jest przewidywanie wyników klas binarnych, przez co znajduje ona idealne zastosowanie dla tego typu algorytmów. Różni się ona od regresji liniowej danymi wyjściowymi. Podczas gdy regresja liniowa jako wynik prezentuje dane ciągłe, to regresja logistyczna przyjmuje wartości stałe. Oznacza to, iż regresja liniowa może przewidywać więcej wartości. Wyróżnia się jednak dodatkowe typy regresji logistycznych, takie jak binarna regresja, gdzie wynikiem może być podział na to czy wiadomość należy do spamu czy nie, wielomianowa regresja, gdzie rezultatem może być przykładowo typ wina.\\
+Celem uruchomienia algorytmu uczenia maszynowego należy zbudować model danych. Przykład takiego modelu zaprezenotwano w kodzie \ref{lst:mlhelperclass}. Ten kod przedstawia konstruktor
+klasy pomocniczej \textbf{MLHelper}. Posiada ona cztery elementy: informacje o punkcie, obliczoną odległość pomiędzy tym punktem oraz następnym, obliczoną odległość międzypunktową oraz obliczoną wartość fiksacji w tym punkcie za pomocą algorytmu \ref{ssec:ivt}. Podczas projektowania aplikacji próbowano jeszcze dodatkowe parametry takie jak odległości w oknie dla punktu oraz dane statystyczne dotyczące okna. Jednak powodowały one przesycenie modelu, co powodowało błędy w obliczeniach oraz brak fiksacji na wyjściu funkcji. Drugim powodem braku ich implementacji był bardzo duży przyrost czasu przeznaczanego na przygotowanie obliczeń, ze względu na dużą ilość danych.
+\begin{lstlisting}[language=Python, caption=Konstruktor klasy pomocniczej, label={lst:mlhelperclass}]
+def __init__(self, Type, CoordX, CoordY, TimeStamp,  *args, **kwargs):
+        self.Data = Data(Type, TimeStamp, CoordX, CoordY)
+        self.VelocityBetweenPoints = float(0)
+        self.DistancesBetweenPoints = float(0)
+        self.IsFixation = bool
+\end{lstlisting}
+Na listingu \ref{lst:mlalgorithm} przedstawiony został algorytm wykorzystujący uczenie maszynowe. Początek algorytmu, czyli linie od 2 do 5 przedstawiają inicjalizację tablic typu \textbf{numpy.array}, które umożliwiają na bardziej skomplikowane operacje na tablicach, podobne do tych używanych w języku R oraz MatLAB. Inicjalizowane są tablice X1, Y1 dla danych treningowych, oraz X2, Y2 dla danych testowych. Następnie w liniach 6-15 przedstawiono pobranie danych z parametrów wejściowych funkcji oraz ich konwersja na format czytelny dla biblioteki \textbf{numpy}. Należało wykonać konwersję z obiektu na słownik, gdyż obiekt \textbf{pd.DataFrame} przyjmuje obiekty iterowalne jako swój parametr. Tą konwersję pokazano na listingu \ref{lst:iter}.
+\begin{lstlisting}[language=Python, caption=Iterator, label={lst:iter}]
+        def __iter__(self):
+                yield 'Data', self.Data
+                yield 'VEL', self.VelocityBetweenPoints
+                yield 'DBP', self.DistancesBetweenPoints
+                yield 'FIX', 1 if self.IsFixation == True else 0
+\end{lstlisting}
+Jak można zauważyć w linii 18 postawiono warunek ile obiektów ma służyć treningowi modelu, a ile przeznaczyć na testowanie. Zdecydowano się na podzielenie zbioru danych na zbiory 10\% danych treningowych, 90\% danych testowych. Należało te dane połączyć, co przedstawia funkcja \textbf{np.concatenate[X,Y]}, przyjująca dwie tablice jako swoje parametry.\\
+W linii 26 po zainicjowaniu typu modelu następuje uczenie modelu za pomocą tablic testujących. Następny wiersz przedstawia sposób predykcji, jak widać nie jest on skomplikowany.\par
+Po obliczeniu wszystkich wartości wynikowych należy zbadać dokładność algorytmu, co zostało pokazane w linii 30. \textbf{Numpy} udostępnia funkcje mierzące dokładność oraz precyzję algorytmów uczenia maszynowego.
+\begin{lstlisting}[language=Python, caption=Algorytm wykorzystujący uczenie maszynowe, label={lst:mlalgorithm}]
+def calculateML(pointList):
+        start = time.process_time()
+        XArr = np.empty([1,3])
+        YArr = np.empty([1])
+        XArr2 = np.empty([1,3])
+        YArr2 = np.empty([1])
+        for i, point in enumerate(pointList):
+        tmpArr = list()
+        for item in point:
+                el = dict(item)
+                tmpArr.append(el)
+        values = pd.DataFrame(tmpArr, columns=['Data', 'VEL', 'DBP', 'FIX'])
+        array = values.values
+        X = array[:,0:3]
+        Y = array[:,3]
+        Y=Y.astype('int')
+        if len(X) != len(Y):
+                print('W punkcie ' + i + ' jest bład')
+        if i < 3:
+                XArr = np.concatenate([XArr,X])
+                YArr = np.concatenate([YArr,Y])
+        else:
+                XArr2 = np.concatenate([XArr2,X])
+                YArr2 = np.concatenate([YArr2,Y])
+        print(XArr[1:,1:])
+        model = LogisticRegression()
+        model.fit(XArr[1:,1:], YArr[1:])
+
+        prediction = model.predict(XArr2[1:,1:])
+
+        ite = accuracy_score(YArr2[1:], prediction)
+        print(ite)
+        endXArr = np.concatenate([XArr[1:,:],XArr2[1:,:]])
+        endYArr = np.concatenate([YArr[1:],prediction])
+        endAll = np.c_[endXArr,endYArr]
+
+        retX = []
+        retY = []
+        print(endAll)
+        for item in endAll:
+        if item[3] == 1:
+                retX.append(item[0].CoordX)
+                retY.append(item[0].CoordY)
+        end = time.process_time()
+        return retX, retY, len(retX), end - start, ite
+\end{lstlisting}
+
 \subsection{Prezentacja wyników}
 \label{ssec:datashow}
 \begin{lstlisting}[language=Python, caption=Wyświetlanie wyników, label={lst:plot}]
