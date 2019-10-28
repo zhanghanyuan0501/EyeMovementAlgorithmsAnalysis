@@ -1,5 +1,5 @@
 \label{chapter:ch2}
-W poniższym rozdziale zawarty został krótki opis oka, analiza teoretyczna dziedziny eye-trackingu, jak również zaprezentowano typy algorytmów wykrywania fiksacji wykorzystanych do przeprowadzenia badań. Rozdział ten oparto głównie o prace \cite{Main}, \cite{EvaluationMethodology}, \cite{MachineLearning}.
+W poniższym rozdziale zawarty został krótki opis oka, analiza teoretyczna dziedziny okulografii, jak również zaprezentowano typy algorytmów wykrywania fiksacji wykorzystanych do przeprowadzenia badań. Na końcu tego rozdziału przedstawiono metody wyświetlania danych. Ten rozdział oparto głównie o prace \cite{Main}, \cite{EvaluationMethodology}, \cite{MachineLearning}.
 \section{Opis ludzkiej gałki ocznej}
 Zadaniem poniższej sekcji jest zaprezentowanie podstawowych terminów związanych z działaniem ludzkiego oka oraz jego budową. Krótka analiza oka została przygotowana zgodnie z pracą numer \cite{EvaluationMethodology}.\par
 Jednym z najważniejszych organów w ludzkim ciele jest oko. Służy ono do dostarczania większości informacji dotyczących otoczenia w jakim się znajdujemy, oraz poszerzania wiedzy o świecie. Około 10\% komórek mózgowych jest zaangażowanych przy interpretacji oraz analizie sygnałów dostarczanych z tego narządu.\par
@@ -103,12 +103,12 @@ Celem poniższego podrozdziału jest opis teoretyczny algorytmów wykrywania fik
 \label{ssec:ivt}
 Algorytm I-VT\footnote{z ang. Identification-Velocity Threshold} jest przykładem algorytmu z grupy prędkościowych. Jak wspomniano w podrozdziale \ref{sec:fixations} te algorytmy bazują na różnicach prędkości międzypunktowych. W większości przypadków te różnice wynoszą mniej niż 150 ms dla fiksacji, a więcej niż 300-400 ms dla sakad. Ze względu na proste wymagania algorytmu, nie jest on skomplikowany w implementacji. Pseudokod algorytmu I-VT zaprezentowano w kodzie \ref{lst:ivtpseudocode}.
 \begin{lstlisting}[language=Python, caption=Pseudokod algorytmu I-VT, label={lst:ivtpseudocode}]
-def ivt:
-    Oblicz prędkości pomiędzy punktami dla wszystkich punktów w protokole
-    Określ punkty poniżej progu jako fiksacje, a powyżej jako sakady
-    Połącz wszystkie punkty fiksacji w grupy fiksacji, usuń wszystkie sakady
-    Zmapuj każdą grupę fiksacji do punktu znajdującego się w środku każdej grupy
-    return zmapowane punkty
+    def ivt:
+        Oblicz prędkości pomiędzy punktami dla wszystkich punktów w protokole
+        Określ punkty poniżej progu jako fiksacje, a powyżej jako sakady
+        Połącz wszystkie punkty fiksacji w grupy fiksacji, usuń wszystkie sakady
+        Zmapuj każdą grupę fiksacji do punktu znajdującego się w środku każdej grupy
+        return zmapowane punkty
 \end{lstlisting}
 Pierwszym krokiem algorytmu I-VT jest obliczenie prędkości między każdym punktem w badanym obszarze. Prędkość ta jest mierzona jako odległość między obecnym punktem a następnym (lub poprzednim) punktem. Następnie każdy punkt jest klasyfikowany jako fiksacja lub sakada w zależności od spełnienia warunku progu, którym w tym wypadku jest prędkość. Zgodnie z zasadami tego typu algorytmów, wszystkie elementy ponad granicą zaliczamy jako sakady, a resztę jako fiksacje. Kolejnym krokiem jest pozbycie się danych niepotrzebnych - sakad, i połączenie wszystkich sakad w grupy fiksacji. Ostatnim krokiem algorytmu jest wyznaczenie środka masy każdej grupy fiksacji, co pozwala nam ukazać fiksację w danym miejscu.\par
 Według specyfikacji, ten algorytm wymaga podania jednego parametru wejściowego - progu prędkości.
