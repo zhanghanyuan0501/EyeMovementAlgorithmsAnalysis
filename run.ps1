@@ -1,3 +1,9 @@
 Set-Location $PSScriptRoot
-python main.py -i '1_15_1310301840.cal' 'ML' -d
+$files = Get-ChildItem "data" -Filter *.cal
+for ($i=0; $i -lt 1; $i++) {
+    $name = $files[$i].Name
+    Write-Host $name
+    python main.py -i $name 'ML' -d
+}
+    
 pause

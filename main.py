@@ -14,7 +14,7 @@ import logging
 from memory_profiler import profile, LogFile
 
 def calibrate(xList, yList):
-    i = 1
+    i = 0
     ssxArr = []
     ssyArr = []
     X = []
@@ -58,7 +58,7 @@ def convertPointsToCalibration(pointsList):
     end = time.process_time()
     return pointsList, end - start
 
-@profile(stream=open('result/' + sys.argv[2] + '-' + sys.argv[3] + '.log','w+'), precision=4)
+@profile(stream=open('result/' + sys.argv[2] + '-' + sys.argv[3] + '.log','w+'), precision=10)
 def main(argv):
     statistics = StatisticsClass()
     if sys.argv[1] == '-h':
@@ -99,7 +99,7 @@ def main(argv):
                 plt.plot(coordX, coordY, 'wo', markersize=5, markeredgecolor='r', label='Calculated fixations')
             print('Ending measurement using I-DT algorithm')
             plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
-            plt.show()
+            
         elif sys.argv[3] == 'I-VT':
             print('Starting measurement using I-VT algorithm')
             for e, measurement in enumerate(parsedMeasurements):
@@ -118,7 +118,7 @@ def main(argv):
                 plt.plot(coordX, coordY, 'wo', markersize=5, markeredgecolor='r', label='Calculated fixations')
             print('Ending measurement using I-VT algorithm')
             plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
-            plt.show()
+            
         elif sys.argv[3] == 'ML':
             print('Starting measurement using Machine Learning algorithm')
             convertedData = []
@@ -141,12 +141,17 @@ def main(argv):
             plt.plot(coordX, coordY, 'wo', markersize=5, markeredgecolor='r', label='Calculated fixations')
             statistics.NumberOfFixationsCount += fixationsForPoint
             statistics.AlgorithmRunTimeStatistic += timealgorithm
+            statistics.MLPrecision = ite
             print('Ending measurement using Machine Learning algorithm')
             plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
-            plt.show()
+            
         else:
             print('INCORRECT ALGORITHM')
         print('Number of fixations: %s, Algorithm runtime: %s s' % (statistics.NumberOfFixationsCount, statistics.AlgorithmRunTimeStatistic))
+        fig1 = plt.gcf()
+        #plt.show()
+        plt.draw()
+        fig1.savefig('result/' + sys.argv[2] + sys.argv[3] + '.png', dpi=100)
         createExitFile(sys.argv[2], statistics, sys.argv[3])
         createExitFixationFile(sys.argv[2], measurementFixations, sys.argv[3])
     elif sys.argv[1] == '-a':

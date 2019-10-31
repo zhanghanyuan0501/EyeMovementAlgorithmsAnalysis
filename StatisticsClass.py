@@ -8,3 +8,4 @@ class StatisticsClass:
         self.CalibrationSummaryTime = float(0)
         self.AlgorithmRunTimeStatistic = 0
         self.NumberOfFixationsCount = 0
+        self.MLPrecision = float(0)

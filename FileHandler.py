@@ -49,7 +49,8 @@ def createExitFile(fileName, statisticClass, alg):
         'AlgorithmRunTimeStatistic',
         'NumberOfFixationsCount',
         'ImportDataToDatabase',
-        'ImportAndConvertDatabaseStatistic']
+        'ImportAndConvertDatabaseStatistic',
+        'MLPrecision']
     now = datetime.datetime.now()
     with open('./result/' + alg + fileName + now.strftime("%d-%m-%Y-%H%M%S") + '.csv', 'w', newline='') as csvFile:
         writer = csv.DictWriter(csvFile, fieldnames=fieldNames)
@@ -60,7 +61,8 @@ def createExitFile(fileName, statisticClass, alg):
             'AlgorithmRunTimeStatistic': str(statisticClass.AlgorithmRunTimeStatistic),
             'NumberOfFixationsCount': str(statisticClass.NumberOfFixationsCount),
             'ImportDataToDatabase': str(statisticClass.ImportDataToDatabase),
-            'ImportAndConvertDatabaseStatistic': str(statisticClass.ImportAndConvertDatabaseStatistic)
+            'ImportAndConvertDatabaseStatistic': str(statisticClass.ImportAndConvertDatabaseStatistic),
+            'MLPrecision': str(statisticClass.MLPrecision)
         })
 
 def createExitFixationFile(fileName, data, alg):

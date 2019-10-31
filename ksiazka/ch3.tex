@@ -72,6 +72,7 @@ Wszystkie dane wejściowe zostały umieszczone w folderze \emph{\textbf{/data}} 
 Pierwsza kolumna reprezentuje typ odczytanych danych, zawiera ona dwie wartości: \textbf{SS} oraz \textbf{R}. SS oznacza zmianę mierzonego punktu, a wszyskie elementy R oznaczają wykonany pomiar. Kolejna kolumna przechowuje czas wykonania pomiaru w formacie \emph{UNIX} obliczanym w milisekundach. Jak można zauważyć, pomiar wykonywany jest z częstotliwością 1 ms, przez co odczytane wyniki powinny być dokładne. Trzeci oraz ostatni parametr to nieskalibrowane współrzędne punktów wejściowych, odpowiednio X i Y. Kalibrację danych opisano w sekcji \ref{ssec:calibration}.\par
 Podobny format danych można znaleźć w bazie danych, zgodnie z podrozdziałem \ref{sec:shortdesc}, wraz z ich formatem.
 \subsection{Format danych wyjściowych}
+\label{ssec:exitdata}
 Ten podrozdział opisuje format danych wyjściowych oraz pliki w jakich one są zapisywane.\par
 Rezultatem działania programu jest trójka plików, plik \emph{.csv} zawierający obliczone dane, plik \emph{.png} będący reprezentacją graficzną obliczonych fiksacji oraz plik \emph{.log} przechowujący zrzut wykorzystania pamięci w czasie trwania aplikacji. Zapis danych odbywa się w momencie zakończenia obliczeń. Opis pliku graficznego został zaprezentowany w sekcji \ref{ssec:fixations}.\\
 Plik \emph{.csv} zostaje zapisany w folderze \textbf{/result}, posiadając w nazwie tytuł pliku wejściowego, dołączając do niego datę wykonania programu, np. 1\_01\_1311201811.cal23\-10\-2019\-173857.csv.
@@ -138,11 +139,11 @@ Wszystkie moduły można pobrać za pomocą pakietu \textbf{pip}, domyślnie ins
 Domyślnie zainstalowanymi pakietami, które również znalazły swoje zastosowanie w pracy są pakiety \textbf{time}, \textbf{os}, \textbf{sys}. Odpowiadają one za pomiar czasu, obsługę plików oraz komunikację z systemem.\par
 Ostatnim wymaganym elementem jest posiadanie bazy \textbf{MongoDB}. W tym celu należy zainstalować wybraną wersję pakietu ze strony \url{https://www.mongodb.com/}. Podczas instalacji automatycznie tworzona jest sesja pod wybranym przez użytkownika portem. Domyślną wartością jest \textbf{27017}. Metoda połączenia z bazą danych dla tego projektu pokazana jest w kodzie \ref{lst:connectDB}.
 \subsection{Kalibracja danych wejściowych}
+\label{ssec:calibrationtheory}
 Ta sekcja ma za zadanie prezentację metodyki kalibracji danych wejściowych, jak również opis teoretyczny wykorzystanego zastosowania. Kod algorytmu znajduje się na listingu \ref{lst:calibration}.\par
-Kalibracja danych ma za zadanie konwersję danych z czujnika ruchu do formatu danych na liniowym układzie współrzędnych odpowiadającym punktom. Jak można zauważyć na rysunku \ref{fig:plikwejsciowy}, współrzędne X i Y, dla danych typu \emph{'R'} w pliku wejściowym posiadają nietypowe wartości, co powoduje błędne działanie algorytmów wykrywania fiksacji. Rozwiązaniem problemu kalibracji jest zastosowanie metody najmniejszych kwadratów. Jak wykazano w sekcji \ref{ssec:regression}, dla obecnych danych należało wykorzystać metodę liniową, a nie wielomianową.\par
+Kalibracja danych ma za zadanie konwersję danych z czujnika ruchu do formatu danych na liniowym układzie współrzędnych odpowiadającym punktom. Jak można zauważyć na rysunku \ref{fig:plikwejsciowy}, współrzędne X i Y, dla danych typu \emph{'R'} w pliku wejściowym posiadają nietypowe wartości, co powoduje błędne działanie algorytmów wykrywania fiksacji. Rozwiązaniem problemu kalibracji jest zastosowanie metody najmniejszych kwadratów.\par
 Zadaniem liniowej metody najmniejszych kwadratów jest znalezienie współczynników funkcji liniowej, przez którą przebiegają wszystkie punkty. W tej metodzie zakładamy iż nasze równanie wynosi $Ax = b$. Każda akcja wykonywana jest dwa razy, dla punktów osi X oraz Y.\par
 Funkcja jest wywoływana osobno dla każdego punktu, ze względu na wstępną kalibrację przeprowadzoną przez urządzenie pomiarowe.
-\label{ssec:calibration}
 \begin{lstlisting}[language=Python, caption=Algorytm kalibracji, label={lst:calibration}]
 import numpy as np
 def calibrate(xList, yList):

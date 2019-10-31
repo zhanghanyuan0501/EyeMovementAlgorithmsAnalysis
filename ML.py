@@ -54,10 +54,10 @@ class MLHelper:
 
 def calculateMlHelper(pointList, existingFixations):
     i = 0
+    helperArr = []
     while i < len(pointList):
         windowTime = int(0)
         j = i + 1
-        helperArr = []
         helper2 = []
         helper2.append(pointList[i])
         helper = MLHelper(pointList[i].Type, pointList[i].CoordX, pointList[i].CoordY, pointList[i].TimeStamp)
@@ -85,7 +85,6 @@ def calculateMlHelper(pointList, existingFixations):
         # helper.AverageVelocityInWindow = st.mean(velArr) if len(velArr) > 1 else 0
         # helper.DeviationWindowVelocity = st.stdev(velArr) if len(velArr) > 1 else 0
         # helper.DeviationWindowDistances = st.stdev(distArr) if len(distArr) > 1 else 0
-        print(dict(helper))
         i += 1
         helperArr.append(helper)
     return helperArr
@@ -94,8 +93,6 @@ def calculateML(pointList):
     start = time.process_time()
     XArr = np.empty([1,3])
     YArr = np.empty([1])
-    XArr2 = np.empty([1,3])
-    YArr2 = np.empty([1])
     for i, point in enumerate(pointList):
         tmpArr = list()
         for item in point:
@@ -108,27 +105,24 @@ def calculateML(pointList):
         Y=Y.astype('int')
         if len(X) != len(Y):
             print('W punkcie ' + i + ' jest bład')
-        if i < 3:
-            XArr = np.concatenate([XArr,X])
-            YArr = np.concatenate([YArr,Y])
-        else:
-            XArr2 = np.concatenate([XArr2,X])
-            YArr2 = np.concatenate([YArr2,Y])
-    print(XArr[1:,1:])
+        XArr = np.concatenate([XArr,X])
+        YArr = np.concatenate([YArr,Y])
+    x_learn, x_test, y_learn, y_test = model_selection.train_test_split(XArr, YArr, test_size=0.8)
+    y_learn=y_learn.astype('int')
+    y_test=y_test.astype('int')
     model = LogisticRegression()
-    model.fit(XArr[1:,1:], YArr[1:])
+    model.fit(x_learn[1:,1:], y_learn[1:])
 
-    prediction = model.predict(XArr2[1:,1:])
+    prediction = model.predict(x_test[1:,1:])
     
-    ite = accuracy_score(YArr2[1:], prediction)
+    ite = model.score(x_test[1:,1:],y_test[1:])
     print(ite)
-    endXArr = np.concatenate([XArr[1:,:],XArr2[1:,:]])
-    endYArr = np.concatenate([YArr[1:],prediction])
+    endXArr = np.concatenate([x_learn[1:,:],x_test[1:,:]])
+    endYArr = np.concatenate([y_learn[1:],prediction])
     endAll = np.c_[endXArr,endYArr]
 
     retX = []
     retY = []
-    print(endAll)
     for item in endAll:
         if item[3] == 1:
             retX.append(item[0].CoordX)
