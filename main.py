@@ -137,7 +137,7 @@ def main(argv):
             for i, item in enumerate(convertedData): 
                 mlHelperArray = ml.calculateMlHelper(item, allFixations)
                 points.append(mlHelperArray)
-            coordX, coordY, fixationsForPoint, timealgorithm, ite = ml.calculateML(points)
+            coordX, coordY, fixationsForPoint, timealgorithm, ite, measurementFixations = ml.calculateML(points)
             plt.plot(coordX, coordY, 'wo', markersize=5, markeredgecolor='r', label='Calculated fixations')
             statistics.NumberOfFixationsCount += fixationsForPoint
             statistics.AlgorithmRunTimeStatistic += timealgorithm

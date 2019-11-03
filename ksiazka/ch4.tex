@@ -16,8 +16,8 @@ Wszystkie testy oraz badania zostały przeprowadzone na maszynie zaprezentowanej
 \end{table}
 Wszystkie pliki aplikacji zostały umieszczone na dysku HDD. Instancja baza danych znajduje się na dysku instalacyjnym, który jest rodzaju SSD.
 \section{Parametry danych wejściowych}
-\label{sec:entryparamters}
-30 pomiarów, 48 plików
+\label{sec:entryparameters}
+Dla każdego pliku umieszczonego w folderze \emph{\/data} w katalogu głównym aplikacji można określić następującą charakterystykę. Wykonane zostało 30 pomiarów punktu, w folderze istnieje 48 plików. Średnią ilością otrzymanych pomiarów, włącznie z punktami 'SS' jest XXX. Pomiary zostały wykonywane z częstotliwością 1000 Hz, czyli co 1 ms. W tabeli zaprezentowano indywidualną ilość pomiarów w każdym pliku.
 \section{Przeprowadzone pomiary}
 W tym podrozdziale zostaną zaprezentowane otrzymane wyniki, których format zaprezentowano w sekcji \ref{ssec:exitdata}. Dodatkowo do każdego wyniku została przygotowana krótka analiza wraz z zaprezentowaniem dopełniających parametrów wyników, umożliwiających lepszą interpretację rezultatów. Rozpoczęto od analizy możliwych rodzajów kalibracji danych wejściowych, wraz z pomiarem czasu. Kolejnym elementem jest ukazanie wpływu parametrów wewnętrznych algorytmów na wyniki końcowe. Trzecia sekcja porównuje czasy trwania algorytmów, wraz z analizą przyczyn różnic czasowych. Następna sekcja opisuje wyniki obciążenia pamięciowego przez zaimplementowane algorytmy wykrywania fiksacji, jak również opisuje najbardziej obciążające metody. W przedostatnim podrozdziale zanalizowano metody wprowadzania danych wejściowych do aplikacji. Ostatnia analiza dotyczy dokładności algorytmu uczenia maszynowego oraz porównania wynikowych punktów wszystkich trzech algorytmów przedstawionych w sekcji \ref{ssec:algorithms}.
 \subsection{Analiza kalibracji danych}
@@ -30,7 +30,7 @@ Wykorzystane rozwiązanie dotyczące kalibracji punktów zostało opisane w sekc
     \caption{Błędnie skalibrowany element}
     \label{fig:error_cal}
 \end{figure}
-W tabeli \ref{tab:calibration} zaprezentowano pomiar czasu kalibracji wszystkich danych dla każdego pliku. Czas ten zaprezentowano w sekundach. Dodatkowymi obliczonymi parametrami są suma wszystkich kalibracji: 97,234375 sekund, średni czas trwania kalibracji:	2,02572 sekund, odchylenie standardowe: 0,07297 sekund, mediana wyników: 2,015625 oraz wartości maksymalne i minimalne - odpowiednio 2,203125 sekund i 1,90625
+W tabeli \ref{tab:calibration} zaprezentowano pomiar czasu kalibracji wszystkich danych dla każdego pliku. Czas ten zaprezentowano w sekundach. Dodatkowymi obliczonymi parametrami są suma wszystkich kalibracji: 97,234375 sekund, średni czas trwania kalibracji:	2,02572 sekund, odchylenie standardowe: 0,07297 sekund, mediana wyników: 2,015625 oraz wartości maksymalne i minimalne - odpowiednio 2,203125 sekund i 1,90625 sekundy.
 \begin{longtable}{|l|r|}
     \hline
     \multicolumn{1}{|c|}{\textbf{Plik wejściowy}} & \multicolumn{1}{c|}{\textbf{Łączny czas kalibracji}} \\ \hline
@@ -96,16 +96,343 @@ W tabeli \ref{tab:calibration} zaprezentowano pomiar czasu kalibracji wszystkich
 Jak można zauważyć na wynikach, kalibracja pomimo wykorzystania zewnętrznej biblioteki oraz operacji na tablicach, nie wymaga zbytniego wkładu czasowego w jej realizację. Odchylenie mieszczące się w granicy 2-3\% dla całości algorytmu zawiera się w dopuszczalnej granicy, prawdopodobnie jest ono spowodowane różnicą w ilości danych dostarczanych. Algorytm jest wydajny ze względu na czas około dwóch sekund dla całego pliku.
 \subsection{Analiza wpływu parametrów algorytmów}
 \label{ssec:queryparameters}
-\subsection{Porównanie czasów trwania algorytmów}
-\label{ssec:times}
-\subsection{Analiza obciążenia pamięci}
-\label{ssec:memory}
-\newpage
+W poniższej sekcji zostanie zaprezentowany wpływ parametrów wewnętrznych algorytmów opisanych w sekcji \ref{ssec:algorithms}. Zbadany zostanie ten wpływ pod kątem różnic w obciązeniu pamięciowym przez algorytmy, porównania ilości elementów wyjściowych oraz czasu trwania algorytmów. Ten podrozdział został podzielony na 3 części, każda prezentująca algorytmy opisane w sekcji \ref{ssec:algorithms}. W celu prezentacji wyników wykorzystano pierwszych dziesięć plików opisanych w sekcji \ref{sec:entryparameters}.
+\subsubsection{Algorytm I-VT}
+\label{sssec:ivtresults}
+Algorytm I-VT możemy zbadać pod kątem wpływu parametru granicznej prędkości międzypunktowej. Celem tej sekcji jest prezentacja otrzymanych wyników, wraz z krótką analizą.
+\paragraph{Ilość wykrytych fiksacji\\}
+\begin{longtable}{l|l|l|l|l|}
+    \cline{2-5}
+     & \multicolumn{4}{c|}{\textbf{Ilość fiksacji}} \\ \hline
+    \endfirsthead
+    %
+    \multicolumn{5}{c}%
+    {{\bfseries Kontynuacja tabeli \thetable\ z poprzedniej strony}} \\
+    \cline{2-5}
+     & \multicolumn{4}{c|}{\textbf{Ilość fiksacji}} \\ \hline
+    \endhead
+    %
+    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{v = 0,00001}} & \multicolumn{1}{c|}{\textbf{v = 0,0005}} & \multicolumn{1}{c|}{\textbf{v = 0,005}} & \multicolumn{1}{c|}{\textbf{v = 0,05}} \\ \hline
+    \multicolumn{1}{|l|}{1\_01\_1311201811} & 13032 & 5703 & 193 & 1 \\ \hline
+    \multicolumn{1}{|l|}{1\_02\_1310301856} & 10857 & 2310 & 59 & 2 \\ \hline
+    \multicolumn{1}{|l|}{1\_03\_1310301904} & 11763 & 2801 & 35 & 1 \\ \hline
+    \multicolumn{1}{|l|}{1\_04\_1310301810} & 11871 & 2419 & 33 & 0 \\ \hline
+    \multicolumn{1}{|l|}{1\_05\_1310301817} & 13526 & 5708 & 131 & 1 \\ \hline
+    \multicolumn{1}{|l|}{1\_06\_1310301837} & 12401 & 3699 & 91 & 49 \\ \hline
+    \multicolumn{1}{|l|}{1\_12\_1310301901} & 13150 & 3364 & 577 & 2 \\ \hline
+    \multicolumn{1}{|l|}{1\_14\_1310301912} & 10741 & 961 & 34 & 0 \\ \hline
+    \multicolumn{1}{|l|}{1\_15\_1310301840} & 13274 & 688 & 3 & 0 \\ \hline
+    \multicolumn{1}{|l|}{1\_16\_1310301844} & 12533 & 7272 & 278 & 0 \\ \hline
+    \caption{Wpływ parametru prędkości granicznej dla algorytmu I-VT, ilość fiksacji}
+    \label{tab:ivtfixationcomparison}\\
+\end{longtable}
+W tabeli \ref{tab:ivtfixationcomparison} zaprezentowano wynik pomiaru ilości wykrytych fiksacji przeprowadzonej na dziesięciu plikach dla algorytmu I-VT. W pierwszej kolumnie umieszczono nazwę pliku, a w następnych pomiar ilości, wraz z parametrem prędkości międzypunktowej.\\
+Jak można zauważyć dla tego algorytmu im mniejsza prędkość graniczna, tym więcej punktów jest wykrywanych. Im mniejszy parametr tym mniej dokładnie filtrowane są punkty, co może spowodować sytuację zaprezentowaną na rysunku \ref{fig:ivterrorresults}, gdzie dla okolic punktu $P = (0.95,0.5)$ możemy zaobserwować duży spadek w dokładności zmierzonych fiksacji.
+Jest to wynikiem porównania zaprezentowanego w pseudokodzie \ref{lst:ivtpseudocode}, więc można stwierdzić, iż wyniki algorytmu są zgodne z oczekiwaniami.\\
+Po zaobserwowaniu wyników graficznych w plikach wynikowych stwierdzono, iż parametr prędkości powinien znajdować się w przedziale $v \in (0,0001;0,005)$, gdyż pomiędzy tymi parametrami wyniki są najdokładniejsze.
+\begin{figure}[H]
+    \centering
+    \captionsetup{justification=centering,margin=2cm}
+    \includegraphics[width=\linewidth]{resources/ivt-errorresults.png}
+    \caption{Błędne przedstawienie punktów dla algorytmu I-VT}
+    \label{fig:ivterrorresults}
+\end{figure}
+\paragraph{Analiza czasów trwania algorytmów\\}
+W tabeli \ref{tab:ivttimecomparison} zaprezentowano wyniki pomiaru czasu trwania algorytmu I-VT. Czas trwania zaprezentowano w sekundach. Zgodnie z otrzymanymi wynikami możemy określić, iż im mniejszy parametr prędkości granicznej, tym mniejszy średni czas trwania algorytmu, ze względu na korelację ilości wykrytych punktów, co zaprezentowano w tabeli \ref{tab:ivtfixationcomparison}. Nadal osiągane czasy nie stanowią problemu w szybkim obliczaniu dużej ilości elementów, ze względu na obliczoną prędkość 540 elementów na sekundę.
+\begin{longtable}{l|l|l|l|l|}
+    \cline{2-5}
+     & \multicolumn{4}{c|}{\textbf{Czas trwania w sekundach}} \\ \hline
+    \endfirsthead
+    %
+    \multicolumn{5}{c}%
+    {{\bfseries Kontynuacja tabeli \thetable\ z poprzedniej strony}} \\
+    \cline{2-5}
+     & \multicolumn{4}{c|}{\textbf{Czas trwania w sekundach}} \\ \hline
+    \endhead
+    %
+    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{v= 0,00001}} & \multicolumn{1}{c|}{\textbf{v = 0,0005}} & \multicolumn{1}{c|}{\textbf{v = 0,005}} & \multicolumn{1}{c|}{\textbf{v = 0,05}} \\ \hline
+    \multicolumn{1}{|l|}{1\_01\_1311201811} & 17.609375 & 13.203125 & 1.921875 & 1.5 \\ \hline
+    \multicolumn{1}{|l|}{1\_02\_1310301856} & 10.6875 & 6.203125 & 1.4375 & 1.453125 \\ \hline
+    \multicolumn{1}{|l|}{1\_03\_1310301904} & 12.796875 & 6.34375 & 1.515625 & 1.453125 \\ \hline
+    \multicolumn{1}{|l|}{1\_04\_1310301810} & 14.109375 & 6.140625 & 1.53125 & 1.40625 \\ \hline
+    \multicolumn{1}{|l|}{1\_05\_1310301817} & 8.71875 & 17.328125 & 1.6875 & 1.53125 \\ \hline
+    \multicolumn{1}{|l|}{1\_06\_1310301837} & 9.234375 & 8.46875 & 1.515625 & 1.46875 \\ \hline
+    \multicolumn{1}{|l|}{1\_12\_1310301901} & 15.265625 & 8.421875 & 1.71875 & 1.4375 \\ \hline
+    \multicolumn{1}{|l|}{1\_14\_1310301912} & 17.765625 & 2.6875 & 1.5 & 1.390625 \\ \hline
+    \multicolumn{1}{|l|}{1\_15\_1310301840} & 24.546875 & 3.078125 & 1.4375 & 1.40625 \\ \hline
+    \multicolumn{1}{|l|}{1\_16\_1310301844} & 8.640625 & 23.09375 & 2.21875 & 1.375 \\ \hline
+    \caption{Wpływ parametru prędkości granicznej dla algorytmu I-VT, czas trwania}
+    \label{tab:ivttimecomparison}\\
+\end{longtable}
+\paragraph{Analiza obciążenia pamięci\\}
+Tabela \ref{tab:ivtmemorycomparison} przedstawia wyniki analizy wykorzystania pamięci przez algorytm I-VT. Jednostką pomiaru jest MB. Zgodnie z zaobserwowanymi pomiarami, można stwierdzić, iż dla obecnych maszyn pomiar algorytmem I-VT nie stanowi zbytniego obciążenia, gdyż pomiary oscylują pomiędzy setkami a dziesiątkami kilobajtów na cały pomiar. Nie zauważono wpływu parametru algorytmu na wykorzystanie pamięciowe, bo jak można zaobserwować, pomiar nie przedstawia żadnej zależności pomiedzy ilością elementów a wykorzystaniem pamięciowym.
+\begin{longtable}{l|l|l|l|l|}
+    \cline{2-5}
+     & \multicolumn{4}{c|}{\textbf{Wykorzystanie pamięci w MB}} \\ \hline
+    \endfirsthead
+    %
+    \multicolumn{5}{c}%
+    {{\bfseries Kontynuacja tabeli \thetable\ z poprzedniej strony}} \\
+    \cline{2-5}
+     & \multicolumn{4}{c|}{\textbf{Wykorzystanie pamięci w MB}} \\ \hline
+    \endhead
+    %
+    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{v= 0,00001}} & \multicolumn{1}{c|}{\textbf{v = 0,0005}} & \multicolumn{1}{c|}{\textbf{v = 0,005}} & \multicolumn{1}{c|}{\textbf{v = 0,05}} \\ \hline
+    \multicolumn{1}{|l|}{1\_01\_1311201811} & 0.04299 & 0.05859 & 0.18750 & 0.22656 \\ \hline
+    \multicolumn{1}{|l|}{1\_02\_1310301856} & 0.07813 & 0.18359 & 0.09375 & 0.25781 \\ \hline
+    \multicolumn{1}{|l|}{1\_03\_1310301904} & 0.03125 & 0.28906 & 0.062500 & 0.14844 \\ \hline
+    \multicolumn{1}{|l|}{1\_04\_1310301810} & 0.16797 & 0.01953 & 0.19922 & 0.08984 \\ \hline
+    \multicolumn{1}{|l|}{1\_05\_1310301817} & 0.17969 & 0.12109 & 0.20313 & 0.17969 \\ \hline
+    \multicolumn{1}{|l|}{1\_06\_1310301837} & 0.10156 & 0.04297 & 0.19922 & 0.14063 \\ \hline
+    \multicolumn{1}{|l|}{1\_12\_1310301901} & 0.03125 & 0.03125 & 0.10156 & 0.08203 \\ \hline
+    \multicolumn{1}{|l|}{1\_14\_1310301912} & 0.08594 & 0.16406 & 0.13672 & 0.09766 \\ \hline
+    \multicolumn{1}{|l|}{1\_15\_1310301840} & 0.03125 & 0.14063 & 0.08203 & 0.07031 \\ \hline
+    \multicolumn{1}{|l|}{1\_16\_1310301844} & 0.0 & 0.21094 & 0.03125 & 0.05078 \\ \hline
+    \caption{Wpływ parametru prędkości granicznej dla algorytmu I-VT, wykorzystanie pamięci}
+    \label{tab:ivtmemorycomparison}\\
+\end{longtable}
+
+\subsubsection{Algorytm I-DT}
+\label{sssec:idtresults}
+Algorytm I-DT różni się od algorytmu I-VT zaprezentowanego w sekcji \ref{sssec:ivtresults} tym, iż posiada on 2 parametry wewnętrzne: granicę dyspersji oraz czas trwania okna. W tej sekcji wyniki będą badane pod kątem modyfikacji tych dwóch parametrów.
+\paragraph{Ilość wykrytych fiksacji - granica dyspersji\\}
+\paragraph{Ilość wykrytych fiksacji - czas trwania okna\\}
+\paragraph{Analiza czasów trwania algorytmu - granica dyspersji\\}
+\paragraph{Analiza czasów trwania algorytmu - czas trwania okna\\}
+\paragraph{Analiza obciążenia pamięci - granica dyspersji\\}
+\paragraph{Analiza obciążenia pamięci - czas trwania okna\\}
+\subsubsection{Algorytm ML - wpływ parametru prędkości}
+\label{sssec:mlivt}
+Ze względu na konieczność stwierdzenia klasy do jakiej należy punkt, tzn. czy należy on do fiksacji, należało wyznaczyć fiksację dowolnym algorytmem. Ponieważ w modelu danych znajdują się informacje o prędkościach międzypunktowych jak również odległościach, zdecydowano się na wstępną analizę algorytmem I-VT. Analizę bezpośredniego wpływu parametru wewnętrznego na algorytm I-VT zaprezentowano w sekcji \ref{sssec:ivtresults}. Wyniki są otrzymywane dla podziału danych 80\% danych testowych, 20\% danych treningowych.
+\paragraph{Ilość wykrytych fiksacji\\}
+Jak zaprezentowano w tabeli \ref{tab:mlivtfixationcomparison}, otrzymane wyniki pozwalają stwierdzić, iż im większy parametr prędkości tym więcej fiksacji jest wykrytych przez algorytm uczenia maszynowego. Jest to zupełna odwrotność wyników opisanych w tabeli \ref{tab:ivtfixationcomparison}. Odwrotność ta jest prawdopodobnie spowodowana błędną próbą podziału przez algorytm danych na dane testowe i treningowe - przez mniejszą ilość punktów treningowych możemy otrzymać mniej dokładne wyniki testowe. Ciekawym efektem ubocznym takiego rozwiązania jest brak otrzymywanych wyników, co jest bardzo widoczne w trzeciej kolumnie tabeli \ref{tab:mlivtfixationcomparison}.
+\begin{longtable}{l|l|l|l|}
+    \cline{2-4}
+     & \multicolumn{3}{c|}{\textbf{Ilość wykrytych fiksacji}} \\ \hline
+    \endfirsthead
+    %
+    \multicolumn{4}{c}%
+    {{\bfseries Kontynuacja tabeli \thetable\ z poprzedniej strony}} \\
+    \cline{2-4}
+     & \multicolumn{3}{c|}{\textbf{Ilość wykrytych fiksacji}} \\ \hline
+    \endhead
+    %
+    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{v = 0,00001}} & \multicolumn{1}{c|}{\textbf{v = 0,0005}} & \multicolumn{1}{c|}{\textbf{v = 0,005}} \\ \hline
+    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 1661 & 6477 & 95967 \\ \hline
+    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} & 1661 & 8897 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 1468 & 8766 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 1597 & 9898 & 97704 \\ \hline
+    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 1536 & 5669 & 96010 \\ \hline
+    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 1828 & 7245 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 1786 & 7420 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} & 1900 &  &  \\ \hline
+    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 1903 &  &  \\ \hline
+    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 1592 & 5326 & 95520 \\ \hline
+    \caption{Wpływ parametru prędkości na algorytm ML, ilość fiksacji}
+    \label{tab:mlivtfixationcomparison}\\
+\end{longtable}
+\paragraph{Analiza czasów trwania algorytmu\\}
+Tabela \ref{tab:mlivttimecomparison} prezentuje otrzymane wyniki pomiaru czasu ze względu na prędkość graniczną. Patrząc na wyniki i porównując je z wynikami otrzymanymi w tabeli \ref{tab:mlivtfixationcomparison} możemy wysnuć podobne wnioski, co do tych przedstawionych w sekcji \ref{sssec:ivtresults}. Im więcej plików umieszczanych w algorytmie, tym większy czas trwania algorytmu. Jednak tutaj nie zauważono dużych różnic czasowych, co może być spowodowane tym, iż algorytm uczenia maszynowego otrzymuje na wejściu tą samą liczbę danych, i tylko sprawdzanie dokładności algorytmów zajmuje więcej czasu.
+\begin{longtable}{l|l|l|l|}
+    \cline{2-4}
+     & \multicolumn{3}{c|}{\textbf{Czas trwania algorytmu}} \\ \hline
+    \endfirsthead
+    %
+    \multicolumn{4}{c}%
+    {{\bfseries Kontynuacja tabeli \thetable\ z poprzedniej strony}} \\
+    \cline{2-4}
+     & \multicolumn{3}{c|}{\textbf{Czas trwania algorytmu}} \\ \hline
+    \endhead
+    %
+    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{v= 0,00001}} & \multicolumn{1}{c|}{\textbf{v = 0,0005}} & \multicolumn{1}{c|}{\textbf{v = 0,005}} \\ \hline
+    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 1.796875 & 1.765625 & 2.140625 \\ \hline
+    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} & 1.828125 & 1.828125 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 1.765625 & 1.8125 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 1.75 & 1.890625 & 2.109375 \\ \hline
+    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 1.765625 & 1.78125 & 2.15625 \\ \hline
+    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 1.75 & 1.8125 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 1.859375 & 1.84375 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} & 1.78125 &  &  \\ \hline
+    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 1.765625 &  &  \\ \hline
+    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 1.75 & 1.96875 & 2.09375 \\ \hline
+    \caption{Wpływ parametru prędkości na algorytm ML, czas trwania}
+    \label{tab:mlivttimecomparison}\\
+\end{longtable}
+\paragraph{Analiza obciążenia pamięci\\}
+W tabeli \ref{tab:mlivtmemorycomparison} zaprezentowano otrzymane pomiary dotyczące różnic w zużyciu pamięciowym ze względu na parametr prędkości granicznej. Porównywalnie do wyników przedstawionych w tabeli \ref{tab:ivtmemorycomparison} można zaobserwować iż ten parametr nie ma wpływu na ilość wykorzystanej pamięci, pomimo zwiększonego jej zużycia. 
+\begin{longtable}{l|l|l|l|}
+    \cline{2-4}
+     & \multicolumn{3}{c|}{\textbf{Pomiar wykorzystania pamięci w MB}} \\ \hline
+    \endfirsthead
+    %
+    \multicolumn{4}{c}%
+    {{\bfseries Kontynuacja tabeli \thetable\ z poprzedniej strony}} \\
+    \cline{2-4}
+     & \multicolumn{3}{c|}{\textbf{Pomiar wykorzystania pamięci w MB}} \\ \hline
+    \endhead
+    %
+    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{v= 0,00001}} & \multicolumn{1}{c|}{\textbf{v = 0,0005}} & \multicolumn{1}{c|}{\textbf{v = 0,005}} \\ \hline
+    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 7.14063 & 7.68359 & 6.66016 \\ \hline
+    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} & 5.94922 & 6.94141 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 7.69531 & 6.54297 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 6.96875 & 7.46875 & 7.75391 \\ \hline
+    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 6.63281 & 5.14063 & 8.16016 \\ \hline
+    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 6.57422 & 6.15625 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 7.22656 & 7.40234 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} & 5.52734 &  &  \\ \hline
+    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 5.03125 &  &  \\ \hline
+    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 5.54297 & 6.82812 & 7.21875 \\ \hline
+    \caption{Wpływ parametru prędkości na algorytm ML, wykorzystanie pamięci}
+    \label{tab:mlivtmemorycomparison}\\
+\end{longtable}
+\paragraph{Analiza precyzji algorytmu\\}
+Jedną z cech uczenia maszynowego jest możliwość określenia precyzji danych algorytmów, poprzez wykonanie następującego obliczenia: 
+\[
+    P = \frac{y_{pred} * 100\%}{y_{real}}
+\]
+Wyniki takich obliczeń zaprezentowano w tabeli \ref{tab:mlivtprecisecomparison}. Wyniki pierwszej kolumny można zinterpretować jako że wykryto dużą ilość fiksacji, algorytm potrafi dokładnie oddzielić fiksacje od sakad. Powodem mniejszej dokładności drugiej kolumny jest mniejsza ilość danych posiadających klasę \emph{"wykryto fiksację"}. W trzeciej kolumnie natomiast bardzo mała ilość danych umieszczonych w algorytmie powoduje przekłamanie "dużej" dokładności pomimo takiej ilości danych. Zauważono tutaj mimo mniejszej próbki wynikowej duże różnice w precyzji.
+\begin{longtable}{l|l|l|l|}
+    \cline{2-4}
+     & \multicolumn{3}{c|}{\textbf{Precyzja algorytmu}} \\ \hline
+    \endfirsthead
+    %
+    \multicolumn{4}{c}%
+    {{\bfseries Kontynuacja tabeli \thetable\ z poprzedniej strony}} \\
+    \cline{2-4}
+     & \multicolumn{3}{c|}{\textbf{Precyzja algorytmu}} \\ \hline
+    \endhead
+    %
+    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{v= 0,00001}} & \multicolumn{1}{c|}{\textbf{v = 0,0005}} & \multicolumn{1}{c|}{\textbf{v = 0,005}} \\ \hline
+    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 91.70\% & 67.45\% & 84.34\% \\ \hline
+    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} & 91.28\% & 55.30\% &  \\ \hline
+    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 92.33\% & 56.30\% &  \\ \hline
+    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 91.75\% & 50.22\% & 92.55\% \\ \hline
+    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 91.96\% & 71.58\% & 83.63\% \\ \hline
+    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 90.84\% & 63.60\% &  \\ \hline
+    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 90.97\% & 62.86\% &  \\ \hline
+    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} & 90.35\% &  &  \\ \hline
+    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 90.44\% &  &  \\ \hline
+    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 91.81\% & 73.39\% & 80.66\% \\ \hline
+    \caption{Wpływ parametru prędkości na algorytm ML, precyzja algorytmu}
+    \label{tab:mlivtprecisecomparison}\\
+\end{longtable}
+\subsubsection{Algorytm ML - wpływ podziału danych testowych i danych treningowych}
+\label{sssec:mldivide}
+Sama techonologia uczenia maszynowego pozwala na modyfikację proporcji danych testowych względem danych treningowych. Celem tej sekcji jest prezentacja otrzymanych wyników przy zastosowaniu różnych wartości tej proporcji. By obliczyć istniejące fiksacje, w celu stworzenia poprawnego modelu danych użyto parametru prędkości granicznej \emph{v = 0,001}, więc znajduje się on pomiędzy danymi zaprezentowanymi w sekcji \ref{sssec:mlivt}. Różnica w tych danych będzie badana przy stopniowym modyfikowaniu różnicy w proporcjach o 15\%, tzn. 20\%-35\%-50\% dla danych testowych, reszta danych treningowych.
+\paragraph{Ilość wykrytych fiksacji\\}
+Na tabeli \ref{tab:mlpropfixcomparison} wyświetlono wyniki pomiaru liczności wykrytych fiksacji przez algorytm uczenia maszynowego oraz różnice względem zmian parametru proporcji na ten wynik. Jak możemy zaobserwować, dla naszego parametru \emph{v} nie wpływają one na wynik końcowy całego algorytmu.
+\begin{longtable}{l|l|l|l|}
+    \cline{2-4}
+     & \multicolumn{3}{c|}{\textbf{Liczba wykrytych fiksacji}} \\ \hline
+    \endfirsthead
+    %
+    \multicolumn{4}{c}%
+    {{\bfseries Kontynuacja tabeli \thetable\ z poprzedniej strony}} \\
+    \cline{2-4}
+     & \multicolumn{3}{c|}{\textbf{Liczba wykrytych fiksacji}} \\ \hline
+    \endhead
+    %
+    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{20\%}} & \multicolumn{1}{c|}{\textbf{35\%}} & \multicolumn{1}{c|}{\textbf{50\%}} \\ \hline
+    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 93727 &  &  \\ \hline
+    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} &  &  &  \\ \hline
+    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 96123 &  & 97277 \\ \hline
+    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 96835 & 97247 & 97704 \\ \hline
+    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 93364 & 94421 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 95981 &  & 97166 \\ \hline
+    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 94484 &  & 96219 \\ \hline
+    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} &  &  & 97825 \\ \hline
+    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 98862 &  &  \\ \hline
+    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 93070 & 94173 &  \\ \hline
+    \caption{Wpływ parametru proporcji, ilość fiksacji}
+    \label{tab:mlpropfixcomparison}\\
+\end{longtable}
+\paragraph{Analiza czasów trwania algorytmu\\}
+Celem tego paragrafu jest zaprezentowanie wyników pomiaru czasu trwania algorytmu oraz analiza różnic w tym pomiarze. Wyniki zaprezentowano w tabeli \ref{tab:mlpropcomparison}. Jak zaobserwowano w tej tabeli, wyniki są bardzo podobne do trzeciej kolumny tabeli \ref{tab:mlivttimecomparison}, co jest spowodowane doborem parametru prędkości granicznej. Nie zauważono innych różnic w pomiarze czasu, przez co wnioskiem tej analizy może być, iż parametr proporcji nie ma wpływu na czas trwania algorytmu.
+\begin{longtable}{l|l|l|l|}
+    \cline{2-4}
+     & \multicolumn{3}{c|}{\textbf{Czas trwania algorytmu}} \\ \hline
+    \endfirsthead
+    %
+    \multicolumn{4}{c}%
+    {{\bfseries Kontynuacja tabeli \thetable\ z poprzedniej strony}} \\
+    \cline{2-4}
+     & \multicolumn{3}{c|}{\textbf{Czas trwania algorytmu}} \\ \hline
+    \endhead
+    %
+    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{20\%}} & \multicolumn{1}{c|}{\textbf{35\%}} & \multicolumn{1}{c|}{\textbf{50\%}} \\ \hline
+    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 2.15625 &  &  \\ \hline
+    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} &  &  &  \\ \hline
+    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 2.1875 &  & 2.203125 \\ \hline
+    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 2.140625 & 2.15625 & 2.0625 \\ \hline
+    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 2.109375 & 2.109375 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 2.15625 &  & 2.203125 \\ \hline
+    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 2.203125 &  & 2.203125 \\ \hline
+    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} &  &  & 2.109375 \\ \hline
+    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 2.171875 &  &  \\ \hline
+    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 2.234375 & 2.0625 &  \\ \hline
+    \caption{Wpływ parametru proporcji, czas trwania}
+    \label{tab:mlpropcomparison}\\
+\end{longtable}
+\paragraph{Analiza obciążenia pamięci\\}
+Wyniki pomiaru obciążenia pamięci wykorzystując uczenie maszynowe przy zmianie parametru proporcji danych testowych zaprezentowano w tabeli \ref{tab:mlpropmemorycomparison}. Zgodnie z tymi wynikami, możemy zauważyć, iż są one podobne do wyników zaprezentowanych w tabeli \ref{tab:mlivtmemorycomparison}. Oznacza to, iż zmiana tego parametru nie ma wpływu na obciążenie pamięci dla wyników.
+\begin{longtable}{l|l|l|l|}
+    \cline{2-4}
+     & \multicolumn{3}{c|}{\textbf{Obciążenie pamięci}} \\ \hline
+    \endfirsthead
+    %
+    \multicolumn{4}{c}%
+    {{\bfseries Kontynuacja tabeli \thetable\ z poprzedniej strony}} \\
+    \cline{2-4}
+     & \multicolumn{3}{c|}{\textbf{Obciążenie pamięci}} \\ \hline
+    \endhead
+    %
+    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{20\%}} & \multicolumn{1}{c|}{\textbf{35\%}} & \multicolumn{1}{c|}{\textbf{50\%}} \\ \hline
+    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 7.14063 &  &  \\ \hline
+    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} &  &  &  \\ \hline
+    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 9.04297 &  & 7.22266 \\ \hline
+    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 11.12891 & 7.93359 & 7.45703 \\ \hline
+    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 6.16797 & 7.17969 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 10.92969 &  & 11.13281 \\ \hline
+    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 7.54688 &  & 7.83203 \\ \hline
+    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} &  &  & 7.14844 \\ \hline
+    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 7.11328 &  &  \\ \hline
+    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 10.07813 & 7.85547 &  \\ \hline
+    \caption{Wpływ parametru proporcji, obciążenie pamięci}
+    \label{tab:mlpropmemorycomparison}\\
+\end{longtable}
+\paragraph{Dokładność algorytmu\\}
+Zgodnie z wynikami porównania liczby wykrytych fiksacji dla zmian proporcji danych testowych względem danych treningowych zaprezentowanymi w tabeli \ref{tab:mlpropprecisioncomparison}, możemy zauważyć iż nie ma to wpływu na wyniki końcowe precyzji. Jest to prawdopodobnie spowodowane brakiem różnic w wynikach wstępnej analizy danych.
+\begin{longtable}{l|l|l|l|}
+    \cline{2-4}
+     & \multicolumn{3}{c|}{\textbf{Precyzja algorytmu}} \\ \hline
+    \endfirsthead
+    %
+    \multicolumn{4}{c}%
+    {{\bfseries Kontynuacja tabeli \thetable\ z poprzedniej strony}} \\
+    \cline{2-4}
+     & \multicolumn{3}{c|}{\textbf{Precyzja algorytmu}} \\ \hline
+    \endhead
+    %
+    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{20\%}} & \multicolumn{1}{c|}{\textbf{35\%}} & \multicolumn{1}{c|}{\textbf{50\%}} \\ \hline
+    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 93.17\% &  &  \\ \hline
+    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} &  &  &  \\ \hline
+    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 96.33\% &  & 96.21\% \\ \hline
+    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 97.19\% & 97.21\% & 97.12\% \\ \hline
+    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 92.56\% & 92.70\% &  \\ \hline
+    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 95.93\% &  & 95.98\% \\ \hline
+    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 94.48\% &  & 94.29\% \\ \hline
+    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} &  &  & 97.43\% \\ \hline
+    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 99.64\% &  &  \\ \hline
+    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 92.43\% & 92.50\% &  \\ \hline
+    \caption{Wpływ parametru proporcji, precyzja algorytmu}
+    \label{tab:mlpropprecisioncomparison}\\
+\end{longtable}
+Jak wywnioskowano w paragrafach powyżej, wpływ parametru proporcji jest znikomy na wynik końcowy algorytmu uczenia maszynowego, co może oznaczać dobrze wybrany typ algorytmu uczenia maszynowego. Większy wpływ na wyniki końcowe dla algorytmu ML ma zmiana parametru prędkości granicznej, zgodnie z zaprezentowanymi wynikami w sekcji \ref{sssec:mlivt}.
 \subsection{Analiza metod wprowadzania danych wejściowych}
 \label{ssec:entrydata}
 Celem poniższej sekcji jest prezentacja otrzymanych wyników pomiaru czasów pobrania danych wejściowych oraz ich konwersji na format czytelny dla aplikacji. Pierwsza kolumna w tabelach \ref{tab:fileimport} i \ref{tab:importdb} zawiera nazwę pliku, a w drugiej kolumnie znajdziemy wartości wykonanego pomiaru podane w sekundach.\par
 W tabeli \ref{tab:fileimport} zaprezentowano wynik pomiaru importu danych oraz konwersji plików na format czytelny dla aplikacji pomiarowej. Obliczono także następujące wartości: łączny czas trwania importu danych wynosi 65,673 sekund, średni czas wynosi 1,3681875, odchylenie standardowe równa się 0,03755 w przybliżeniu do 5 miejsc po przecinku, a mediana wynosi 1,359 sekundy. Elementy maksymalne i minimalne wynoszą odpowiednio: 1,438 i
-1,297 sekundy. Zgodnie z wartościami pokazanymi w sekcji \ref{sec:entryparamters}, oznacza to iż średnio 65734 elementów jest przetwarzanych na sekundę.
+1,297 sekundy. Zgodnie z wartościami pokazanymi w sekcji \ref{sec:entryparameters}, oznacza to iż średnio 65734 elementów jest przetwarzanych na sekundę.
 \begin{longtable}{|l|l|}
     \hline
     \multicolumn{1}{|c|}{\textbf{Plik wejściowy}} & \multicolumn{1}{c|}{\textbf{Czas wczytywania i konwersji}} \\ \hline
@@ -298,7 +625,7 @@ odchylenie standardowe 0,74628 sekund, mediana 3,562 sekund, maksimum prawie 7 s
     \label{tab:insertdb}\\
 \end{longtable}
 Zastanawiającym wynikiem jest wynik 7 sekund przy zapisie do bazy danych, po weryfikacji prawdopodobną przyczyną takich pomiarów jest chwilowa niedyspozycyjność serwera do wykonywania operacji, jednak, jako iż tylko 2 operacje osiągnęły taki wynik, może to być też wynikiem przypadku, bo nie znaleziono żadnych anomalii przeszukując te dwa pliki.\\
-Łączny średni czas operacji na bazie danych wynosi około 6,22 sekund, co dla ilości danych zaprezentowanych w sekcji \ref{sec:entryparamters} jest bardzo dobrym wynikiem. Powodem dużej prędkości takich operacji również jest mała złożoność danych, gdyż jest to tylko 5 pól w jednej tabeli.\par
+Łączny średni czas operacji na bazie danych wynosi około 6,22 sekund, co dla ilości danych zaprezentowanych w sekcji \ref{sec:entryparameters} jest bardzo dobrym wynikiem. Powodem dużej prędkości takich operacji również jest mała złożoność danych, gdyż jest to tylko 5 pól w jednej tabeli.\par
 Na rysunku \ref{fig:importdata} zaprezentowano wykres przedstawiający wyniki powyższych tabel.
 \newpage
 \begin{figure}[H]
@@ -308,5 +635,38 @@ Na rysunku \ref{fig:importdata} zaprezentowano wykres przedstawiający wyniki po
     \caption{Przedstawienie wyników pomiaru czasu importu danych do aplikacji}
     \label{fig:importdata}
 \end{figure}
-\newpage
-\subsection{Dokładność algorytmów i porównanie punktów wynikowych}
+\subsection{Porównanie końcowe algorytmów}
+\label{ssec:compalgorithms}
+Obserwując wyniki algorytmów zaprezentowane w sekcji \ref{ssec:queryparameters} wyniki końcowe zależą dużo od wartości parametrów wejściowych algorytmów. Niepoprawna wartość prędkości granicznej dla algorytmu I-VT, czy też wartości dyspersji i rozmiaru czasowego okna dla algorytmu I-DT może powodować zbyt duże nagromadzenie, lub wręcz przeciwnie zbyt małą ilość danych. Dlatego niezbędne jest znalezienie w ciągu weryfikacji danych, jeżeli istenieje taka możliwość odpowiedniej wartości tych parametrów.\par
+Jak już zostało napisane w sekcji \ref{sssec:ivtresults}, w trakcie testów odkryto, iż prawidłowy parametr prędkości mieści się w przedziale $v \in (0,0001;0,001)$. Jest to spowodowane dokładnością urządzenia pomiarowego i wykonanego nim pomiaru. Należy ten parametr dostosowywać w zależności od wykonanego pomiaru. Przykładowe wyniki tego algorytmu odpowiednio dla wartości parametru \emph{v} wynoszących \emph{0.00001, 0.0005} oraz \emph{0.005} i \emph{0.05} dla pliku \emph{1\_03\_1310301904.cal} zaprezentowano w odpowiedniej kolejności na rysunkach \ref{fig:ivt1}, \ref{fig:ivt2}, \ref{fig:ivt3}, \ref{fig:ivt4}. Można na nich zaobserwować potwierdzenie powyższego założenia. Patrząc na tabele \ref{tab:ivtfixationcomparison} wartości fiksacji wynoszą 11763, 2801, 35, 1. Zastanawiającym wynikiem analizy jest różnica w ilości punktów w linii do punktów $P_1 = (0.95,0.5)$ oraz $P_2 = (0.95, 0.025)$. Dla rysunku \ref{fig:ivt1} i \ref{fig:ivt2} możemy zaobserwować zmianę ilości punktów w linii, ale zwiększona jest ilość punktów w fiksacji dla punktów skupionych przy wartościach 'RR'. Być może dla tego pliku został w danych wyraźnie zaznaczony ruch oka.\par
+Nie jest zaskakującym wynikiem czas trwania algorytmu, wraz z wykorzystaniem pamięciowym, gdyż jedno porównanie do następnego elementu w tablicy, w wypadku poprawnie skonstruowanego kodu nie powinno stanowić dużej złożoności czasowej oraz pamięciowej.
+\begin{figure}[H]
+    \centering
+    \captionsetup{justification=centering,margin=2cm}
+    \includegraphics[width=0.8\linewidth]{resources/ivtresults/file1.png}
+    \caption{Wynik algorytmu I-VT dla v = 0.00001}
+    \label{fig:ivt1}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \captionsetup{justification=centering,margin=2cm}
+    \includegraphics[width=0.8\linewidth]{resources/ivtresults/file2.png}
+    \caption{Wynik algorytmu I-VT dla v = 0.0005}
+    \label{fig:ivt2}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \captionsetup{justification=centering,margin=2cm}
+    \includegraphics[width=0.8\linewidth]{resources/ivtresults/file3.png}
+    \caption{Wynik algorytmu I-VT dla v = 0.005}
+    \label{fig:ivt3}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \captionsetup{justification=centering,margin=2cm}
+    \includegraphics[width=0.8\linewidth]{resources/ivtresults/file4.png}
+    \caption{Wynik algorytmu I-VT dla v = 0.05}
+    \label{fig:ivt4}
+\end{figure}
+Pierwszym wnioskiem z analizy pracy algorytmu I-DT jest to, iż jest on najdłużej działającym algorytmem.\par
+Dla algorytmu uczenia maszynowego zaskakującą informacją jest to, że zauważono brak znaczącego wpływu na wyniki końcowe przez to ile procent danych przeznaczono na testy a ile na trening modelu. Również nietypowym zjawiskiej jest odwrotność ilości wykrywanych fiksacji względem algorytmu I-VT, który posłużył za przygotowanie liczby wynikowej. Celem dokładniejszej analizy tych algorytmów należałoby posiadać dane, które posiadałyby już określoną wartość klasy przynależności do grupy, gdyż błędny parametr zgodnie z pierwszym paragrafem może powodować niedokładne wyniki. Być może też posiadanie takich danych pozwoliłoby na wyeliminowanie problemu pustych wyników w tabelach znajdujących się w paragrafie \ref{sssec:mldivide} i \ref{sssec:mlivt}.

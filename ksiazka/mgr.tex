@@ -19,7 +19,7 @@
 \usepackage{subfiles}
 \usepackage{fancyhdr}
 \usepackage{nopageno}
-\usepackage{caption}
+\usepackage[center]{caption}
 \usepackage{subcaption}
 \usepackage[linesnumbered,noalgohanging]{algorithm2e}
 \usepackage{setspace}
@@ -46,6 +46,7 @@
 \setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}  
 \renewcommand*{\lstlistlistingname}{Spis fragmentów kodu}
 \renewcommand*{\lstlistingname}{Kod}
+\setcounter{secnumdepth}{3}
 
 \title{Analiza wybranych algorytmów wykrywania składowych ruchu oka}
 \author{inż. Paweł Kucia}
@@ -78,7 +79,7 @@
     \chapter{Badania}
         \subfile{ch4}
     \chapter{Podsumowanie i wnioski}
-        \blindtext
+        \subfile{ch5}
     \backmatter
     \fancyhf{}
     \pagestyle{plain}

@@ -3,6 +3,7 @@ from operator import attrgetter
 from math import sqrt
 from Data import Data
 import IVT as ivt
+import constants as constants
 
 # Load libraries
 import pandas as pd
@@ -56,8 +57,6 @@ def calculateMlHelper(pointList, existingFixations):
     i = 0
     helperArr = []
     while i < len(pointList):
-        windowTime = int(0)
-        j = i + 1
         helper2 = []
         helper2.append(pointList[i])
         helper = MLHelper(pointList[i].Type, pointList[i].CoordX, pointList[i].CoordY, pointList[i].TimeStamp)
@@ -107,7 +106,7 @@ def calculateML(pointList):
             print('W punkcie ' + i + ' jest bład')
         XArr = np.concatenate([XArr,X])
         YArr = np.concatenate([YArr,Y])
-    x_learn, x_test, y_learn, y_test = model_selection.train_test_split(XArr, YArr, test_size=0.8)
+    x_learn, x_test, y_learn, y_test = model_selection.train_test_split(XArr, YArr, test_size=constants.ML_PROPORTIONS)
     y_learn=y_learn.astype('int')
     y_test=y_test.astype('int')
     model = LogisticRegression()
@@ -123,9 +122,10 @@ def calculateML(pointList):
 
     retX = []
     retY = []
+    measurementFixations = []
     for item in endAll:
         if item[3] == 1:
             retX.append(item[0].CoordX)
             retY.append(item[0].CoordY)
     end = time.process_time()
-    return retX, retY, len(retX), end - start, ite
+    return retX, retY, len(retX), end - start, ite, measurementFixations
