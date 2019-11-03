@@ -17,25 +17,38 @@ def calibrate(xList, yList):
     i = 0
     ssxArr = []
     ssyArr = []
-    X = []
-    Y = []
+    tmpX = np.asarray(xList)
+    tmpY = np.asarray(yList)
+    # X = []
+    # Y = []
     while i < len(xList):
-        X.append([xList[i]**2,xList[i],yList[i]**2,yList[i]])
-        Y.append([yList[i]**2,yList[i],xList[i]**2,xList[i]])
+        # X.append([xList[i]**2,xList[i],yList[i]**2,yList[i]])
+        # Y.append([yList[i]**2,yList[i],xList[i]**2,xList[i]])
         ssxArr.append(xList[0])
         ssyArr.append(yList[0])
+
         i+=1
 
-    x = np.linalg.lstsq(X,ssxArr, rcond=None)
-    y = np.linalg.lstsq(Y,ssyArr, rcond=None)
+    ssxTmp = np.asarray(ssxArr)
+    ssyTmp = np.asarray(ssyArr)
+    temp = np.polynomial.Polynomial.fit(tmpX, tmpY, 2)
+    x_fit = np.polynomial.Polynomial(temp)
+    x_test = x_fit(ssxTmp[1:])[0]
+    tempY = np.polynomial.Polynomial.fit(tmpY, tmpX, 2)
+    y_fit = np.polynomial.Polynomial(tempY)
+    y_test = y_fit(ssyTmp[1:])[0]
+    retX = x_test(tmpX[1:])
+    retY = y_test(tmpY[1:])
+    # x = np.linalg.lstsq(X,ssxArr, rcond=None)
+    # y = np.linalg.lstsq(Y,ssyArr, rcond=None)
 
     i = 1
-    retX = []
-    retY = []
-    while i < len(xList):
-        retX.append(x[0][0]*xList[i]**2 + x[0][1]*xList[i] + x[0][2]*yList[i]**2 + x[0][3]*yList[i])
-        retY.append(y[0][0]*yList[i]**2 + y[0][1]*yList[i] + y[0][2]*xList[i]**2 + y[0][3]*xList[i])
-        i += 1
+    # retX = []
+    # retY = []
+    # while i < len(xList):
+    #     retX.append(x[0][0]*xList[i]**2 + x[0][1]*xList[i] + x[0][2]*yList[i]**2 + x[0][3]*yList[i])
+    #     retY.append(y[0][0]*yList[i]**2 + y[0][1]*yList[i] + y[0][2]*xList[i]**2 + y[0][3]*xList[i])
+    #     i += 1
     
     return retX, retY
 
@@ -51,6 +64,7 @@ def convertPointsToCalibration(pointsList):
         coordY.append(i.CoordY)
 
     retX, retY = calibrate(coordX, coordY)
+    print(retX)
     for i, item in enumerate(pointsList):
         if not item.Type == 'SS':
             pointsList[i].CoordX = retX[i-1]
