@@ -417,8 +417,8 @@ def calculateML(pointList):
                 coordX, coordY, timealgorithm, fixationsForPoint = calculateIdtAlgorithm(m1)
                 plt.plot(coordX, coordY, 'wo', markersize=5, markeredgecolor='r', label='Calculated fixations')
                 ...
-            plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
-            plt.show()
+        plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
+        plt.show()
 \end{lstlisting}
 Listing \ref{lst:plot} prezentuje wykorzystanie biblioteki \textbf{pyplot} odpowiadającej za tworzenie wykresów oraz wyświetlanie punktów w układzie współrzędnych w języku Python. Funkcja \emph{plot()} przyjmuje jako parametry wejściowe następujące wartości: X, Y, sposób prezentacji, rozmiar linii/punktu, legendę. Celem wyświetlenia wartości należy użyć funkcji \textbf{plt.show()}. Otwiera ona nowe okno z naniesionymi wartościami. Przykład takiego okna zaprezentowano na rysunku \ref{fig:presentationfixation}.
 \subsection{Pomiar czasu}
@@ -430,9 +430,70 @@ W trakcie wykonywania aplikacji wykonywany jest pomiar czasu działania różnyc
     end = time.process_time()
     return ..., end - start, ...
 \end{lstlisting}
+\subsection{Obsługa plików}
+Celem tej sekcji jest zaprezentowanie sposobu odczytu danych z pliku cal, oraz wykorzystania biblioteki \emph{csv} służącej do zapisywania plików typu .csv.
+\label{ssec:filehandling}
+\subsubsection{Odczyt danych z pliku}
+\label{sssec:readfile}
+W kodzie \ref{lst:readfile} przedstawiono metodykę odczytu danych z pliku \emph{.cal} oraz sposób konwersji tych danych na obiekt czytelny dla użytkownika, wraz z oddzieleniem każdego pomiaru za pomocą elementu 'SS'. Pierwsza pętla \textbf{for} od linii 3 do linii 9 bezpośrednio odpowiada za odczyt danych z pliku. W pierwszym kroku odczytuje ona wszystkie pliki za pomocą funkcji \emph{os.listdir()}, następnie sprawdza czy plik posiada nazwę zgodną z parametrem wejściowym \emph{fileName}. W linii 5 opisano wykorzystanie dyrektywy \emph{with}, odpowiadającej dyrektywie \emph{using} z języka C\#, tzn. usuwającej z pamięci operacyjnej obiekt po wyjściu z wcięcia w języku Python.\\
+Od linii szóstej w pętli sprawdzana jest każda linia pliku, następnie tworzona jest tablica przechowująca elementy typu \emph{string}, które tworzone są za pomocą podzielenia linii przez znak specjalny TAB. Dodawane są one następnie jako specjalny obiekt do tymczasowej listy.\\
+Po skończeniu operacji w pierwszej pętli od linii 10 do 23 przedstawiono pętle rozdzielającą listę wszystkich pomiarów na tablicę list pomiarów. Elementem rodzielającym listę jest pomiar typu 'SS'. Funkcja zwraca tablicę list pomiarów.
+\begin{lstlisting}[language=Python, caption=Odczyt i tworzenie danych z pliku, label={lst:readfile}]
+def createObjectsFromFile(fileName):
+    for file in os.listdir('./data'):
+        if file.endswith(fileName):
+            with open('./data/' + file, newline='') as inputfile:
+                for line in inputfile:
+                    splittedLine = line.strip('\r\n').split('\t') # co linię, oddziel o znak tab
+                    results.append(Data(splittedLine[0], splittedLine[1], splittedLine[2], splittedLine[3]))
+    i = 0
+    loopFlag = True
+    while loopFlag:
+        for element in results:
+            if i + 1 == len(results):
+                retList.append(results[i])
+                loopFlag = False
+                break
+            if results[i + 1].Type == 'SS':
+                retList.append(results[i])
+                break
+            retList.append(results[i])
+            i += 1
+        i += 1
+        returnList.append(retList)
+        retList = []
+    return returnList
+\end{lstlisting}
+\subsubsection{Zapis danych do pliku}
+\label{sssec:savefile}
+Na listingu \ref{lst:writefile} pokazano sposób tworzenia oraz zapisywania plików wyjściowych do formatu CSV. Wykorzystano w tym celu specjalną bibliotekę \emph{csv}, domyślnie instalowaną z pakietem Python.\\
+We fragmencie od linii 2 do 8 włącznie utworzono słownik nagłówków, jakie plik csv powinien posiadać. W wypadku braku tego słownika, aplikacja zgłasza błąd. W linii 10 otwierany jest obiekt dla pliku, analogicznie do rozwiązania zaprezentowanego w sekcji \ref{sssec:openfile}, tylko wykorzystując parametr \textbf{'w'}, odpowiadający za zapis. W liniach 11,12 tworzony jest plik przyjmujący słownik jako swoje pola oraz dodawany jest do niego nagłówek. W ostatniej linii algorytmu tworzony jest jeden rząd, w którym umieszczone są statystyki pomiaru.
+\begin{lstlisting}[language=Python, caption=Zapis danych do pliku csv, label={lst:writefile}]
+def createExitFile(fileName, statisticClass, alg):
+    fieldNames = ['ImportAndConvertFileStatistic',
+        'CalibrationSummaryTime',
+        'AlgorithmRunTimeStatistic',
+        'NumberOfFixationsCount',
+        'ImportDataToDatabase',
+        'ImportAndConvertDatabaseStatistic',
+        'MLPrecision']
+    now = datetime.datetime.now()
+    with open('./result/' + alg + fileName + now.strftime("%d-%m-%Y-%H%M%S") + '.csv', 'w', newline='') as csvFile:
+        writer = csv.DictWriter(csvFile, fieldnames=fieldNames)
+        writer.writeheader()
+        writer.writerow({
+            'ImportAndConvertFileStatistic': str(statisticClass.ImportAndConvertFileStatistic),
+            'CalibrationSummaryTime': str(statisticClass.CalibrationSummaryTime),
+            'AlgorithmRunTimeStatistic': str(statisticClass.AlgorithmRunTimeStatistic),
+            'NumberOfFixationsCount': str(statisticClass.NumberOfFixationsCount),
+            'ImportDataToDatabase': str(statisticClass.ImportDataToDatabase),
+            'ImportAndConvertDatabaseStatistic': str(statisticClass.ImportAndConvertDatabaseStatistic),
+            'MLPrecision': str(statisticClass.MLPrecision)
+        })
+\end{lstlisting}
 \subsection{Pomiar wykorzystania pamięci}
 \label{ssec:memorymethod}
-W celu przeprowadzenia pomiaru wykorzystania pamięci w aplikacji należy użyć biblioteki \textbf{memory\-profiler}. Sposób implementacji przedstawiono w kodzie \ref{lst:memory}. Ten moduł został użyty do całej aplikacji, przez zdefiniowanie go przed funkcją \textbf{main}. Biblioteka ta wypisuje w MB zużycie pamięci przez każdą linijkę aplikacji, oraz zapisuje ją do pliku poprzez użycie parametru 'stream'. W przypadku aplikacji zastosowano precyzję do 5 miejsc po przecinku, ze względu na zakładaną możliwość mniejszego zużycia pamięci przez podstawowe algorytmy. Określenie tej precyzji znajduje się w parametrze \emph{precision}.
+W celu przeprowadzenia pomiaru wykorzystania pamięci w aplikacji należy użyć biblioteki \textbf{memory\-profiler}. Sposób implementacji przedstawiono w kodzie \ref{lst:memory}. Ten moduł został użyty do całej aplikacji, przez zdefiniowanie go przed funkcją \textbf{main}. Biblioteka ta wypisuje w MiB\footnote{Mebibajt (1MiB = 1024 KB)} zużycie pamięci przez każdą linijkę aplikacji, oraz zapisuje ją do pliku poprzez użycie parametru 'stream'. W przypadku aplikacji zastosowano precyzję do 5 miejsc po przecinku, ze względu na zakładaną możliwość mniejszego zużycia pamięci przez podstawowe algorytmy. Określenie tej precyzji znajduje się w parametrze \emph{precision}.
 \begin{lstlisting}[language=Python, caption=Pomiar wykorzystania pamięci, label={lst:memory}]
 @profile(stream=open('result/' + sys.argv[2] + '-' + sys.argv[3] + '.log','w+'), precision=4)
 def main(argv):
