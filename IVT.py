@@ -6,6 +6,7 @@ def calculateIvtAlgorithm(pointList):
     fixations = []
     coordX = []
     coordY = []
+    saccades = []
     i = 0
     for element in pointList:
         velocity = 0
@@ -22,6 +23,8 @@ def calculateIvtAlgorithm(pointList):
 
         if (velocity < constants.FIXATION_VELOCITY_THRESHOLD):
             fixations.append(pointList[i])
+        else:
+            saccades.append(pointList[i])
         i += 1
     
     i = 0
@@ -39,7 +42,7 @@ def calculateIvtAlgorithm(pointList):
 
         
     end = time.process_time()
-    return coordX, coordY, end - start, len(coordX), fixations
+    return coordX, coordY, end - start, len(coordX), fixations, saccades
 
 
 def prepareDataIvt(pointList):

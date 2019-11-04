@@ -123,9 +123,12 @@ def calculateML(pointList):
     retX = []
     retY = []
     measurementFixations = []
+    countSaccades = 0
     for item in endAll:
         if item[3] == 1:
             retX.append(item[0].CoordX)
             retY.append(item[0].CoordY)
+        else:
+            countSaccades += 1
     end = time.process_time()
-    return retX, retY, len(retX), end - start, ite, measurementFixations
+    return retX, retY, len(retX), end - start, ite, measurementFixations, countSaccades

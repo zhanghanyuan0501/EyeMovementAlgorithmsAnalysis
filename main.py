@@ -100,15 +100,14 @@ def main(argv):
             print('Starting measurement using I-DT algorithm')
             for e, measurement in enumerate(parsedMeasurements):
                 print('Starting calibration')
-                m1, convertingTime = convertPointsToCalibration(measurement)
-                statistics.CalibrationSummaryTime += convertingTime
-                for i, item in enumerate(m1):
+                for i, item in enumerate(measurement):
                     if item.Type == 'SS':
-                        plt.plot(m1[i].CoordX, m1[i].CoordY, 'ko', markersize=10, label='Eye-tracker points' if i == 0 else "")
+                        plt.plot(item.CoordX, item.CoordY, 'ko', markersize=10, label='Eye-tracker points' if i == 0 else "")
                 print('Calculating using I-DT point #' + str(e))     
-                coordX, coordY, timealgorithm, fixationsForPoint, fixations = idt.calculateIdtAlgorithm(m1)
+                coordX, coordY, timealgorithm, fixationsForPoint, fixations, saccade = idt.calculateIdtAlgorithm(measurement)
                 statistics.AlgorithmRunTimeStatistic += timealgorithm
                 statistics.NumberOfFixationsCount += fixationsForPoint
+                statistics.SaccadeCount += saccade
                 measurementFixations.append(fixations)
                 plt.plot(coordX, coordY, 'wo', markersize=5, markeredgecolor='r', label='Calculated fixations')
             print('Ending measurement using I-DT algorithm')
@@ -117,18 +116,22 @@ def main(argv):
         elif sys.argv[3] == 'I-VT':
             print('Starting measurement using I-VT algorithm')
             for e, measurement in enumerate(parsedMeasurements):
-                print('Starting calibration')
-                m1, convertingTime = convertPointsToCalibration(measurement)
-                statistics.CalibrationSummaryTime += convertingTime
-                print('Ended calibration')
-                for i, item in enumerate(m1):
+                for i, item in enumerate(measurement):
                     if item.Type == 'SS':
-                        plt.plot(m1[i].CoordX, m1[i].CoordY, 'ko', markersize=10, label='Eye-tracker points' if i == 0 else "")
+                        plt.plot(item.CoordX, item.CoordY, 'ko', markersize=10, label='Eye-tracker points' if i == 0 else "")
                 print('Calculating using I-VT point #' + str(e))               
-                coordX, coordY, timealgorithm, fixationsForPoint, fixations = ivt.calculateIvtAlgorithm(m1)
+                coordX, coordY, timealgorithm, fixationsForPoint, fixations, saccades = ivt.calculateIvtAlgorithm(measurement)
+                statistics.SaccadeCount += len(saccades)
                 statistics.AlgorithmRunTimeStatistic += timealgorithm
                 statistics.NumberOfFixationsCount += fixationsForPoint
                 measurementFixations.append(fixations)
+                saccades = np.asarray(saccades)
+                tmpX = []
+                tmpY = []
+                for i in saccades:
+                    tmpX.append(i.CoordX)
+                    tmpY.append(i.CoordY)
+                #plt.plot(tmpX, tmpY, 'wo', markersize=2, markeredgecolor='g')
                 plt.plot(coordX, coordY, 'wo', markersize=5, markeredgecolor='r', label='Calculated fixations')
             print('Ending measurement using I-VT algorithm')
             plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
@@ -138,30 +141,29 @@ def main(argv):
             convertedData = []
             allFixations = []
             for measurement in parsedMeasurements:
-                m1, convertingTime = convertPointsToCalibration(measurement)
-                statistics.CalibrationSummaryTime += convertingTime
-                for i, item in enumerate(m1):
+                for i, item in enumerate(measurement):
                     if item.Type == 'SS':
-                        plt.plot(m1[i].CoordX, m1[i].CoordY, 'ko', markersize=10, label='Eye-tracker points' if i == 0 else "")
-                fixations = ivt.prepareDataIvt(m1)
+                        plt.plot(item.CoordX, item.CoordY, 'ko', markersize=10, label='Eye-tracker points' if i == 0 else "")
+                fixations = ivt.prepareDataIvt(measurement)
                 allFixations.extend(fixations)
-                convertedData.append(m1)
+                convertedData.append(measurement)
 
             points = []
             for i, item in enumerate(convertedData): 
                 mlHelperArray = ml.calculateMlHelper(item, allFixations)
                 points.append(mlHelperArray)
-            coordX, coordY, fixationsForPoint, timealgorithm, ite, measurementFixations = ml.calculateML(points)
+            coordX, coordY, fixationsForPoint, timealgorithm, ite, measurementFixations, saccadeCount = ml.calculateML(points)
             plt.plot(coordX, coordY, 'wo', markersize=5, markeredgecolor='r', label='Calculated fixations')
             statistics.NumberOfFixationsCount += fixationsForPoint
             statistics.AlgorithmRunTimeStatistic += timealgorithm
             statistics.MLPrecision = ite
+            statistics.SaccadeCount = saccadeCount
             print('Ending measurement using Machine Learning algorithm')
             plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
             
         else:
             print('INCORRECT ALGORITHM')
-        print('Number of fixations: %s, Algorithm runtime: %s s' % (statistics.NumberOfFixationsCount, statistics.AlgorithmRunTimeStatistic))
+        print('Number of fixations: %s, Algorithm runtime: %s s, Saccades %s' % (statistics.NumberOfFixationsCount, statistics.AlgorithmRunTimeStatistic, statistics.SaccadeCount))
         fig1 = plt.gcf()
         #plt.show()
         plt.draw()

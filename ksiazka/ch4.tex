@@ -19,117 +19,18 @@ Wszystkie pliki aplikacji zostały umieszczone na dysku HDD. Instancja baza dany
 \label{sec:entryparameters}
 Dla każdego pliku umieszczonego w folderze \emph{\/data} w katalogu głównym aplikacji można określić następującą charakterystykę. Wykonane zostało 30 pomiarów punktu, w folderze istnieje 48 plików. Średnią ilością otrzymanych pomiarów, włącznie z punktami 'SS' jest XXX. Pomiary zostały wykonywane z częstotliwością 1000 Hz, czyli co 1 ms. W tabeli zaprezentowano indywidualną ilość pomiarów w każdym pliku.
 \section{Przeprowadzone pomiary}
-W tym podrozdziale zostaną zaprezentowane otrzymane wyniki, których format zaprezentowano w sekcji \ref{ssec:exitdata}. Dodatkowo do każdego wyniku została przygotowana krótka analiza wraz z zaprezentowaniem dopełniających parametrów wyników, umożliwiających lepszą interpretację rezultatów. Rozpoczęto od analizy możliwych rodzajów kalibracji danych wejściowych, wraz z pomiarem czasu. Kolejnym elementem jest ukazanie wpływu parametrów wewnętrznych algorytmów na wyniki końcowe. Trzecia sekcja porównuje czasy trwania algorytmów, wraz z analizą przyczyn różnic czasowych. Następna sekcja opisuje wyniki obciążenia pamięciowego przez zaimplementowane algorytmy wykrywania fiksacji, jak również opisuje najbardziej obciążające metody. W przedostatnim podrozdziale zanalizowano metody wprowadzania danych wejściowych do aplikacji. Ostatnia analiza dotyczy dokładności algorytmu uczenia maszynowego oraz porównania wynikowych punktów wszystkich trzech algorytmów przedstawionych w sekcji \ref{ssec:algorithms}.
-\subsection{Analiza kalibracji danych}
-\label{ssec:calibration}
-Wykorzystane rozwiązanie dotyczące kalibracji punktów zostało opisane w sekcji \ref{ssec:calibrationtheory}. Zdecydowano się na wykorzystanie rozwiązania liniowego, pomimo nieliniowości punktów, ze względu na problemy z implementacją algorytmów wielomianowych, z wykorzystaniem metod \textbf{np.polyfit} oraz \textbf{np.polyval}, których zadaniem jest utworzenie takiej funkcji wielomianowej. Dodatkowo brak doświadczenia w pracy z takimi rozwiązaniami mógł przyczynić się do niepowodzenia. Przykład takiej błędnej kalibracji zaprezentowano na rysunku \ref{fig:error_cal}.
-\begin{figure}[H]
-    \centering
-    \captionsetup{justification=centering,margin=2cm}
-    \includegraphics[width=\linewidth]{resources/error_cal.png}
-    \caption{Błędnie skalibrowany element}
-    \label{fig:error_cal}
-\end{figure}
-W tabeli \ref{tab:calibration} zaprezentowano pomiar czasu kalibracji wszystkich danych dla każdego pliku. Czas ten zaprezentowano w sekundach. Dodatkowymi obliczonymi parametrami są suma wszystkich kalibracji: 97,234375 sekund, średni czas trwania kalibracji:	2,02572 sekund, odchylenie standardowe: 0,07297 sekund, mediana wyników: 2,015625 oraz wartości maksymalne i minimalne - odpowiednio 2,203125 sekund i 1,90625 sekundy.
-\begin{longtable}{|l|r|}
-    \hline
-    \multicolumn{1}{|c|}{\textbf{Plik wejściowy}} & \multicolumn{1}{c|}{\textbf{Łączny czas kalibracji}} \\ \hline
-    \endfirsthead
-    %
-    \multicolumn{2}{c}%
-    {{\bfseries Kontynuacja tabeli \thetable\ z poprzedniej strony}} \\
-    \hline
-    \multicolumn{1}{|c|}{\textbf{Plik wejściowy}} & \multicolumn{1}{c|}{\textbf{Łączny czas kalibracji}} \\ \hline
-    \endhead
-    %
-    1\_01\_1311201811.cal & 2,140625 \\ \hline
-    1\_02\_1310301856.cal & 2,0625 \\ \hline
-    1\_03\_1310301904.cal & 1,953125 \\ \hline
-    1\_04\_1310301810.cal & 1,96875 \\ \hline
-    1\_05\_1310301817.cal & 2,078125 \\ \hline
-    1\_06\_1310301837.cal & 1,921875 \\ \hline
-    1\_12\_1310301901.cal & 1,953125 \\ \hline
-    1\_14\_1310301912.cal & 1,953125 \\ \hline
-    1\_15\_1310301840.cal & 2,03125 \\ \hline
-    1\_16\_1310301844.cal & 2,1875 \\ \hline
-    1\_17\_1310301825.cal & 2,125 \\ \hline
-    1\_20\_1310301822.cal & 1,984375 \\ \hline
-    1\_21\_1310301833.cal & 1,90625 \\ \hline
-    1\_22\_1310301908.cal & 2,0625 \\ \hline
-    1\_23\_1310301722.cal & 2,03125 \\ \hline
-    1\_24\_1311201804.cal & 1,984375 \\ \hline
-    1\_25\_1311201806.cal & 1,984375 \\ \hline
-    1\_26\_1311201835.cal & 2,0625 \\ \hline
-    1\_27\_1311201823.cal & 1,90625 \\ \hline
-    1\_28\_1310301813.cal & 2,015625 \\ \hline
-    1\_29\_1310301914.cal & 1,984375 \\ \hline
-    1\_31\_1310301807.cal & 2,09375 \\ \hline
-    1\_32\_1310301831.cal & 2 \\ \hline
-    1\_34\_1310301804.cal & 2,171875 \\ \hline
-    3\_01\_1401151823.cal & 2,03125 \\ \hline
-    3\_02\_1401151905.cal & 2,0625 \\ \hline
-    3\_03\_1401151858.cal & 1,953125 \\ \hline
-    3\_04\_1401151803.cal & 1,96875 \\ \hline
-    3\_05\_1401151752.cal & 2,15625 \\ \hline
-    3\_06\_1311201818.cal & 2,140625 \\ \hline
-    3\_12\_1401151843.cal & 2,046875 \\ \hline
-    3\_14\_1401151837.cal & 1,921875 \\ \hline
-    3\_15\_1401151641.cal & 1,96875 \\ \hline
-    3\_16\_1401151847.cal & 2,03125 \\ \hline
-    3\_17\_1401151814.cal & 1,9375 \\ \hline
-    3\_20\_1401151759.cal & 2 \\ \hline
-    3\_21\_1401151911.cal & 2 \\ \hline
-    3\_22\_1401151828.cal & 1,984375 \\ \hline
-    3\_23\_1401151854.cal & 2 \\ \hline
-    3\_24\_1401151840.cal & 2,015625 \\ \hline
-    3\_25\_1401151908.cal & 2,203125 \\ \hline
-    3\_26\_1401151826.cal & 2,03125 \\ \hline
-    3\_27\_1401151811.cal & 2 \\ \hline
-    3\_28\_1401151747.cal & 2,0625 \\ \hline
-    3\_29\_1401151833.cal & 2,0625 \\ \hline
-    3\_31\_1401151755.cal & 2,078125 \\ \hline
-    3\_32\_1401151808.cal & 2,046875 \\ \hline
-    3\_34\_1401151805.cal & 1,96875 \\ \hline
-    \caption{Pomiar czasów kalibracji}
-    \label{tab:calibration}\\
-    \end{longtable}
-Jak można zauważyć na wynikach, kalibracja pomimo wykorzystania zewnętrznej biblioteki oraz operacji na tablicach, nie wymaga zbytniego wkładu czasowego w jej realizację. Odchylenie mieszczące się w granicy 2-3\% dla całości algorytmu zawiera się w dopuszczalnej granicy, prawdopodobnie jest ono spowodowane różnicą w ilości danych dostarczanych. Algorytm jest wydajny ze względu na czas około dwóch sekund dla całego pliku.
+W tym podrozdziale zostaną zaprezentowane otrzymane wyniki, których format zaprezentowano w sekcji \ref{ssec:exitdata}. Dodatkowo do każdego wyniku została przygotowana krótka analiza wraz z zaprezentowaniem dopełniających parametrów wyników, umożliwiających lepszą interpretację rezultatów. Pierwszym elementem jest ukazanie wpływu parametrów wewnętrznych algorytmów na wyniki końcowe. Druga sekcja porównuje czasy trwania algorytmów, wraz z analizą przyczyn różnic czasowych. Następna sekcja opisuje wyniki obciążenia pamięciowego przez zaimplementowane algorytmy wykrywania fiksacji, jak również opisuje najbardziej obciążające metody. W przedostatnim podrozdziale zanalizowano metody wprowadzania danych wejściowych do aplikacji. Ostatnia analiza dotyczy dokładności algorytmu uczenia maszynowego oraz porównania wynikowych punktów wszystkich trzech algorytmów przedstawionych w sekcji \ref{ssec:algorithms}.
 \subsection{Analiza wpływu parametrów algorytmów}
 \label{ssec:queryparameters}
 W poniższej sekcji zostanie zaprezentowany wpływ parametrów wewnętrznych algorytmów opisanych w sekcji \ref{ssec:algorithms}. Zbadany zostanie ten wpływ pod kątem różnic w obciązeniu pamięciowym przez algorytmy, porównania ilości elementów wyjściowych oraz czasu trwania algorytmów. Ten podrozdział został podzielony na 3 części, każda prezentująca algorytmy opisane w sekcji \ref{ssec:algorithms}. W celu prezentacji wyników wykorzystano pierwszych dziesięć plików opisanych w sekcji \ref{sec:entryparameters}.
 \subsubsection{Algorytm I-VT}
 \label{sssec:ivtresults}
-Algorytm I-VT możemy zbadać pod kątem wpływu parametru granicznej prędkości międzypunktowej. Celem tej sekcji jest prezentacja otrzymanych wyników, wraz z krótką analizą.
-\paragraph{Ilość wykrytych fiksacji\\}
-\begin{longtable}{l|l|l|l|l|}
-    \cline{2-5}
-     & \multicolumn{4}{c|}{\textbf{Ilość fiksacji}} \\ \hline
-    \endfirsthead
-    %
-    \multicolumn{5}{c}%
-    {{\bfseries Kontynuacja tabeli \thetable\ z poprzedniej strony}} \\
-    \cline{2-5}
-     & \multicolumn{4}{c|}{\textbf{Ilość fiksacji}} \\ \hline
-    \endhead
-    %
-    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{v = 0,00001}} & \multicolumn{1}{c|}{\textbf{v = 0,0005}} & \multicolumn{1}{c|}{\textbf{v = 0,005}} & \multicolumn{1}{c|}{\textbf{v = 0,05}} \\ \hline
-    \multicolumn{1}{|l|}{1\_01\_1311201811} & 13032 & 5703 & 193 & 1 \\ \hline
-    \multicolumn{1}{|l|}{1\_02\_1310301856} & 10857 & 2310 & 59 & 2 \\ \hline
-    \multicolumn{1}{|l|}{1\_03\_1310301904} & 11763 & 2801 & 35 & 1 \\ \hline
-    \multicolumn{1}{|l|}{1\_04\_1310301810} & 11871 & 2419 & 33 & 0 \\ \hline
-    \multicolumn{1}{|l|}{1\_05\_1310301817} & 13526 & 5708 & 131 & 1 \\ \hline
-    \multicolumn{1}{|l|}{1\_06\_1310301837} & 12401 & 3699 & 91 & 49 \\ \hline
-    \multicolumn{1}{|l|}{1\_12\_1310301901} & 13150 & 3364 & 577 & 2 \\ \hline
-    \multicolumn{1}{|l|}{1\_14\_1310301912} & 10741 & 961 & 34 & 0 \\ \hline
-    \multicolumn{1}{|l|}{1\_15\_1310301840} & 13274 & 688 & 3 & 0 \\ \hline
-    \multicolumn{1}{|l|}{1\_16\_1310301844} & 12533 & 7272 & 278 & 0 \\ \hline
-    \caption{Wpływ parametru prędkości granicznej dla algorytmu I-VT, ilość fiksacji}
-    \label{tab:ivtfixationcomparison}\\
-\end{longtable}
+Algorytm I-VT możemy zbadać pod kątem wpływu parametru granicznej prędkości międzypunktowej. Celem tej sekcji jest prezentacja otrzymanych wyników, wraz z krótką analizą.\par
+\textbf{Liczba wykrytych fiksacji}\par
 W tabeli \ref{tab:ivtfixationcomparison} zaprezentowano wynik pomiaru ilości wykrytych fiksacji przeprowadzonej na dziesięciu plikach dla algorytmu I-VT. W pierwszej kolumnie umieszczono nazwę pliku, a w następnych pomiar ilości, wraz z parametrem prędkości międzypunktowej.\\
-Jak można zauważyć dla tego algorytmu im mniejsza prędkość graniczna, tym więcej punktów jest wykrywanych. Im mniejszy parametr tym mniej dokładnie filtrowane są punkty, co może spowodować sytuację zaprezentowaną na rysunku \ref{fig:ivterrorresults}, gdzie dla okolic punktu $P = (0.95,0.5)$ możemy zaobserwować duży spadek w dokładności zmierzonych fiksacji.
+Jak można zauważyć dla tego algorytmu im mniejsza prędkość graniczna, tym więcej punktów jest wykrywanych. Im mniejszy parametr tym mniej dokładnie filtrowane są punkty, co może spowodować sytuację zaprezentowaną na rysunku \ref{fig:ivterrorresults}, gdzie możemy zaobserwować duży spadek w dokładności zmierzonych fiksacji.
 Jest to wynikiem porównania zaprezentowanego w pseudokodzie \ref{lst:ivtpseudocode}, więc można stwierdzić, iż wyniki algorytmu są zgodne z oczekiwaniami.\\
-Po zaobserwowaniu wyników graficznych w plikach wynikowych stwierdzono, iż parametr prędkości powinien znajdować się w przedziale $v \in (0,0001;0,005)$, gdyż pomiędzy tymi parametrami wyniki są najdokładniejsze.
+Po zaobserwowaniu wyników graficznych w plikach wynikowych stwierdzono, iż parametr prędkości powinien znajdować się w okolicach wartości $v \in (0,005)$, gdyż dla tego wyniku zaobserwowano najdokładniejsze wyniki. Ostatnią wartością badaną było $v = 0,1$, jednak dla tego parametru wynikiem było od 0 do 1 fiksacji, dlatego został on pominięty w tabeli wynikowej.\par
 \begin{figure}[H]
     \centering
     \captionsetup{justification=centering,margin=2cm}
@@ -137,296 +38,342 @@ Po zaobserwowaniu wyników graficznych w plikach wynikowych stwierdzono, iż par
     \caption{Błędne przedstawienie punktów dla algorytmu I-VT}
     \label{fig:ivterrorresults}
 \end{figure}
-\paragraph{Analiza czasów trwania algorytmów\\}
-W tabeli \ref{tab:ivttimecomparison} zaprezentowano wyniki pomiaru czasu trwania algorytmu I-VT. Czas trwania zaprezentowano w sekundach. Zgodnie z otrzymanymi wynikami możemy określić, iż im mniejszy parametr prędkości granicznej, tym mniejszy średni czas trwania algorytmu, ze względu na korelację ilości wykrytych punktów, co zaprezentowano w tabeli \ref{tab:ivtfixationcomparison}. Nadal osiągane czasy nie stanowią problemu w szybkim obliczaniu dużej ilości elementów, ze względu na obliczoną prędkość 540 elementów na sekundę.
+{\small
+\begin{longtable}{l|l|l|l|l|l|l|l|l|} 
+    \cline{2-9}
+     & \multicolumn{8}{c|}{\textbf{Ilość fiksacji/sakad}} \\ \hline
+    \endfirsthead
+    %
+    \multicolumn{9}{c}%
+    {{\bfseries Kontynuacja tabeli \thetable\ }} \\
+    \cline{2-9}
+     & \multicolumn{8}{c|}{\textbf{Ilość fiksacji/sakad}} \\ \hline
+    \endhead
+    %
+    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{2}{c|}{\textbf{v = 0,0001}} & \multicolumn{2}{c|}{\textbf{v = 0,005}} & \multicolumn{2}{c|}{\textbf{v = 0,001}} & \multicolumn{2}{l|}{\textbf{v = 0,01}} \\ \hline
+    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 6434 & \cellcolor[HTML]{EFEFEF}91444 & 780 & \cellcolor[HTML]{EFEFEF}3744 & 18015 & \cellcolor[HTML]{EFEFEF}52054 & 513 & \cellcolor[HTML]{EFEFEF}1545 \\ \hline
+    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} & 5896 & \cellcolor[HTML]{EFEFEF}92107 & 110 & \cellcolor[HTML]{EFEFEF}2415 & 1011 & \cellcolor[HTML]{EFEFEF}8817 & 37 & \cellcolor[HTML]{EFEFEF}405 \\ \hline
+    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 5645 & \cellcolor[HTML]{EFEFEF}92313 & 99 & \cellcolor[HTML]{EFEFEF}2027 & 1592 & \cellcolor[HTML]{EFEFEF}7547 & 54 & \cellcolor[HTML]{EFEFEF}446 \\ \hline
+    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 6792 & \cellcolor[HTML]{EFEFEF}90736 & 101 & \cellcolor[HTML]{EFEFEF}1688 & 1526 & \cellcolor[HTML]{EFEFEF}9217 & 30 & \cellcolor[HTML]{EFEFEF}263 \\ \hline
+    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 6475 & \cellcolor[HTML]{EFEFEF}91476 & 204 & \cellcolor[HTML]{EFEFEF}2877 & 11015 & \cellcolor[HTML]{EFEFEF}25880 & 85 & \cellcolor[HTML]{EFEFEF}939 \\ \hline
+    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 6815 & \cellcolor[HTML]{EFEFEF}90960 & 98 & \cellcolor[HTML]{EFEFEF}1889 & 3308 & \cellcolor[HTML]{EFEFEF}8590 & 42 & \cellcolor[HTML]{EFEFEF}288 \\ \hline
+    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 6726 & \cellcolor[HTML]{EFEFEF}91100 & 118 & \cellcolor[HTML]{EFEFEF}1865 & 6954 & \cellcolor[HTML]{EFEFEF}14511 & 42 & \cellcolor[HTML]{EFEFEF}399 \\ \hline
+    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} & 11964 & \cellcolor[HTML]{EFEFEF}82189 & 83 & \cellcolor[HTML]{EFEFEF}2213 & 278 & \cellcolor[HTML]{EFEFEF}6612 & 46 & \cellcolor[HTML]{EFEFEF}641 \\ \hline
+    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 7737 & \cellcolor[HTML]{EFEFEF}89751 & 87 & \cellcolor[HTML]{EFEFEF}1208 & 12041 & \cellcolor[HTML]{EFEFEF}22008 & 42 & \cellcolor[HTML]{EFEFEF}263 \\ \hline
+    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 6509 & \cellcolor[HTML]{EFEFEF}91431 & 126 & \cellcolor[HTML]{EFEFEF}1745 & 17453 & \cellcolor[HTML]{EFEFEF}42023 & 48 & \cellcolor[HTML]{EFEFEF}529 \\ \hline
+    \caption{Wpływ parametru prędkości granicznej dla algorytmu I-VT, ilość fiksacji}
+    \label{tab:ivtfixationcomparison}\\
+\end{longtable}
+}
+\textbf{Analiza czasu trwania algorytmu}\par
+W tabeli \ref{tab:ivttimecomparison} zaprezentowano wyniki pomiaru czasu trwania algorytmu I-VT. Czas trwania zaprezentowano w sekundach. Obserwując otrzymane wyniki możemy określić, iż czas trwania algorytmu wzrasta odwrotnie proporcjonalnie do ilości wykrytych fiksacji. Zastanawiającym wynikiem jest pomiar czasu dla parametru $v = 0,01$, ze względu na swoje podobieństwo do rezultatów z pierwszej kolumny. Jest to spowodowane małą ilością elementów koniecznych do wykonania drugiego porównania, ze względu na duży parametr prędkości.\par
+{\small
 \begin{longtable}{l|l|l|l|l|}
     \cline{2-5}
-     & \multicolumn{4}{c|}{\textbf{Czas trwania w sekundach}} \\ \hline
+     & \multicolumn{4}{c|}{\textbf{Pomiar długości trwania algorytmu (w s)}} \\ \hline
     \endfirsthead
     %
     \multicolumn{5}{c}%
-    {{\bfseries Kontynuacja tabeli \thetable\ z poprzedniej strony}} \\
+    {{\bfseries Kontynuacja tabeli \thetable\ }} \\
     \cline{2-5}
-     & \multicolumn{4}{c|}{\textbf{Czas trwania w sekundach}} \\ \hline
+     & \multicolumn{4}{c|}{\textbf{Pomiar długości trwania algorytmu (w s)}} \\ \hline
     \endhead
     %
-    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{v= 0,00001}} & \multicolumn{1}{c|}{\textbf{v = 0,0005}} & \multicolumn{1}{c|}{\textbf{v = 0,005}} & \multicolumn{1}{c|}{\textbf{v = 0,05}} \\ \hline
-    \multicolumn{1}{|l|}{1\_01\_1311201811} & 17.609375 & 13.203125 & 1.921875 & 1.5 \\ \hline
-    \multicolumn{1}{|l|}{1\_02\_1310301856} & 10.6875 & 6.203125 & 1.4375 & 1.453125 \\ \hline
-    \multicolumn{1}{|l|}{1\_03\_1310301904} & 12.796875 & 6.34375 & 1.515625 & 1.453125 \\ \hline
-    \multicolumn{1}{|l|}{1\_04\_1310301810} & 14.109375 & 6.140625 & 1.53125 & 1.40625 \\ \hline
-    \multicolumn{1}{|l|}{1\_05\_1310301817} & 8.71875 & 17.328125 & 1.6875 & 1.53125 \\ \hline
-    \multicolumn{1}{|l|}{1\_06\_1310301837} & 9.234375 & 8.46875 & 1.515625 & 1.46875 \\ \hline
-    \multicolumn{1}{|l|}{1\_12\_1310301901} & 15.265625 & 8.421875 & 1.71875 & 1.4375 \\ \hline
-    \multicolumn{1}{|l|}{1\_14\_1310301912} & 17.765625 & 2.6875 & 1.5 & 1.390625 \\ \hline
-    \multicolumn{1}{|l|}{1\_15\_1310301840} & 24.546875 & 3.078125 & 1.4375 & 1.40625 \\ \hline
-    \multicolumn{1}{|l|}{1\_16\_1310301844} & 8.640625 & 23.09375 & 2.21875 & 1.375 \\ \hline
-    \caption{Wpływ parametru prędkości granicznej dla algorytmu I-VT, czas trwania}
+    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{v = 0,0001}} & \multicolumn{1}{c|}{\textbf{v = 0,005}} & \multicolumn{1}{c|}{\textbf{v = 0,001}} & \textbf{v = 0,01} \\ \hline
+    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 1.265625 & 4.21875 & 24.234375 & 3.515625 \\ \hline
+    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} & 1.203125 & 1.671875 & 4.375 & 1.5625 \\ \hline
+    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 1.15625 & 1.5625 & 6.203125 & 1.46875 \\ \hline
+    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 1.578125 & 1.546875 & 6.0625 & 1.5 \\ \hline
+    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 1.203125 & 1.921875 & 31.765625 & 1.625 \\ \hline
+    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 1.25 & 1.53125 & 12.3125 & 1.4375 \\ \hline
+    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 1.359375 & 1.546875 & 24.875 & 1.4375 \\ \hline
+    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} & 4.203125 & 1.484375 & 1.90625 & 1.5 \\ \hline
+    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 1.421875 & 1.421875 & 33.875 & 1.421875 \\ \hline
+    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 1.140625 & 1.46875 & 34.5625 & 1.453125 \\ \hline
+    \caption{Wpływ parametru prędkości granicznej dla algorytmu I-VT, pomiar czasu}
     \label{tab:ivttimecomparison}\\
 \end{longtable}
-\paragraph{Analiza obciążenia pamięci\\}
-Tabela \ref{tab:ivtmemorycomparison} przedstawia wyniki analizy wykorzystania pamięci przez algorytm I-VT. Jednostką pomiaru jest MiB. Zgodnie z zaobserwowanymi pomiarami, można stwierdzić, iż dla obecnych maszyn pomiar algorytmem I-VT nie stanowi zbytniego obciążenia, gdyż pomiary oscylują pomiędzy setkami a dziesiątkami kilobajtów na cały pomiar. Nie zauważono wpływu parametru algorytmu na wykorzystanie pamięciowe, bo jak można zaobserwować, pomiar nie przedstawia żadnej zależności pomiedzy ilością elementów a wykorzystaniem pamięciowym.
+}
+\textbf{Analiza wykorzystania pamięci operacyjnej}\par
+Tabela \ref{tab:ivtmemorycomparison} przedstawia wyniki analizy wykorzystania pamięci przez algorytm I-VT. Jednostką pomiaru jest MiB. Zgodnie z zaobserwowanymi pomiarami, można stwierdzić, iż dla obecnych maszyn pomiar algorytmem I-VT nie stanowi zbytniego obciążenia, gdyż pomiary oscylują pomiędzy setkami a dziesiątkami kilobajtów na cały pomiar. Nie zauważono znaczącego wpływu parametru algorytmu na wykorzystanie pamięciowe, bo jak można zaobserwować, liczba otrzymanych elementów nie ma wpływu na zużycie pamięci operacyjnej.\par
+{\small
 \begin{longtable}{l|l|l|l|l|}
     \cline{2-5}
-     & \multicolumn{4}{c|}{\textbf{Wykorzystanie pamięci w MiB}} \\ \hline
+     & \multicolumn{4}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Wykorzystanie pamięci operacyjnej\\  (w MiB)\end{tabular}}} \\ \hline
     \endfirsthead
     %
     \multicolumn{5}{c}%
-    {{\bfseries Kontynuacja tabeli \thetable\ z poprzedniej strony}} \\
+    {{\bfseries Kontynuacja tabeli \thetable\ }} \\
     \cline{2-5}
-     & \multicolumn{4}{c|}{\textbf{Wykorzystanie pamięci w MiB}} \\ \hline
+     & \multicolumn{4}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Wykorzystanie pamięci operacyjnej\\  (w MiB)\end{tabular}}} \\ \hline
     \endhead
     %
-    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{v= 0,00001}} & \multicolumn{1}{c|}{\textbf{v = 0,0005}} & \multicolumn{1}{c|}{\textbf{v = 0,005}} & \multicolumn{1}{c|}{\textbf{v = 0,05}} \\ \hline
-    \multicolumn{1}{|l|}{1\_01\_1311201811} & 0.04299 & 0.05859 & 0.18750 & 0.22656 \\ \hline
-    \multicolumn{1}{|l|}{1\_02\_1310301856} & 0.07813 & 0.18359 & 0.09375 & 0.25781 \\ \hline
-    \multicolumn{1}{|l|}{1\_03\_1310301904} & 0.03125 & 0.28906 & 0.062500 & 0.14844 \\ \hline
-    \multicolumn{1}{|l|}{1\_04\_1310301810} & 0.16797 & 0.01953 & 0.19922 & 0.08984 \\ \hline
-    \multicolumn{1}{|l|}{1\_05\_1310301817} & 0.17969 & 0.12109 & 0.20313 & 0.17969 \\ \hline
-    \multicolumn{1}{|l|}{1\_06\_1310301837} & 0.10156 & 0.04297 & 0.19922 & 0.14063 \\ \hline
-    \multicolumn{1}{|l|}{1\_12\_1310301901} & 0.03125 & 0.03125 & 0.10156 & 0.08203 \\ \hline
-    \multicolumn{1}{|l|}{1\_14\_1310301912} & 0.08594 & 0.16406 & 0.13672 & 0.09766 \\ \hline
-    \multicolumn{1}{|l|}{1\_15\_1310301840} & 0.03125 & 0.14063 & 0.08203 & 0.07031 \\ \hline
-    \multicolumn{1}{|l|}{1\_16\_1310301844} & 0.0 & 0.21094 & 0.03125 & 0.05078 \\ \hline
-    \caption{Wpływ parametru prędkości granicznej dla algorytmu I-VT, wykorzystanie pamięci}
+    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{v = 0,0001}} & \multicolumn{1}{c|}{\textbf{v = 0,005}} & \multicolumn{1}{c|}{\textbf{v = 0,001}} & \textbf{v = 0,01} \\ \hline
+    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 0.12500 & 0.17188 & 0.15234 & 0.21094 \\ \hline
+    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} & 0.10156 & 0.24609 & 0.16797 & 0.18359 \\ \hline
+    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 0.16016 & 0.15234 & 0.13281 & 0.12891 \\ \hline
+    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 0.19531 & 0.17188 & 0.12500 & 0.15625 \\ \hline
+    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 0.12109 & 0.15625 & 0.16406 & 0.24219 \\ \hline
+    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 0.06641 & 0.11328 & 0.12500 & 0.25000 \\ \hline
+    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 0.12500 & 0.22656 & 0.24219 & 0.17188 \\ \hline
+    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} & 0.20313 & 0.18750 & 0.21094 & 0.16016 \\ \hline
+    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 0.12109 & 0.12891 & 0.12891 & 0.21094 \\ \hline
+    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 0.10156 & 0.19922 & 0.17969 & 0.16797 \\ \hline
+    \caption{Wpływ parametru prędkości granicznej dla algorytmu I-VT, wykorzystanie pamięci operacyjnej}
     \label{tab:ivtmemorycomparison}\\
 \end{longtable}
-
+}
 \subsubsection{Algorytm I-DT}
 \label{sssec:idtresults}
-Algorytm I-DT różni się od algorytmu I-VT zaprezentowanego w sekcji \ref{sssec:ivtresults} tym, iż posiada on 2 parametry wewnętrzne: granicę dyspersji oraz czas trwania okna. W tej sekcji wyniki będą badane pod kątem modyfikacji tych dwóch parametrów.
-\paragraph{Ilość wykrytych fiksacji - granica dyspersji\\}
-\paragraph{Ilość wykrytych fiksacji - czas trwania okna\\}
+Algorytm I-DT różni się od algorytmu I-VT zaprezentowanego w sekcji \ref{sssec:ivtresults} tym, iż posiada on 2 parametry wewnętrzne: granicę dyspersji oraz czas trwania okna. W tej sekcji wyniki będą badane pod kątem modyfikacji tych dwóch parametrów. 
+\paragraph{Liczba wykrytych fiksacji - granica dyspersji\\}
+\paragraph{Liczba wykrytych fiksacji - czas trwania okna\\}
 \paragraph{Analiza czasów trwania algorytmu - granica dyspersji\\}
 \paragraph{Analiza czasów trwania algorytmu - czas trwania okna\\}
 \paragraph{Analiza obciążenia pamięci - granica dyspersji\\}
 \paragraph{Analiza obciążenia pamięci - czas trwania okna\\}
 \subsubsection{Algorytm ML - wpływ parametru prędkości}
 \label{sssec:mlivt}
-Ze względu na konieczność stwierdzenia klasy do jakiej należy punkt, tzn. czy należy on do fiksacji, należało wyznaczyć fiksację dowolnym algorytmem. Ponieważ w modelu danych znajdują się informacje o prędkościach międzypunktowych jak również odległościach, zdecydowano się na wstępną analizę algorytmem I-VT. Analizę bezpośredniego wpływu parametru wewnętrznego na algorytm I-VT zaprezentowano w sekcji \ref{sssec:ivtresults}. Wyniki są otrzymywane dla podziału danych 80\% danych testowych, 20\% danych treningowych.
-\paragraph{Ilość wykrytych fiksacji\\}
-Jak zaprezentowano w tabeli \ref{tab:mlivtfixationcomparison}, otrzymane wyniki pozwalają stwierdzić, iż im większy parametr prędkości tym więcej fiksacji jest wykrytych przez algorytm uczenia maszynowego. Jest to zupełna odwrotność wyników opisanych w tabeli \ref{tab:ivtfixationcomparison}. Odwrotność ta jest prawdopodobnie spowodowana błędną próbą podziału przez algorytm danych na dane testowe i treningowe - przez mniejszą ilość punktów treningowych możemy otrzymać mniej dokładne wyniki testowe. Ciekawym efektem ubocznym takiego rozwiązania jest brak otrzymywanych wyników, co jest bardzo widoczne w trzeciej kolumnie tabeli \ref{tab:mlivtfixationcomparison}.
-\begin{longtable}{l|l|l|l|}
-    \cline{2-4}
-     & \multicolumn{3}{c|}{\textbf{Ilość wykrytych fiksacji}} \\ \hline
+Ze względu na konieczność stwierdzenia klasy przynależności dla punktu, tzn. czy należy on do fiksacji, należało wyznaczyć fiksację dowolnym algorytmem. Ze względu na to iż w modelu danych znajdują się informacje o prędkościach międzypunktowych jak również odległościach, zdecydowano się na wstępną analizę algorytmem I-VT. Analizę bezpośredniego wpływu parametru wewnętrznego na algorytm I-VT zaprezentowano w sekcji \ref{sssec:ivtresults}. Wyniki są otrzymywane dla podziału danych 50\% danych testowych, 50\% danych treningowych.\par
+\textbf{Liczba wykrytych fiksacji}\par
+Jak zaprezentowano w tabeli \ref{tab:mlivtfixcomparison}, otrzymane wyniki pozwalają stwierdzić, iż im większy parametr prędkości tym więcej fiksacji jest wykrytych przez algorytm uczenia maszynowego. Jest to zupełna odwrotność wyników opisanych w tabeli \ref{tab:mlivtfixcomparison}. Odwrotność ta jest prawdopodobnie spowodowana błędną próbą podziału przez algorytm wyników na dane testowe i treningowe - przez mniejszą ilość punktów treningowych możemy otrzymać mniej dokładne wyniki testowe. Ciekawym efektem ubocznym takiego rozwiązania jest okazjonalny brak otrzymywanych wyników, co jest bardzo widoczne w trzeciej kolumnie tabeli \ref{tab:mlivtfixcomparison}.\par
+{\small
+\begin{longtable}{l|l|l|l|l|l|l|l|l|}
+    \cline{2-9}
+     & \multicolumn{8}{c|}{\textbf{Liczba wykrytych fiksacji/sakad}} \\ \hline
     \endfirsthead
     %
-    \multicolumn{4}{c}%
-    {{\bfseries Kontynuacja tabeli \thetable\ z poprzedniej strony}} \\
-    \cline{2-4}
-     & \multicolumn{3}{c|}{\textbf{Ilość wykrytych fiksacji}} \\ \hline
+    \multicolumn{9}{c}%
+    {{\bfseries Kontynuacja tabeli \thetable\ }} \\
+    \cline{2-9}
+     & \multicolumn{8}{c|}{\textbf{Liczba wykrytych fiksacji/sakad}} \\ \hline
     \endhead
     %
-    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{v = 0,00001}} & \multicolumn{1}{c|}{\textbf{v = 0,0005}} & \multicolumn{1}{c|}{\textbf{v = 0,005}} \\ \hline
-    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 1661 & 6477 & 95967 \\ \hline
-    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} & 1661 & 8897 &  \\ \hline
-    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 1468 & 8766 &  \\ \hline
-    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 1597 & 9898 & 97704 \\ \hline
-    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 1536 & 5669 & 96010 \\ \hline
-    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 1828 & 7245 &  \\ \hline
-    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 1786 & 7420 &  \\ \hline
-    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} & 1900 &  &  \\ \hline
-    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 1903 &  &  \\ \hline
-    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 1592 & 5326 & 95520 \\ \hline
-    \caption{Wpływ parametru prędkości na algorytm ML, ilość fiksacji}
-    \label{tab:mlivtfixationcomparison}\\
+    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{2}{c|}{\textbf{v = 0,00001}} & \multicolumn{2}{c|}{\textbf{v = 0,0005}} & \multicolumn{2}{c|}{\textbf{v = 0,0001}} & \multicolumn{2}{l|}{\textbf{v = 0,005}} \\ \hline
+    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 3809 & \cellcolor[HTML]{EFEFEF}95319 & 3800 & \cellcolor[HTML]{EFEFEF}95328 & 3801 & \cellcolor[HTML]{EFEFEF}95327 &  & \cellcolor[HTML]{EFEFEF} \\ \hline
+    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} & 3336 & \cellcolor[HTML]{EFEFEF}95835 & 3345 & \cellcolor[HTML]{EFEFEF}95826 & 3433 & \cellcolor[HTML]{EFEFEF}95738 & 97942 & \cellcolor[HTML]{EFEFEF}1229 \\ \hline
+    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 3213 & \cellcolor[HTML]{EFEFEF}95993 & 3265 & \cellcolor[HTML]{EFEFEF}95941 & 3448 & \cellcolor[HTML]{EFEFEF}95758 &  & \cellcolor[HTML]{EFEFEF} \\ \hline
+    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 3449 & \cellcolor[HTML]{EFEFEF}95699 & 3632 & \cellcolor[HTML]{EFEFEF}95516 & 4128 & \cellcolor[HTML]{EFEFEF}95020 & 98261 & \cellcolor[HTML]{EFEFEF}887 \\ \hline
+    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 3834 & \cellcolor[HTML]{EFEFEF}95375 & 3826 & \cellcolor[HTML]{EFEFEF}95383 & 3805 & \cellcolor[HTML]{EFEFEF}95404 & 97756 & \cellcolor[HTML]{EFEFEF}1453 \\ \hline
+    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 4039 & \cellcolor[HTML]{EFEFEF}95141 & 4027 & \cellcolor[HTML]{EFEFEF}95153 & 4030 & \cellcolor[HTML]{EFEFEF}95150 &  & \cellcolor[HTML]{EFEFEF} \\ \hline
+    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 3897 & \cellcolor[HTML]{EFEFEF}95127 &  & \cellcolor[HTML]{EFEFEF} & 3909 & \cellcolor[HTML]{EFEFEF}95115 &  & \cellcolor[HTML]{EFEFEF} \\ \hline
+    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} & 3166 & \cellcolor[HTML]{EFEFEF}96008 & 3241 & \cellcolor[HTML]{EFEFEF}95933 & 8533 & \cellcolor[HTML]{EFEFEF}90641 &  & \cellcolor[HTML]{EFEFEF} \\ \hline
+    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 4196 & \cellcolor[HTML]{EFEFEF}94913 & 4245 & \cellcolor[HTML]{EFEFEF}94864 & 4605 & \cellcolor[HTML]{EFEFEF}94504 & 98476 & \cellcolor[HTML]{EFEFEF}633 \\ \hline
+    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 3800 & \cellcolor[HTML]{EFEFEF}95389 & 3863 & \cellcolor[HTML]{EFEFEF}95326 & 3836 & \cellcolor[HTML]{EFEFEF}95353 & 98258 & \cellcolor[HTML]{EFEFEF}931 \\ \hline
+    \caption{Wpływ parametru prędkości granicznej dla algorytmu uczenia maszynowego, liczba fiksacji}
+    \label{tab:mlivtfixcomparison}\\
 \end{longtable}
-\paragraph{Analiza czasów trwania algorytmu\\}
-Tabela \ref{tab:mlivttimecomparison} prezentuje otrzymane wyniki pomiaru czasu ze względu na prędkość graniczną. Patrząc na wyniki i porównując je z wynikami otrzymanymi w tabeli \ref{tab:mlivtfixationcomparison} możemy wysnuć podobne wnioski, co do tych przedstawionych w sekcji \ref{sssec:ivtresults}. Im więcej plików umieszczanych w algorytmie, tym większy czas trwania algorytmu. Jednak tutaj nie zauważono dużych różnic czasowych, co może być spowodowane tym, iż algorytm uczenia maszynowego otrzymuje na wejściu tą samą liczbę danych, i tylko sprawdzanie dokładności algorytmów zajmuje więcej czasu.
-\begin{longtable}{l|l|l|l|}
-    \cline{2-4}
-     & \multicolumn{3}{c|}{\textbf{Czas trwania algorytmu}} \\ \hline
+}
+\textbf{Analiza czasu trwania algorytmu}\par
+Tabela \ref{tab:mlivttimecomparison} prezentuje otrzymane wyniki pomiaru czasu ze względu na prędkość graniczną. Patrząc na wyniki i porównując je z wynikami otrzymanymi w tabeli \ref{tab:mlivtfixcomparison} możemy wysnuć podobne wnioski, co do tych przedstawionych w sekcji \ref{sssec:ivtresults}. Im więcej plików umieszczanych w algorytmie, tym większy czas trwania algorytmu. Jednak tutaj nie zauważono dużych różnic czasowych, co może być spowodowane tym, iż algorytm uczenia maszynowego otrzymuje na wejściu tą samą liczbę danych, i tylko sprawdzanie dokładności algorytmów zajmuje więcej czasu.\par
+{\small
+\begin{longtable}{l|l|l|l|l|}
+    \cline{2-5}
+     & \multicolumn{4}{c|}{\textbf{Czas trwania algorytmu}} \\ \hline
     \endfirsthead
     %
-    \multicolumn{4}{c}%
-    {{\bfseries Kontynuacja tabeli \thetable\ z poprzedniej strony}} \\
-    \cline{2-4}
-     & \multicolumn{3}{c|}{\textbf{Czas trwania algorytmu}} \\ \hline
+    \multicolumn{5}{c}%
+    {{\bfseries Kontynuacja tabeli \thetable\ }} \\
+    \cline{2-5}
+     & \multicolumn{4}{c|}{\textbf{Czas trwania algorytmu}} \\ \hline
     \endhead
     %
-    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{v= 0,00001}} & \multicolumn{1}{c|}{\textbf{v = 0,0005}} & \multicolumn{1}{c|}{\textbf{v = 0,005}} \\ \hline
-    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 1.796875 & 1.765625 & 2.140625 \\ \hline
-    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} & 1.828125 & 1.828125 &  \\ \hline
-    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 1.765625 & 1.8125 &  \\ \hline
-    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 1.75 & 1.890625 & 2.109375 \\ \hline
-    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 1.765625 & 1.78125 & 2.15625 \\ \hline
-    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 1.75 & 1.8125 &  \\ \hline
-    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 1.859375 & 1.84375 &  \\ \hline
-    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} & 1.78125 &  &  \\ \hline
-    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 1.765625 &  &  \\ \hline
-    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 1.75 & 1.96875 & 2.09375 \\ \hline
-    \caption{Wpływ parametru prędkości na algorytm ML, czas trwania}
+    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{v = 0,00001}} & \multicolumn{1}{c|}{\textbf{v = 0,0005}} & \multicolumn{1}{c|}{\textbf{v = 0,0001}} & \textbf{v = 0,005} \\ \hline
+    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 1.921875 & 1.9375 & 1.96875 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} & 1.953125 & 1.921875 & 1.9375 & 2.265625 \\ \hline
+    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 1.9375 & 1.90625 & 1.953125 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 1.9375 & 1.921875 & 2.015625 & 2.265625 \\ \hline
+    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 1.921875 & 1.921875 & 1.9375 & 2.203125 \\ \hline
+    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 1.9375 & 1.9375 & 1.953125 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 1.921875 &  & 1.96875 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} & 1.921875 & 1.921875 & 1.953125 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 1.953125 & 1.921875 & 1.9375 & 2.171875 \\ \hline
+    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 2.03125 & 1.9375 & 1.96875 & 2.171875 \\ \hline
+    \caption{Wpływ parametru prędkości granicznej dla algorytmu uczenia maszynowego, czas trwania}
     \label{tab:mlivttimecomparison}\\
 \end{longtable}
-\paragraph{Analiza obciążenia pamięci\\}
-W tabeli \ref{tab:mlivtmemorycomparison} zaprezentowano otrzymane pomiary dotyczące różnic w zużyciu pamięciowym ze względu na parametr prędkości granicznej. Porównywalnie do wyników przedstawionych w tabeli \ref{tab:ivtmemorycomparison} można zaobserwować iż ten parametr nie ma wpływu na ilość wykorzystanej pamięci, pomimo zwiększonego jej zużycia. 
-\begin{longtable}{l|l|l|l|}
-    \cline{2-4}
-     & \multicolumn{3}{c|}{\textbf{Pomiar wykorzystania pamięci w MiB}} \\ \hline
+}
+\textbf{Analiza wykorzystania pamięci operacyjnej}\par
+W tabeli \ref{tab:mlivtmemorycomparison} zaprezentowano otrzymane pomiary dotyczące różnic w zużyciu pamięciowym ze względu na parametr prędkości granicznej. Porównywalnie do wyników przedstawionych w tabeli \ref{tab:ivtmemorycomparison} można zaobserwować iż ten parametr nie ma wpływu na ilość wykorzystanej pamięci, pomimo zwiększonego jej zużycia.\par
+{\small
+\begin{longtable}{l|l|l|l|l|}
+    \cline{2-5}
+     & \multicolumn{4}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Wykorzystanie pamięci operacyjnej\\  (w MiB)\end{tabular}}} \\ \hline
     \endfirsthead
     %
-    \multicolumn{4}{c}%
-    {{\bfseries Kontynuacja tabeli \thetable\ z poprzedniej strony}} \\
-    \cline{2-4}
-     & \multicolumn{3}{c|}{\textbf{Pomiar wykorzystania pamięci w MiB}} \\ \hline
+    \multicolumn{5}{c}%
+    {{\bfseries Kontynuacja tabeli \thetable\ }} \\
+    \cline{2-5}
+     & \multicolumn{4}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Wykorzystanie pamięci operacyjnej\\  (w MiB)\end{tabular}}} \\ \hline
     \endhead
     %
-    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{v= 0,00001}} & \multicolumn{1}{c|}{\textbf{v = 0,0005}} & \multicolumn{1}{c|}{\textbf{v = 0,005}} \\ \hline
-    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 7.14063 & 7.68359 & 6.66016 \\ \hline
-    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} & 5.94922 & 6.94141 &  \\ \hline
-    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 7.69531 & 6.54297 &  \\ \hline
-    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 6.96875 & 7.46875 & 7.75391 \\ \hline
-    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 6.63281 & 5.14063 & 8.16016 \\ \hline
-    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 6.57422 & 6.15625 &  \\ \hline
-    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 7.22656 & 7.40234 &  \\ \hline
-    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} & 5.52734 &  &  \\ \hline
-    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 5.03125 &  &  \\ \hline
-    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 5.54297 & 6.82812 & 7.21875 \\ \hline
-    \caption{Wpływ parametru prędkości na algorytm ML, wykorzystanie pamięci}
+    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{v = 0,00001}} & \multicolumn{1}{c|}{\textbf{v = 0,0005}} & \multicolumn{1}{c|}{\textbf{v = 0,0001}} & \textbf{v = 0,005} \\ \hline
+    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 8,36719 & 7.12891 & 8,12891 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} & 7,64063 & 7,38672 & 7,79688 & 11,36719 \\ \hline
+    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 7,80859 & 8,37891 & 6,64063 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 8,02344 & 7,90625 & 8,53516 & 11,14844 \\ \hline
+    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 6,93750 & 6,89063 & 7,50391 & 7,62500 \\ \hline
+    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 6,91797 & 7,85547 & 7,69141 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 7,21094 &  & 8,55859 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} & 7,09766 & 7,79297 & 7,28516 &  \\ \hline
+    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 7,86328 & 7,62891 & 7,16016 & 6,72266 \\ \hline
+    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 7,59766 & 6,07813 & 7,18359 & 9,64453 \\ \hline
+    \caption{Wpływ parametru prędkości granicznej dla algorytmu uczenia maszynowego, wykorzystanie pamięci operacyjnej}
     \label{tab:mlivtmemorycomparison}\\
 \end{longtable}
+}
 \paragraph{Analiza precyzji algorytmu\\}
 Jedną z cech uczenia maszynowego jest możliwość określenia precyzji danych algorytmów, poprzez wykonanie następującego obliczenia: 
 \[
     P = \frac{y_{pred} * 100\%}{y_{real}}
 \]
-Wyniki takich obliczeń zaprezentowano w tabeli \ref{tab:mlivtprecisecomparison}. Wyniki pierwszej kolumny można zinterpretować jako że wykryto dużą ilość fiksacji, algorytm potrafi dokładnie oddzielić fiksacje od sakad. Powodem mniejszej dokładności drugiej kolumny jest mniejsza ilość danych posiadających klasę \emph{"wykryto fiksację"}. W trzeciej kolumnie natomiast bardzo mała ilość danych umieszczonych w algorytmie powoduje przekłamanie "dużej" dokładności pomimo takiej ilości danych. Zauważono tutaj mimo mniejszej próbki wynikowej duże różnice w precyzji.
-\begin{longtable}{l|l|l|l|}
-    \cline{2-4}
-     & \multicolumn{3}{c|}{\textbf{Precyzja algorytmu}} \\ \hline
+Wyniki takich obliczeń zaprezentowano w tabeli \ref{tab:mlivtprecisioncomparison}. Wyniki pierwszej kolumny można zinterpretować jako że wykryto dużą ilość fiksacji, algorytm potrafi dokładnie oddzielić fiksacje od sakad. Powodem mniejszej dokładności drugiej kolumny jest mniejsza ilość danych posiadających klasę \emph{"wykryto fiksację"}. W trzeciej kolumnie natomiast bardzo mała ilość danych umieszczonych w algorytmie powoduje przekłamanie "dużej" dokładności pomimo takiej ilości danych. Zauważono tutaj mimo mniejszej próbki wynikowej duże różnice w precyzji.\par
+{\small
+\begin{longtable}{l|l|l|l|l|}
+    \cline{2-5}
+     & \multicolumn{4}{c|}{\textbf{Precyzja algorytmu}} \\ \hline
     \endfirsthead
     %
-    \multicolumn{4}{c}%
-    {{\bfseries Kontynuacja tabeli \thetable\ z poprzedniej strony}} \\
-    \cline{2-4}
-     & \multicolumn{3}{c|}{\textbf{Precyzja algorytmu}} \\ \hline
+    \multicolumn{5}{c}%
+    {{\bfseries Kontynuacja tabeli \thetable\ }} \\
+    \cline{2-5}
+     & \multicolumn{4}{c|}{\textbf{Precyzja algorytmu}} \\ \hline
     \endhead
     %
-    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{v= 0,00001}} & \multicolumn{1}{c|}{\textbf{v = 0,0005}} & \multicolumn{1}{c|}{\textbf{v = 0,005}} \\ \hline
-    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 91.70\% & 67.45\% & 84.34\% \\ \hline
-    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} & 91.28\% & 55.30\% &  \\ \hline
-    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 92.33\% & 56.30\% &  \\ \hline
-    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 91.75\% & 50.22\% & 92.55\% \\ \hline
-    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 91.96\% & 71.58\% & 83.63\% \\ \hline
-    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 90.84\% & 63.60\% &  \\ \hline
-    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 90.97\% & 62.86\% &  \\ \hline
-    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} & 90.35\% &  &  \\ \hline
-    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 90.44\% &  &  \\ \hline
-    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 91.81\% & 73.39\% & 80.66\% \\ \hline
-    \caption{Wpływ parametru prędkości na algorytm ML, precyzja algorytmu}
-    \label{tab:mlivtprecisecomparison}\\
+    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{v = 0,00001}} & \multicolumn{1}{c|}{\textbf{v = 0,0005}} & \multicolumn{1}{c|}{\textbf{v = 0,0001}} & \textbf{v = 0,005} \\ \hline
+    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 92,36\% & 92,35\% & 92,35\% &  \\ \hline
+    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} & 93,29\% & 93,31\% & 92,86\% & 97,55\% \\ \hline
+    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 93,64\% & 93,74\% & 93,22\% &  \\ \hline
+    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 92,94\% & 92,85\% & 91,53\% & 98,32\% \\ \hline
+    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 92,33\% & 92,31\% & 92,26\% & 97,07\% \\ \hline
+    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 91,72\% & 91,70\% & 91,71\% &  \\ \hline
+    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 92,04\% &  & 92,06\% &  \\ \hline
+    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} & 93,50\% & 93,65\% & 83,11\% &  \\ \hline
+    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 91,66\% & 91,75\% & 90,58\% & 98,78\% \\ \hline
+    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 92,19\% & 92,31\% & 92,26\% & 98,30\% \\ \hline
+    \caption{Wpływ parametru prędkości granicznej dla algorytmu uczenia maszynowego, precyzja algorytmu}
+    \label{tab:mlivtprecisioncomparison}\\
 \end{longtable}
+}
 \subsubsection{Algorytm ML - wpływ podziału danych testowych i danych treningowych}
 \label{sssec:mldivide}
-Sama techonologia uczenia maszynowego pozwala na modyfikację proporcji danych testowych względem danych treningowych. Celem tej sekcji jest prezentacja otrzymanych wyników przy zastosowaniu różnych wartości tej proporcji. By obliczyć istniejące fiksacje, w celu stworzenia poprawnego modelu danych użyto parametru prędkości granicznej \emph{v = 0,001}, więc znajduje się on pomiędzy danymi zaprezentowanymi w sekcji \ref{sssec:mlivt}. Różnica w tych danych będzie badana przy stopniowym modyfikowaniu różnicy w proporcjach o 15\%, tzn. 20\%-35\%-50\% dla danych testowych, reszta danych treningowych.
-\paragraph{Ilość wykrytych fiksacji\\}
-Na tabeli \ref{tab:mlpropfixcomparison} wyświetlono wyniki pomiaru liczności wykrytych fiksacji przez algorytm uczenia maszynowego oraz różnice względem zmian parametru proporcji na ten wynik. Jak możemy zaobserwować, dla naszego parametru \emph{v} nie wpływają one na wynik końcowy całego algorytmu.
-\begin{longtable}{l|l|l|l|}
-    \cline{2-4}
-     & \multicolumn{3}{c|}{\textbf{Liczba wykrytych fiksacji}} \\ \hline
+Sama techonologia uczenia maszynowego pozwala na modyfikację proporcji danych testowych względem danych treningowych. Celem tej sekcji jest prezentacja otrzymanych wyników przy zastosowaniu różnych wartości tej proporcji. By obliczyć istniejące fiksacje, w celu stworzenia poprawnego modelu danych użyto parametru prędkości granicznej \emph{v = 0,0001}, pobrany został z danych przedstawionych w sekcji \ref{sssec:mlivt}. Różnica w tych danych będzie badana przy stopniowym modyfikowaniu różnicy w proporcjach o 15\%, tzn. 20\%-35\%-50\% dla danych testowych, reszta danych treningowych.\par
+
+\textbf{Liczba wykrytych fiksacji/sakad}\par
+Na tabeli \ref{tab:mlpropfixcomparison} wyświetlono wyniki pomiaru liczności wykrytych fiksacji przez algorytm uczenia maszynowego oraz różnice względem zmian parametru proporcji na ten wynik. Jak możemy zaobserwować, dla naszego parametru \emph{v} nie wpływają one na wynik końcowy całego algorytmu.\par
+{\small
+\begin{longtable}{l|l|l|l|l|l|l|}
+    \cline{2-7}
+     & \multicolumn{6}{c|}{\textbf{Liczba wykrytych fiksacji/sakad}} \\ \hline
     \endfirsthead
     %
-    \multicolumn{4}{c}%
-    {{\bfseries Kontynuacja tabeli \thetable\ z poprzedniej strony}} \\
-    \cline{2-4}
-     & \multicolumn{3}{c|}{\textbf{Liczba wykrytych fiksacji}} \\ \hline
+    \multicolumn{7}{c}%
+    {{\bfseries Kontynuacja tabeli \thetable\ }} \\
+    \cline{2-7}
+     & \multicolumn{6}{c|}{\textbf{Liczba wykrytych fiksacji/sakad}} \\ \hline
     \endhead
     %
-    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{20\%}} & \multicolumn{1}{c|}{\textbf{35\%}} & \multicolumn{1}{c|}{\textbf{50\%}} \\ \hline
-    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 93727 &  &  \\ \hline
-    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} &  &  &  \\ \hline
-    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 96123 &  & 97277 \\ \hline
-    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 96835 & 97247 & 97704 \\ \hline
-    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 93364 & 94421 &  \\ \hline
-    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 95981 &  & 97166 \\ \hline
-    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 94484 &  & 96219 \\ \hline
-    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} &  &  & 97825 \\ \hline
-    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 98862 &  &  \\ \hline
-    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 93070 & 94173 &  \\ \hline
-    \caption{Wpływ parametru proporcji, ilość fiksacji}
+    \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{2}{c|}{\textbf{20\%}} & \multicolumn{2}{c|}{\textbf{35\%}} & \multicolumn{2}{c|}{\textbf{50\%}} \\ \hline
+    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 6118 & \cellcolor[HTML]{EFEFEF}93010 & 4948 & \cellcolor[HTML]{EFEFEF}94180 & 3749 & \cellcolor[HTML]{EFEFEF}95379 \\ \hline
+    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} & 5534 & \cellcolor[HTML]{EFEFEF}93637 & 4582 & \cellcolor[HTML]{EFEFEF}94589 & 3511 & \cellcolor[HTML]{EFEFEF}95660 \\ \hline
+    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 5419 & \cellcolor[HTML]{EFEFEF}93787 & 4475 & \cellcolor[HTML]{EFEFEF}94731 & 3382 & \cellcolor[HTML]{EFEFEF}95824 \\ \hline
+    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 6662 & \cellcolor[HTML]{EFEFEF}92486 & 5466 & \cellcolor[HTML]{EFEFEF}93682 & 4168 & \cellcolor[HTML]{EFEFEF}94980 \\ \hline
+    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 6116 & \cellcolor[HTML]{EFEFEF}93093 & 4928 & \cellcolor[HTML]{EFEFEF}94281 & 3780 & \cellcolor[HTML]{EFEFEF}95429 \\ \hline
+    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 6501 & \cellcolor[HTML]{EFEFEF}92679 & 5253 & \cellcolor[HTML]{EFEFEF}93927 & 4084 & \cellcolor[HTML]{EFEFEF}95096 \\ \hline
+    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 6289 & \cellcolor[HTML]{EFEFEF}92735 & 5079 & \cellcolor[HTML]{EFEFEF}93945 & 3904 & \cellcolor[HTML]{EFEFEF}95120 \\ \hline
+    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} & 13505 & \cellcolor[HTML]{EFEFEF}85669 & 11012 & \cellcolor[HTML]{EFEFEF}88162 & 8498 & \cellcolor[HTML]{EFEFEF}90676 \\ \hline
+    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 7415 & \cellcolor[HTML]{EFEFEF}91694 & 6030 & \cellcolor[HTML]{EFEFEF}93079 & 4635 & \cellcolor[HTML]{EFEFEF}94474 \\ \hline
+    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 6158 & \cellcolor[HTML]{EFEFEF}93031 & 5045 & \cellcolor[HTML]{EFEFEF}94144 & 3957 & \cellcolor[HTML]{EFEFEF}95232 \\ \hline
+    \caption{Wpływ parametru podziału zbiorów dla algorytmu uczenia maszynowego, liczba fiksacji}
     \label{tab:mlpropfixcomparison}\\
 \end{longtable}
-\paragraph{Analiza czasów trwania algorytmu\\}
-Celem tego paragrafu jest zaprezentowanie wyników pomiaru czasu trwania algorytmu oraz analiza różnic w tym pomiarze. Wyniki zaprezentowano w tabeli \ref{tab:mlpropcomparison}. Jak zaobserwowano w tej tabeli, wyniki są bardzo podobne do trzeciej kolumny tabeli \ref{tab:mlivttimecomparison}, co jest spowodowane doborem parametru prędkości granicznej. Nie zauważono innych różnic w pomiarze czasu, przez co wnioskiem tej analizy może być, iż parametr proporcji nie ma wpływu na czas trwania algorytmu.
-\begin{longtable}{l|l|l|l|}
+}
+\textbf{Analiza czasu trwania algorytmu}\par
+Celem tego paragrafu jest zaprezentowanie wyników pomiaru czasu trwania algorytmu oraz analiza różnic w tym pomiarze. Wyniki zaprezentowano w tabeli \ref{tab:mlproptimecomparison}. Jak zaobserwowano w tej tabeli, wyniki są bardzo podobne do trzeciej kolumny tabeli \ref{tab:mlivttimecomparison}, co jest spowodowane doborem parametru prędkości granicznej. Nie zauważono innych różnic w pomiarze czasu, przez co wnioskiem tej analizy może być, iż parametr proporcji nie ma wpływu na czas trwania algorytmu.\par
+{\begin{longtable}{l|l|l|l|}
     \cline{2-4}
-     & \multicolumn{3}{c|}{\textbf{Czas trwania algorytmu}} \\ \hline
+     & \multicolumn{3}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Czas trwania algorytmu\\  (w s)\end{tabular}}} \\ \hline
     \endfirsthead
     %
     \multicolumn{4}{c}%
-    {{\bfseries Kontynuacja tabeli \thetable\ z poprzedniej strony}} \\
+    {{\bfseries Table \thetable\ continued from previous page}} \\
     \cline{2-4}
-     & \multicolumn{3}{c|}{\textbf{Czas trwania algorytmu}} \\ \hline
+     & \multicolumn{3}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Czas trwania algorytmu\\  (w s)\end{tabular}}} \\ \hline
     \endhead
     %
     \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{20\%}} & \multicolumn{1}{c|}{\textbf{35\%}} & \multicolumn{1}{c|}{\textbf{50\%}} \\ \hline
-    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 2.15625 &  &  \\ \hline
-    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} &  &  &  \\ \hline
-    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 2.1875 &  & 2.203125 \\ \hline
-    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 2.140625 & 2.15625 & 2.0625 \\ \hline
-    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 2.109375 & 2.109375 &  \\ \hline
-    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 2.15625 &  & 2.203125 \\ \hline
-    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 2.203125 &  & 2.203125 \\ \hline
-    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} &  &  & 2.109375 \\ \hline
-    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 2.171875 &  &  \\ \hline
-    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 2.234375 & 2.0625 &  \\ \hline
-    \caption{Wpływ parametru proporcji, czas trwania}
-    \label{tab:mlpropcomparison}\\
+    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 2.015625 & 1.953125 & 1.953125 \\ \hline
+    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} & 1.9375 & 1.9375 & 1.9375 \\ \hline
+    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 1.953125 & 1.96875 & 1.9375 \\ \hline
+    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 1.9375 & 1.96875 & 2.015625 \\ \hline
+    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 1.96875 & 1.953125 & 1.953125 \\ \hline
+    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 1.9375 & 1.953125 & 1.953125 \\ \hline
+    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 1.96875 & 1.9375 & 1.953125 \\ \hline
+    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} & 1.9375 & 1.984375 & 1.984375 \\ \hline
+    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 1.90625 & 1.96875 & 1.96875 \\ \hline
+    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 1.921875 & 1.96875 & 1.96875 \\ \hline
+    \caption{Wpływ parametru podziału zbiorów dla algorytmu uczenia maszynowego, czas trwania}
+    \label{tab:mlproptimecomparison}\\
 \end{longtable}
-\paragraph{Analiza obciążenia pamięci\\}
-Wyniki pomiaru obciążenia pamięci wykorzystując uczenie maszynowe przy zmianie parametru proporcji danych testowych zaprezentowano w tabeli \ref{tab:mlpropmemorycomparison}. Zgodnie z tymi wynikami, możemy zauważyć, iż są one podobne do wyników zaprezentowanych w tabeli \ref{tab:mlivtmemorycomparison}. Oznacza to, iż zmiana tego parametru nie ma wpływu na obciążenie pamięci dla wyników.
+}
+\textbf{Analiza wykorzystania pamięci operacyjnej}\par
+Wyniki pomiaru obciążenia pamięci wykorzystując uczenie maszynowe przy zmianie parametru proporcji danych testowych zaprezentowano w tabeli \ref{tab:mlpropmemorycomparison}. Zgodnie z tymi wynikami, możemy zauważyć, iż są one podobne do wyników zaprezentowanych w tabeli \ref{tab:mlivtmemorycomparison}. Oznacza to, iż zmiana tego parametru nie ma wpływu na obciążenie pamięci dla wyników.\par
+{\small
 \begin{longtable}{l|l|l|l|}
     \cline{2-4}
-     & \multicolumn{3}{c|}{\textbf{Obciążenie pamięci}} \\ \hline
+     & \multicolumn{3}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Wykorzystanie pamięci operacyjnej\\ (w MiB)\end{tabular}}} \\ \hline
     \endfirsthead
     %
     \multicolumn{4}{c}%
-    {{\bfseries Kontynuacja tabeli \thetable\ z poprzedniej strony}} \\
+    {{\bfseries Table \thetable\ continued from previous page}} \\
     \cline{2-4}
-     & \multicolumn{3}{c|}{\textbf{Obciążenie pamięci}} \\ \hline
+     & \multicolumn{3}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Wykorzystanie pamięci operacyjnej\\ (w MiB)\end{tabular}}} \\ \hline
     \endhead
     %
     \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{20\%}} & \multicolumn{1}{c|}{\textbf{35\%}} & \multicolumn{1}{c|}{\textbf{50\%}} \\ \hline
-    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 7.14063 &  &  \\ \hline
-    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} &  &  &  \\ \hline
-    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 9.04297 &  & 7.22266 \\ \hline
-    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 11.12891 & 7.93359 & 7.45703 \\ \hline
-    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 6.16797 & 7.17969 &  \\ \hline
-    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 10.92969 &  & 11.13281 \\ \hline
-    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 7.54688 &  & 7.83203 \\ \hline
-    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} &  &  & 7.14844 \\ \hline
-    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 7.11328 &  &  \\ \hline
-    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 10.07813 & 7.85547 &  \\ \hline
-    \caption{Wpływ parametru proporcji, obciążenie pamięci}
+    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 7,42578 & 7,24609 & 7,65234 \\ \hline
+    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} & 7,50391 & 8,21094 & 7,78516 \\ \hline
+    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 8,50391 & 7,22266 & 7,39453 \\ \hline
+    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 7,49609 & 7,57422 & 8,27734 \\ \hline
+    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 8,07422 & 7,32813 & 7,89453 \\ \hline
+    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 6,59375 & 7,24219 & 7,97656 \\ \hline
+    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 6,48438 & 7,49219 & 7,57422 \\ \hline
+    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} & 7,01953 & 8,26563 & 8,05469 \\ \hline
+    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 6,71094 & 7,26172 & 7,05859 \\ \hline
+    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 6,85547 & 7,16797 & 7,07813 \\ \hline
+    \caption{Wpływ parametru podziału zbiorów dla algorytmu uczenia maszynowego, zużycie pamięci}
     \label{tab:mlpropmemorycomparison}\\
 \end{longtable}
-\paragraph{Dokładność algorytmu\\}
-Zgodnie z wynikami porównania liczby wykrytych fiksacji dla zmian proporcji danych testowych względem danych treningowych zaprezentowanymi w tabeli \ref{tab:mlpropprecisioncomparison}, możemy zauważyć iż nie ma to wpływu na wyniki końcowe precyzji. Jest to prawdopodobnie spowodowane brakiem różnic w wynikach wstępnej analizy danych.
+}
+\textbf{Precyzja algorytmu}\par
+Zgodnie z wynikami porównania liczby wykrytych fiksacji dla zmian proporcji danych testowych względem danych treningowych zaprezentowanymi w tabeli \ref{tab:mlpropprecisioncomparison}, możemy zauważyć iż nie ma to wpływu na wyniki końcowe precyzji. Jest to prawdopodobnie spowodowane brakiem różnic w wynikach wstępnej analizy danych.\par
+{\small
 \begin{longtable}{l|l|l|l|}
     \cline{2-4}
      & \multicolumn{3}{c|}{\textbf{Precyzja algorytmu}} \\ \hline
     \endfirsthead
     %
     \multicolumn{4}{c}%
-    {{\bfseries Kontynuacja tabeli \thetable\ z poprzedniej strony}} \\
+    {{\bfseries Table \thetable\ continued from previous page}} \\
     \cline{2-4}
      & \multicolumn{3}{c|}{\textbf{Precyzja algorytmu}} \\ \hline
     \endhead
     %
     \multicolumn{1}{|c|}{\textbf{Plik}} & \multicolumn{1}{c|}{\textbf{20\%}} & \multicolumn{1}{c|}{\textbf{35\%}} & \multicolumn{1}{c|}{\textbf{50\%}} \\ \hline
-    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 93.17\% &  &  \\ \hline
-    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} &  &  &  \\ \hline
-    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 96.33\% &  & 96.21\% \\ \hline
-    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 97.19\% & 97.21\% & 97.12\% \\ \hline
-    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 92.56\% & 92.70\% &  \\ \hline
-    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 95.93\% &  & 95.98\% \\ \hline
-    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 94.48\% &  & 94.29\% \\ \hline
-    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} &  &  & 97.43\% \\ \hline
-    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 99.64\% &  &  \\ \hline
-    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 92.43\% & 92.50\% &  \\ \hline
-    \caption{Wpływ parametru proporcji, precyzja algorytmu}
+    \multicolumn{1}{|l|}{1\_01\_1311201811.cal} & 92.55\% & 92.37\% & 92.24\% \\ \hline
+    \multicolumn{1}{|l|}{1\_02\_1310301856.cal} & 92.73\% & 93.11\% & 93.02\% \\ \hline
+    \multicolumn{1}{|l|}{1\_03\_1310301904.cal} & 92.99\% & 93.28\% & 93.09\% \\ \hline
+    \multicolumn{1}{|l|}{1\_04\_1310301810.cal} & 91.60\% & 91.75\% & 91.61\% \\ \hline
+    \multicolumn{1}{|l|}{1\_05\_1310301817.cal} & 92.30\% & 92.18\% & 92.21\% \\ \hline
+    \multicolumn{1}{|l|}{1\_06\_1310301837.cal} & 91.72\% & 91.67\% & 91.82\% \\ \hline
+    \multicolumn{1}{|l|}{1\_12\_1310301901.cal} & 92.17\% & 92.04\% & 92.05\% \\ \hline
+    \multicolumn{1}{|l|}{1\_14\_1310301912.cal} & 82.85\% & 83.02\% & 83.04\% \\ \hline
+    \multicolumn{1}{|l|}{1\_15\_1310301840.cal} & 90.62\% & 90.65\% & 90.64\% \\ \hline
+    \multicolumn{1}{|l|}{1\_16\_1310301844.cal} & 92.36\% & 92.42\% & 92.50\% \\ \hline
+    \caption{Wpływ parametru podziału zbiorów dla algorytmu uczenia maszynowego, precyzja algorytmu}
     \label{tab:mlpropprecisioncomparison}\\
 \end{longtable}
+}
 Jak wywnioskowano w paragrafach powyżej, wpływ parametru proporcji jest znikomy na wynik końcowy algorytmu uczenia maszynowego, co może oznaczać dobrze wybrany typ algorytmu uczenia maszynowego. Większy wpływ na wyniki końcowe dla algorytmu ML ma zmiana parametru prędkości granicznej, zgodnie z zaprezentowanymi wynikami w sekcji \ref{sssec:mlivt}.
 \subsection{Analiza metod wprowadzania danych wejściowych}
 \label{ssec:entrydata}
@@ -638,7 +585,7 @@ Na rysunku \ref{fig:importdata} zaprezentowano wykres przedstawiający wyniki po
 \subsection{Porównanie końcowe algorytmów}
 \label{ssec:compalgorithms}
 Obserwując wyniki algorytmów zaprezentowane w sekcji \ref{ssec:queryparameters} wyniki końcowe zależą dużo od wartości parametrów wejściowych algorytmów. Niepoprawna wartość prędkości granicznej dla algorytmu I-VT, czy też wartości dyspersji i rozmiaru czasowego okna dla algorytmu I-DT może powodować zbyt duże nagromadzenie, lub wręcz przeciwnie zbyt małą ilość danych. Dlatego niezbędne jest znalezienie w ciągu weryfikacji danych, jeżeli istenieje taka możliwość odpowiedniej wartości tych parametrów.\par
-Jak już zostało napisane w sekcji \ref{sssec:ivtresults}, w trakcie testów odkryto, iż prawidłowy parametr prędkości mieści się w przedziale $v \in (0,0001;0,001)$. Jest to spowodowane dokładnością urządzenia pomiarowego i wykonanego nim pomiaru. Należy ten parametr dostosowywać w zależności od wykonanego pomiaru. Przykładowe wyniki tego algorytmu odpowiednio dla wartości parametru \emph{v} wynoszących \emph{0.00001, 0.0005} oraz \emph{0.005} i \emph{0.05} dla pliku \emph{1\_03\_1310301904.cal} zaprezentowano w odpowiedniej kolejności na rysunkach \ref{fig:ivt1}, \ref{fig:ivt2}, \ref{fig:ivt3}, \ref{fig:ivt4}. Można na nich zaobserwować potwierdzenie powyższego założenia. Patrząc na tabele \ref{tab:ivtfixationcomparison} wartości fiksacji wynoszą 11763, 2801, 35, 1. Zastanawiającym wynikiem analizy jest różnica w ilości punktów w linii do punktów $P_1 = (0.95,0.5)$ oraz $P_2 = (0.95, 0.025)$. Dla rysunku \ref{fig:ivt1} i \ref{fig:ivt2} możemy zaobserwować zmianę ilości punktów w linii, ale zwiększona jest ilość punktów w fiksacji dla punktów skupionych przy wartościach 'RR'. Być może dla tego pliku został w danych wyraźnie zaznaczony ruch oka.\par
+Jak już zostało napisane w sekcji \ref{sssec:ivtresults}, w trakcie testów odkryto, iż prawidłowy parametr prędkości mieści się w przedziale $v \in (0,0001;0,001)$. Jest to spowodowane dokładnością urządzenia pomiarowego i wykonanego nim pomiaru. Należy ten parametr dostosowywać w zależności od wykonanego pomiaru. Przykładowe wyniki tego algorytmu odpowiednio dla wartości parametru \emph{v} wynoszących \emph{0.00001, 0.0005} oraz \emph{0.005} i \emph{0.05} dla pliku \emph{1\_03\_1310301904.cal} zaprezentowano w odpowiedniej kolejności na rysunkach \ref{fig:ivt1}, \ref{fig:ivt2}, \ref{fig:ivt3}, \ref{fig:ivt4}. Można na nich zaobserwować potwierdzenie powyższego założenia. Patrząc na tabelę  wartości fiksacji wynoszą 11763, 2801, 35, 1. Zastanawiającym wynikiem analizy jest różnica w ilości punktów w linii do punktów $P_1 = (0.95,0.5)$ oraz $P_2 = (0.95, 0.025)$. Dla rysunku \ref{fig:ivt1} i \ref{fig:ivt2} możemy zaobserwować zmianę ilości punktów w linii, ale zwiększona jest ilość punktów w fiksacji dla punktów skupionych przy wartościach 'RR'. Być może dla tego pliku został w danych wyraźnie zaznaczony ruch oka.\par
 Nie jest zaskakującym wynikiem czas trwania algorytmu, wraz z wykorzystaniem pamięciowym, gdyż jedno porównanie do następnego elementu w tablicy, w wypadku poprawnie skonstruowanego kodu nie powinno stanowić dużej złożoności czasowej oraz pamięciowej.
 \begin{figure}[H]
     \centering

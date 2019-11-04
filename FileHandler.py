@@ -45,7 +45,7 @@ def createObjectsFromFile(fileName):
 
 def createExitFile(fileName, statisticClass, alg):
     fieldNames = ['ImportAndConvertFileStatistic',
-        'CalibrationSummaryTime',
+        'SaccadeCount',
         'AlgorithmRunTimeStatistic',
         'NumberOfFixationsCount',
         'ImportDataToDatabase',
@@ -57,7 +57,7 @@ def createExitFile(fileName, statisticClass, alg):
         writer.writeheader()
         writer.writerow({
             'ImportAndConvertFileStatistic': str(statisticClass.ImportAndConvertFileStatistic),
-            'CalibrationSummaryTime': str(statisticClass.CalibrationSummaryTime),
+            'SaccadeCount': str(statisticClass.SaccadeCount),
             'AlgorithmRunTimeStatistic': str(statisticClass.AlgorithmRunTimeStatistic),
             'NumberOfFixationsCount': str(statisticClass.NumberOfFixationsCount),
             'ImportDataToDatabase': str(statisticClass.ImportDataToDatabase),
