@@ -23,3 +23,5 @@ Input files are placed in the ```/data``` directory, you just need to place the 
 ## LaTeX work
 
 The thesis is being written using LaTeX, it is located in directory ```/ksiazka```.
+
+zhang 到此一游~
